@@ -80,6 +80,19 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
+
+  <!-- Cloudflare Web Analytics -->
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' 
+          data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
+
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-X0YD7WX0CD"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-X0YD7WX0CD');
+  </script>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen">
 
@@ -344,6 +357,16 @@
 
       result.classList.remove("hidden");
 
+      // ===== Google Analytics: Track successful scan =====
+      if (typeof gtag === "function") {
+        gtag("event", "scan_completed", {
+            status: data.status,
+            php_version: data.php_version || "unknown",
+            framework: data.framework || "none",
+            url: data.url || input.value
+        });
+      }
+
       // ===== SMART CTA =====
       let ctaTitle = "", ctaText = "", ctaButton = "Book a free discovery call";
 
@@ -405,6 +428,14 @@
       );
       document.getElementById("bookBtn").href = `https://cal.com/alex-mochu/php-fix?notes=${notes}`;
 
+      document.getElementById("bookBtn").addEventListener("click", () => {
+        if (typeof gtag === "function") {
+            gtag("event", "book_call_click", {
+            status: data.status,
+            url: data.url || input.value
+            });
+        }
+      });
       ctaSection.classList.remove("hidden");
     }
 

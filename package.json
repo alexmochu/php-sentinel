@@ -1,0 +1,11 @@
+{
+  "name": "php-sentinel",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler pages dev public",
+    "deploy": "wrangler pages deploy public"
+  },
+  "devDependencies": {
+    "wrangler": "^3.78.0"
+  }
+}

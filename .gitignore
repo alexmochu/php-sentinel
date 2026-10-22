@@ -1,0 +1,59 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build / Output
+dist/
+build/
+.out/
+.next/
+.vercel/
+.wrangler/
+.cloudflare/
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+*.local
+.dev.vars
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editor / IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Cloudflare / Wrangler
+.wrangler/
+.dev.vars
+wrangler.toml.bak
+
+# Database local state
+.wrangler/state/
+
+# Testing
+coverage/
+.nyc_output/
+
+# Misc
+*.tgz
+*.pem
+.cache/
+tmp/
+temp/

@@ -1,0 +1,8 @@
+name = "php-sentinel"
+compatibility_date = "2024-09-23"
+pages_build_output_dir = "public"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "php-sentinel-db"
+database_id = "c4498acc-1ea0-40f0-af3f-30e70a48ca8c"

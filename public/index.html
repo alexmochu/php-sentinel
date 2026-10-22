@@ -30,7 +30,7 @@
   <meta name="twitter:image" content="https://sentinel.kejanigarage.com/og-image.png" />
   <meta name="twitter:creator" content="@Karanjamochu" />
 
-  <!-- Favicon (using OG image) -->
+  <!-- Favicon -->
   <link rel="icon" href="/og-image.png" type="image/png" />
   <link rel="apple-touch-icon" href="/og-image.png" />
 
@@ -81,7 +81,7 @@
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 
-  <!-- Cloudflare Web Analytics -->
+  <!-- Cloudflare Web Analytics (replace the token) -->
   <script defer src='https://static.cloudflareinsights.com/beacon.min.js' 
           data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
 
@@ -124,7 +124,7 @@
       </p>
     </div>
 
-    <!-- INPUT CARD (MAIN ACTION) -->
+    <!-- INPUT CARD -->
     <div id="inputCard" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8 mb-8">
       <label class="block text-sm font-medium text-slate-700 mb-2">Website URL</label>
       <div class="flex flex-col sm:flex-row gap-3">
@@ -223,7 +223,7 @@
     <!-- Result -->
     <div id="result" class="hidden space-y-6"></div>
 
-    <!-- CTA Section (dynamically filled) -->
+    <!-- CTA Section -->
     <div id="ctaSection" class="hidden mt-10"></div>
 
   </main>
@@ -357,17 +357,17 @@
 
       result.classList.remove("hidden");
 
-      // ===== Google Analytics: Track successful scan =====
+      // Google Analytics - successful scan
       if (typeof gtag === "function") {
         gtag("event", "scan_completed", {
-            status: data.status,
-            php_version: data.php_version || "unknown",
-            framework: data.framework || "none",
-            url: data.url || input.value
+          status: data.status,
+          php_version: data.php_version || "unknown",
+          framework: data.framework || "none",
+          url: data.url || input.value
         });
       }
 
-      // ===== SMART CTA =====
+      // Smart CTA
       let ctaTitle = "", ctaText = "", ctaButton = "Book a free discovery call";
 
       if (data.status === "vulnerable") {
@@ -430,12 +430,13 @@
 
       document.getElementById("bookBtn").addEventListener("click", () => {
         if (typeof gtag === "function") {
-            gtag("event", "book_call_click", {
+          gtag("event", "book_call_click", {
             status: data.status,
             url: data.url || input.value
-            });
+          });
         }
       });
+
       ctaSection.classList.remove("hidden");
     }
 

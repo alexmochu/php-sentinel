@@ -3,89 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <!-- Primary SEO -->
-  <title>PHP Sentinel – Free PHP2Shell Vulnerability Checker | Check if Your Site is Exposed</title>
-  <meta name="title" content="PHP Sentinel – Free PHP2Shell Vulnerability Checker | Check if Your Site is Exposed" />
-  <meta name="description" content="Instantly check if your website is vulnerable to the critical PHP2Shell remote code execution flaws (CVE-2026-109618 & CVE-2026-109619). Free, no login required. Detect PHP version, frameworks (WordPress, Laravel, Magento, Joomla) and get clear next steps." />
-  <meta name="keywords" content="PHP2Shell, PHP vulnerability checker, CVE-2026-109618, CVE-2026-109619, PHP security scanner, check PHP version, WordPress PHP vulnerability, Laravel security, Magento PHP, Joomla security, free PHP checker, PHP remote code execution, PHP patch checker" />
-  <meta name="author" content="Alex Mochu, Kejani Garage" />
-  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <title>PHP Sentinel – Free PHP2Shell Vulnerability Checker</title>
+  <meta name="description" content="Check if your website is exposed to critical PHP vulnerabilities. Free, no login. Also shows public technology signals for the URL you enter." />
   <link rel="canonical" href="https://sentinel.kejanigarage.com/" />
-
-  <!-- Open Graph -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://sentinel.kejanigarage.com/" />
   <meta property="og:title" content="PHP Sentinel – Free PHP2Shell Vulnerability Checker" />
-  <meta property="og:description" content="Instantly check if your website is exposed to the critical PHP2Shell RCE vulnerabilities. Free & no login." />
+  <meta property="og:description" content="Instantly check PHP exposure and public tech signals for your website." />
   <meta property="og:image" content="https://sentinel.kejanigarage.com/og-image.png" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:site_name" content="PHP Sentinel by Kejani Garage" />
-
-  <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="PHP Sentinel – Free PHP2Shell Vulnerability Checker" />
-  <meta name="twitter:description" content="Instantly check if your site is vulnerable to the critical PHP2Shell RCE flaws. Free, no login." />
-  <meta name="twitter:image" content="https://sentinel.kejanigarage.com/og-image.png" />
-  <meta name="twitter:creator" content="@Karanjamochu" />
-
-  <!-- Favicon -->
   <link rel="icon" href="/og-image.png" type="image/png" />
-  <link rel="apple-touch-icon" href="/og-image.png" />
-
-  <!-- Theme -->
   <meta name="theme-color" content="#0F172A" />
-
-  <!-- JSON-LD -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "PHP Sentinel",
-    "url": "https://sentinel.kejanigarage.com/",
-    "description": "Free tool to check if a website is vulnerable to PHP2Shell (CVE-2026-109618 & CVE-2026-109619).",
-    "applicationCategory": "SecurityApplication",
-    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-    "creator": {
-      "@type": "Person",
-      "name": "Alex Mochu",
-      "url": "https://kejanigarage.com"
-    }
-  }
-  </script>
-
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            navy: "#0F172A",
-            teal: "#0D9488",
-          }
-        }
-      }
-    }
+    tailwind.config = { theme: { extend: { colors: { navy: "#0F172A", teal: "#0D9488" } } } }
   </script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
     body { font-family: 'Inter', system-ui, sans-serif; }
-    .loader {
-      width: 48px; height: 48px;
-      border: 4px solid #e2e8f0;
-      border-top-color: #0D9488;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
+    .loader { width: 48px; height: 48px; border: 4px solid #e2e8f0; border-top-color: #0D9488; border-radius: 50%; animation: spin .8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
-
-  <!-- Cloudflare Web Analytics (replace the token) -->
-  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' 
-          data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'></script>
-
-  <!-- Google Analytics 4 -->
+  <!-- Cloudflare Web Analytics: put your token -->
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"YOUR_CLOUDFLARE_TOKEN"}'></script>
+  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-X0YD7WX0CD"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -95,142 +34,123 @@
   </script>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen">
-
-  <!-- Header -->
   <header class="border-b border-slate-200 bg-white">
-    <div class="max-w-3xl mx-auto px-4 py-5 flex items-center justify-between">
+    <div class="max-w-6xl mx-auto px-4 py-5 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-lg bg-navy flex items-center justify-center">
-          <span class="text-teal font-bold text-lg">P</span>
-        </div>
+        <div class="w-9 h-9 rounded-lg bg-navy flex items-center justify-center"><span class="text-teal font-bold text-lg">P</span></div>
         <div>
           <h1 class="font-semibold text-navy text-lg leading-tight">PHP Sentinel</h1>
           <p class="text-xs text-slate-500">by Kejani Garage</p>
         </div>
       </div>
-      <a href="https://kejanigarage.com" target="_blank" class="text-sm text-slate-500 hover:text-teal transition">kejanigarage.com</a>
+      <a href="https://kejanigarage.com" target="_blank" class="text-sm text-slate-500 hover:text-teal">kejanigarage.com</a>
     </div>
   </header>
 
-  <main class="max-w-3xl mx-auto px-4 py-10 sm:py-14">
-
-    <!-- Hero -->
-    <div class="text-center mb-8">
-      <h2 class="text-3xl sm:text-4xl font-bold text-navy tracking-tight mb-3">
-        Is your website vulnerable to PHP2Shell?
-      </h2>
-      <p class="text-slate-600 text-lg max-w-xl mx-auto">
-        Instantly check if your PHP site is exposed to the critical remote code execution flaws announced on 21 October 2026.
-      </p>
+  <main class="max-w-6xl mx-auto px-4 py-10">
+    <div class="text-center mb-8 max-w-3xl mx-auto">
+      <h2 class="text-3xl sm:text-4xl font-bold text-navy tracking-tight mb-3">Is your website exposed to critical PHP flaws?</h2>
+      <p class="text-slate-600 text-lg">Paste a URL to check public PHP signals and what the page appears to be built with. Free. No login.</p>
     </div>
 
-    <!-- INPUT CARD -->
-    <div id="inputCard" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8 mb-8">
+    <!-- Input first -->
+    <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8 mb-8">
       <label class="block text-sm font-medium text-slate-700 mb-2">Website URL</label>
       <div class="flex flex-col sm:flex-row gap-3">
-        <input
-          id="urlInput"
-          type="text"
-          placeholder="example.com or https://shop.example.com"
-          class="flex-1 px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal focus:border-transparent text-slate-800 placeholder-slate-400"
-          autocomplete="off"
-        />
-        <button
-          id="checkBtn"
-          class="px-6 py-3 bg-navy hover:bg-slate-800 text-white font-medium rounded-xl transition flex items-center justify-center gap-2 min-w-[140px]"
-        >
+        <input id="urlInput" type="text" placeholder="example.com or https://shop.example.com"
+          class="flex-1 px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal" />
+        <button id="checkBtn" class="px-6 py-3 bg-navy hover:bg-slate-800 text-white font-medium rounded-xl min-w-[140px]">
           <span id="btnText">Check Now</span>
         </button>
       </div>
-      <p class="mt-3 text-xs text-slate-500">
-        Supports full domains and subdomains. No login required.
-      </p>
+      <p class="mt-3 text-xs text-slate-500">Supports domains and subdomains. Results are based on public signals only.</p>
     </div>
 
-    <!-- EDUCATIONAL SECTION -->
-    <div id="eduSection" class="mb-6 space-y-3">
-      <div class="bg-white border border-slate-200 rounded-2xl p-5">
-        <h3 class="font-semibold text-navy mb-3 flex items-center gap-2">
-          <svg class="w-5 h-5 text-rose-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
-          Why you should check now
-        </h3>
-        <ul class="space-y-2.5 text-sm text-slate-700">
-          <li class="flex gap-2"><span class="text-rose-500 font-bold">•</span><span><strong>Unauthenticated RCE</strong> — attackers can run code on your server without logging in.</span></li>
-          <li class="flex gap-2"><span class="text-rose-500 font-bold">•</span><span><strong>Affects most PHP sites</strong> — WordPress, Laravel, Magento, Joomla, Drupal and custom apps.</span></li>
-          <li class="flex gap-2"><span class="text-rose-500 font-bold">•</span><span><strong>Exploits are public</strong> — automated attacks started within hours of the patch release.</span></li>
-          <li class="flex gap-2"><span class="text-rose-500 font-bold">•</span><span><strong>Only real fix</strong> — upgrade to PHP 8.2.35 / 8.3.36 / 8.4.27 / 8.5.12.</span></li>
-        </ul>
-        <div class="mt-4 pt-3 border-t border-slate-100 text-xs text-slate-500 flex flex-wrap gap-x-4 gap-y-1">
-          <span>CVE-2026-109618 & 109619</span>
-          <span>CVSS 9.2 (Critical)</span>
-          <span>Patched 21 Oct 2026</span>
+    <!-- 3-column: ads + middle content -->
+    <div class="grid lg:grid-cols-12 gap-6 mb-10">
+      <!-- Left ad -->
+      <aside class="lg:col-span-3 order-2 lg:order-1">
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 sticky top-4">
+          <p class="text-xs font-medium text-teal uppercase tracking-wide mb-2">Need help?</p>
+          <h3 class="font-semibold text-navy mb-2">Fixing or upgrading PHP?</h3>
+          <p class="text-sm text-slate-600 mb-4">If the check shows risk, or you want a second pair of eyes, book a free discovery call.</p>
+          <a href="https://cal.com/alex-mochu/php-fix" target="_blank" class="inline-flex w-full justify-center px-4 py-2.5 bg-teal hover:bg-teal/90 text-white text-sm font-medium rounded-xl">Book a free call</a>
+        </div>
+      </aside>
+
+      <!-- Center -->
+      <div class="lg:col-span-6 order-1 lg:order-2 space-y-6">
+        <div id="eduSection" class="bg-white border border-slate-200 rounded-2xl p-5">
+          <h3 class="font-semibold text-navy mb-3">Why this check matters</h3>
+          <ul class="space-y-2 text-sm text-slate-700">
+            <li>• Critical PHP flaws can allow remote code execution without a login.</li>
+            <li>• WordPress, Laravel, Magento, Joomla and Drupal sites are often in scope.</li>
+            <li>• Many owners do not know which PHP version they run.</li>
+            <li>• Patched versions: 8.2.35, 8.3.36, 8.4.27, 8.5.12.</li>
+          </ul>
+        </div>
+
+        <div id="loading" class="hidden text-center py-12">
+          <div class="loader mx-auto mb-4"></div>
+          <p class="text-slate-600 font-medium">Scanning public signals…</p>
+        </div>
+
+        <div id="result" class="hidden space-y-4"></div>
+        <div id="ctaSection" class="hidden"></div>
+      </div>
+
+      <!-- Right ad -->
+      <aside class="lg:col-span-3 order-3">
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 sticky top-4">
+          <p class="text-xs font-medium text-slate-500 uppercase tracking-wide mb-2">Kejani Garage</p>
+          <h3 class="font-semibold text-navy mb-2">Product and engineering help</h3>
+          <p class="text-sm text-slate-600 mb-4">Support for teams running PHP, WordPress, Laravel and modern web stacks.</p>
+          <a href="https://kejanigarage.com" target="_blank" class="inline-flex w-full justify-center px-4 py-2.5 border border-slate-300 hover:bg-slate-50 text-slate-800 text-sm font-medium rounded-xl">Visit website</a>
+        </div>
+      </aside>
+    </div>
+
+    <!-- FAQ -->
+    <section class="max-w-3xl mx-auto mb-10">
+      <h3 class="text-xl font-semibold text-navy mb-4">How to use and what results mean</h3>
+      <div class="bg-white border border-slate-200 rounded-2xl divide-y divide-slate-100 text-sm text-slate-700">
+        <div class="p-5">
+          <p class="font-medium text-navy mb-2">How to use</p>
+          <ol class="list-decimal list-inside space-y-1">
+            <li>Enter a website URL.</li>
+            <li>Click Check Now.</li>
+            <li>Read the status and next step.</li>
+            <li>Book a free call from the page if you want help.</li>
+          </ol>
+        </div>
+        <div class="p-5 space-y-3">
+          <p class="font-medium text-navy">What the results mean</p>
+          <p><strong>Vulnerable</strong> — A PHP version known to be affected was detected. Upgrade is recommended.</p>
+          <p><strong>Version Hidden</strong> — PHP is present, but the version is not public. Verify on the server.</p>
+          <p><strong>Safe</strong> — The detected version includes the official patches for the CVEs this tool checks.</p>
+          <p><strong>No PHP Detected</strong> — This URL did not show clear PHP signals. A separate API or backend may still use PHP.</p>
+        </div>
+        <div class="p-5 space-y-2">
+          <p class="font-medium text-navy">What this tool checks</p>
+          <p>Public headers, common framework signals, PHP version when exposed, and whether that version is below the fixed releases for CVE-2026-109618 and CVE-2026-109619. It also reports other public technology signals when present.</p>
+          <p class="font-medium text-navy pt-2">What it does not do</p>
+          <p>It does not log into your server, run exploits, or guarantee visibility when versions are hidden. For non-PHP stacks it describes what public signals suggest; it is not a full vulnerability audit of every language.</p>
+        </div>
+        <div class="p-5">
+          <p class="font-medium text-navy mb-2">Currently checked (PHP)</p>
+          <ul class="space-y-1">
+            <li>CVE-2026-109618 and CVE-2026-109619 (critical RCE)</li>
+            <li>Fixed versions: 8.5.12, 8.4.27, 8.3.36, 8.2.35</li>
+            <li>Sources: php.net security announcements, PHP Foundation</li>
+          </ul>
         </div>
       </div>
-      <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-600 flex gap-2.5">
-        <svg class="w-4 h-4 text-teal flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-        </svg>
-        <p>This tool only reads public headers. It never tries to exploit your site.</p>
-      </div>
-    </div>
-
-    <!-- LEARN MORE -->
-    <div id="moreInfoSection" class="mb-8">
-      <details class="bg-white border border-slate-200 rounded-2xl overflow-hidden group">
-        <summary class="flex items-center justify-between px-5 py-4 cursor-pointer font-medium text-navy hover:bg-slate-50 transition list-none">
-          <span class="flex items-center gap-2">
-            <svg class="w-5 h-5 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-            Learn more about PHP2Shell
-          </span>
-          <svg class="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-          </svg>
-        </summary>
-        <div class="px-5 pb-5 pt-1 text-sm text-slate-700 space-y-4 border-t border-slate-100">
-          <div>
-            <p class="font-medium text-slate-900 mb-1">What exactly is PHP2Shell?</p>
-            <p>Two critical vulnerabilities in the PHP engine itself. Both allow unauthenticated remote code execution. Tracked as CVE-2026-109618 and CVE-2026-109619.</p>
-          </div>
-          <div>
-            <p class="font-medium text-slate-900 mb-1">Which versions are safe?</p>
-            <ul class="list-disc list-inside mt-1 space-y-0.5 text-slate-600">
-              <li>PHP 8.5.12</li>
-              <li>PHP 8.4.27</li>
-              <li>PHP 8.3.36</li>
-              <li>PHP 8.2.35</li>
-            </ul>
-          </div>
-          <div>
-            <p class="font-medium text-slate-900 mb-1">Official sources</p>
-            <a href="https://www.php.net/archive/2026.php#2026-10-21-5" target="_blank" class="text-teal hover:underline block">PHP.net Security Advisory</a>
-            <a href="https://thephp.foundation/blog/2026/10/21/todays-php-security-release-and-how-were-strengthening-php-security/" target="_blank" class="text-teal hover:underline block">PHP Foundation blog post</a>
-          </div>
-        </div>
-      </details>
-    </div>
-
-    <!-- Loading -->
-    <div id="loading" class="hidden text-center py-16">
-      <div class="loader mx-auto mb-4"></div>
-      <p class="text-slate-600 font-medium">Scanning your website…</p>
-      <p class="text-sm text-slate-500 mt-1">Checking headers and public signals</p>
-    </div>
-
-    <!-- Result -->
-    <div id="result" class="hidden space-y-6"></div>
-
-    <!-- CTA Section -->
-    <div id="ctaSection" class="hidden mt-10"></div>
-
+    </section>
   </main>
 
-  <footer class="border-t border-slate-200 mt-16 py-8 text-center text-sm text-slate-500">
+  <footer class="border-t border-slate-200 py-8 text-center text-sm text-slate-500">
     <p>PHP Sentinel · Built by <a href="https://kejanigarage.com" class="text-teal hover:underline">Kejani Garage</a></p>
-    <p class="mt-1">This tool only inspects public headers and signals. It never attempts exploits.</p>
+    <p class="mt-1">Public signals only. No exploits.</p>
   </footer>
 
   <script>
@@ -240,17 +160,15 @@
     const loading = document.getElementById("loading");
     const result = document.getElementById("result");
     const ctaSection = document.getElementById("ctaSection");
+    const eduSection = document.getElementById("eduSection");
 
     btn.addEventListener("click", runCheck);
-    input.addEventListener("keydown", (e) => { if (e.key === "Enter") runCheck(); });
+    input.addEventListener("keydown", e => { if (e.key === "Enter") runCheck(); });
 
     async function runCheck() {
       const url = input.value.trim();
       if (!url) { input.focus(); return; }
-
-      document.getElementById("eduSection").classList.add("hidden");
-      document.getElementById("moreInfoSection").classList.add("hidden");
-
+      eduSection.classList.add("hidden");
       btn.disabled = true;
       btnText.textContent = "Scanning…";
       loading.classList.remove("hidden");
@@ -266,13 +184,9 @@
         const data = await res.json();
         loading.classList.add("hidden");
         showResult(data);
-      } catch (err) {
+      } catch {
         loading.classList.add("hidden");
-        result.innerHTML = `
-          <div class="bg-rose-50 border border-rose-200 rounded-2xl p-6 text-center">
-            <p class="font-medium text-rose-800">Something went wrong</p>
-            <p class="text-sm text-rose-600 mt-1">Please try again in a moment.</p>
-          </div>`;
+        result.innerHTML = `<div class="bg-rose-50 border border-rose-200 rounded-2xl p-6 text-center"><p class="font-medium text-rose-800">Something went wrong</p><p class="text-sm text-rose-600 mt-1">Please try again.</p></div>`;
         result.classList.remove("hidden");
       } finally {
         btn.disabled = false;
@@ -281,83 +195,42 @@
     }
 
     function showResult(data) {
-      let color, icon, title;
+      let color = "slate", title = "No PHP Detected";
+      if (data.status === "vulnerable") { color = "rose"; title = "Vulnerable – Action Required"; }
+      else if (data.status === "hidden") { color = "amber"; title = "PHP Detected – Version Hidden"; }
+      else if (data.status === "safe") { color = "emerald"; title = "Looks Safe"; }
 
-      if (data.status === "vulnerable") {
-        color = "rose"; title = "Vulnerable – Action Required";
-        icon = `<svg class="w-8 h-8 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`;
-      } else if (data.status === "hidden") {
-        color = "amber"; title = "PHP Detected – Version Hidden";
-        icon = `<svg class="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`;
-      } else if (data.status === "safe") {
-        color = "emerald"; title = "Looks Safe";
-        icon = `<svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`;
-      } else {
-        color = "slate"; title = "No PHP Detected";
-        icon = `<svg class="w-8 h-8 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`;
-      }
-
-      const supportBadge = data.support_status 
-        ? `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 ml-2">${data.support_status}</span>` 
-        : "";
-
-      const hygieneNote = data.hygiene 
-        ? `<div class="mt-3 p-3 bg-amber-50 border border-amber-100 rounded-lg text-sm text-amber-800">${data.hygiene}</div>` 
-        : "";
-
-      const tip = data.tip 
-        ? `<div class="mt-4 p-4 bg-slate-50 rounded-xl text-sm text-slate-700"><strong class="font-medium">What to do next:</strong> ${data.tip}</div>` 
+      const signals = Array.isArray(data.tech_signals) ? data.tech_signals : [];
+      const signalsHtml = signals.length
+        ? `<div class="mt-4 p-4 bg-white/60 rounded-xl text-sm"><p class="font-medium text-slate-900 mb-2">What we found on this URL</p><ul class="list-disc list-inside space-y-1 text-slate-700">${signals.map(s => `<li>${s}</li>`).join("")}</ul><p class="mt-2 text-xs text-slate-500">Based on public signals only. Separate APIs or backends are not checked unless you enter those URLs too.</p></div>`
         : "";
 
       const toolUrl = "https://sentinel.kejanigarage.com";
-      const resultSummary = `${title}\n${data.message}${data.php_version ? `\nVersion: ${data.php_version}` : ""}${data.framework ? `\nFramework: ${data.framework}` : ""}`;
-      const shareText = encodeURIComponent(`${resultSummary}\n\nChecked with PHP Sentinel → ${toolUrl}`);
-      const shareUrl = encodeURIComponent(toolUrl);
-
-      window.lastResultText = `${resultSummary}\n\nChecked with PHP Sentinel → ${toolUrl}`;
+      const summary = `${title}\n${data.message || ""}${data.php_version ? "\nVersion: " + data.php_version : ""}`;
+      window.lastResultText = `${summary}\n\nChecked with PHP Sentinel → ${toolUrl}`;
+      const shareText = encodeURIComponent(window.lastResultText);
 
       result.innerHTML = `
-        <div class="bg-${color}-50 border border-${color}-200 rounded-2xl p-6 sm:p-8">
-          <div class="flex items-start gap-4">
-            <div class="flex-shrink-0 mt-1">${icon}</div>
-            <div class="flex-1">
-              <h3 class="text-xl font-semibold text-${color}-900 mb-2 flex items-center flex-wrap">
-                ${title} ${supportBadge}
-              </h3>
-              <p class="text-${color}-800 mb-2">${data.message || data.error}</p>
-              ${data.details ? `<p class="text-sm text-${color}-700 mb-3">${data.details}</p>` : ""}
-              <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm text-${color}-800 mb-1">
-                ${data.php_version ? `<span>Version: <code class="bg-white/70 px-1.5 py-0.5 rounded font-mono">${data.php_version}</code></span>` : ""}
-                ${data.framework ? `<span>Framework: ${data.framework}</span>` : ""}
-              </div>
-              ${hygieneNote}
-              ${tip}
-            </div>
+        <div class="bg-${color}-50 border border-${color}-200 rounded-2xl p-6">
+          <h3 class="text-xl font-semibold text-${color}-900 mb-2">${title}${data.support_status ? ` <span class="text-xs font-medium bg-white/80 px-2 py-0.5 rounded-full">${data.support_status}</span>` : ""}</h3>
+          <p class="text-${color}-800 mb-2">${data.message || data.error || ""}</p>
+          ${data.details ? `<p class="text-sm text-${color}-700 mb-2">${data.details}</p>` : ""}
+          <div class="text-sm text-${color}-800 flex flex-wrap gap-3">
+            ${data.php_version ? `<span>Version: <code class="bg-white/70 px-1 rounded">${data.php_version}</code></span>` : ""}
+            ${data.framework ? `<span>Framework: ${data.framework}</span>` : ""}
           </div>
+          ${data.hygiene ? `<div class="mt-3 p-3 bg-amber-50 border border-amber-100 rounded-lg text-sm text-amber-800">${data.hygiene}</div>` : ""}
+          ${data.tip ? `<div class="mt-4 p-4 bg-slate-50 rounded-xl text-sm text-slate-700"><strong>What to do next:</strong> ${data.tip}</div>` : ""}
+          ${signalsHtml}
         </div>
-
         <div class="flex flex-wrap gap-3">
-          <button onclick="copyResult()" class="px-4 py-2.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-sm font-medium rounded-xl transition flex items-center gap-2">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
-            Copy result
-          </button>
-          <a href="https://twitter.com/intent/tweet?text=${shareText}" target="_blank" class="px-4 py-2.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-sm font-medium rounded-xl transition flex items-center gap-2">
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-            Share on X
-          </a>
-          <a href="https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}" target="_blank" class="px-4 py-2.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-sm font-medium rounded-xl transition flex items-center gap-2">
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-            Share on LinkedIn
-          </a>
-          <button onclick="checkAnother()" class="px-4 py-2.5 bg-navy hover:bg-slate-800 text-white text-sm font-medium rounded-xl transition flex items-center gap-2">
-            Check another site
-          </button>
-        </div>
-      `;
-
+          <button onclick="copyResult()" class="px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm">Copy result</button>
+          <a href="https://twitter.com/intent/tweet?text=${shareText}" target="_blank" class="px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm">Share on X</a>
+          <a href="https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(toolUrl)}" target="_blank" class="px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm">Share on LinkedIn</a>
+          <button onclick="checkAnother()" class="px-4 py-2.5 bg-navy text-white rounded-xl text-sm">Check another site</button>
+        </div>`;
       result.classList.remove("hidden");
 
-      // Google Analytics - successful scan
       if (typeof gtag === "function") {
         gtag("event", "scan_completed", {
           status: data.status,
@@ -367,90 +240,46 @@
         });
       }
 
-      // Smart CTA
-      let ctaTitle = "", ctaText = "", ctaButton = "Book a free discovery call";
-
+      let ctaTitle = "Happy to help", ctaText = "You can book a free discovery call for a broader review or upgrade help.", ctaButton = "Book a free discovery call";
       if (data.status === "vulnerable") {
-        ctaTitle = "Your site needs urgent attention";
-        ctaText = "I help teams safely upgrade PHP and harden their applications after critical vulnerabilities like this. Let’s get your site protected.";
+        ctaTitle = "Your site needs attention";
+        ctaText = "I help teams upgrade PHP and harden applications after critical issues like this.";
         ctaButton = "Book free emergency review";
       } else if (data.status === "hidden") {
-        ctaTitle = "Version is hidden — let’s verify it’s patched";
-        ctaText = "Hiding the version is good practice, but we still need to confirm you’re on a safe release. I can help you check and upgrade properly.";
+        ctaTitle = "Version hidden — verify it is patched";
+        ctaText = "I can help you confirm the real version and upgrade safely.";
         ctaButton = "Book a free verification call";
       } else if (data.status === "safe") {
-        ctaTitle = "Great news — you’re on a patched version";
-        ctaText = "Want to go further? I also help teams with long-term PHP modernization, performance, and security hardening.";
+        ctaTitle = "You look patched";
+        ctaText = "If you want long-term hardening or modernization help, book a free strategy call.";
         ctaButton = "Book a free strategy call";
-      } else {
-        ctaTitle = "Not running PHP? Still happy to help";
-        ctaText = "Even if this site isn’t on PHP, I work with teams on modern web architecture, security reviews, and product engineering.";
-        ctaButton = "Book a free discovery call";
       }
 
       ctaSection.innerHTML = `
-        <div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8">
-          <div class="flex flex-col sm:flex-row gap-6 items-start">
-            <div class="flex-shrink-0">
-              <div class="w-16 h-16 rounded-full bg-navy flex items-center justify-center text-teal text-2xl font-bold">AM</div>
-            </div>
-            <div class="flex-1">
-              <div class="flex items-center gap-3 mb-1 flex-wrap">
-                <h3 class="font-semibold text-navy text-lg">Alex Mochu</h3>
-                <div class="flex items-center gap-2">
-                  <a href="https://linkedin.com/in/alex-mochu" target="_blank" class="text-slate-400 hover:text-[#0A66C2] transition">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-                  </a>
-                  <a href="https://github.com/alexmochu" target="_blank" class="text-slate-400 hover:text-navy transition">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                  </a>
-                </div>
-              </div>
-              <p class="text-sm text-slate-500 mb-3">Senior Fullstack Engineer · Nairobi</p>
-              <p class="text-slate-600 text-sm leading-relaxed mb-4">
-                Alex builds tools that turn complex technical problems into clear next steps. 
-                Based in Nairobi, he helps teams patch, modernize, and future-proof their PHP applications — especially after high-impact security events like PHP2Shell.
-              </p>
-              <h4 class="font-semibold text-navy mb-1">${ctaTitle}</h4>
-              <p class="text-slate-600 text-sm leading-relaxed mb-5">${ctaText}</p>
-              <a id="bookBtn" href="https://cal.com/alex-mochu/php-fix" target="_blank"
-                 class="inline-flex items-center gap-2 px-5 py-3 bg-teal hover:bg-teal/90 text-white font-medium rounded-xl transition">
-                ${ctaButton}
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-              </a>
-            </div>
-          </div>
-        </div>
-      `;
-
-      const notes = encodeURIComponent(
-        `PHP Sentinel result for ${data.url || input.value}\nStatus: ${data.status}\n${data.php_version ? "Version: " + data.php_version : ""}\n${data.message || ""}`
-      );
-      document.getElementById("bookBtn").href = `https://cal.com/alex-mochu/php-fix?notes=${notes}`;
-
-      document.getElementById("bookBtn").addEventListener("click", () => {
-        if (typeof gtag === "function") {
-          gtag("event", "book_call_click", {
-            status: data.status,
-            url: data.url || input.value
-          });
-        }
+        <div class="bg-white rounded-2xl border border-slate-200 p-6">
+          <h3 class="font-semibold text-navy text-lg">Alex Mochu</h3>
+          <p class="text-sm text-slate-500 mb-3">Senior Fullstack Engineer · Nairobi</p>
+          <p class="text-slate-600 text-sm mb-4">Alex builds tools that turn complex technical problems into clear next steps. He helps teams patch, modernize, and future-proof PHP applications.</p>
+          <h4 class="font-semibold text-navy mb-1">${ctaTitle}</h4>
+          <p class="text-slate-600 text-sm mb-4">${ctaText}</p>
+          <a id="bookBtn" href="https://cal.com/alex-mochu/php-fix" target="_blank" class="inline-flex items-center gap-2 px-5 py-3 bg-teal hover:bg-teal/90 text-white font-medium rounded-xl">${ctaButton}</a>
+        </div>`;
+      const notes = encodeURIComponent(`PHP Sentinel result for ${data.url || input.value}\nStatus: ${data.status}\n${data.php_version || ""}\n${data.message || ""}`);
+      const bookBtn = document.getElementById("bookBtn");
+      bookBtn.href = `https://cal.com/alex-mochu/php-fix?notes=${notes}`;
+      bookBtn.addEventListener("click", () => {
+        if (typeof gtag === "function") gtag("event", "book_call_click", { status: data.status, url: data.url || input.value });
       });
-
       ctaSection.classList.remove("hidden");
     }
 
     function copyResult() {
-      navigator.clipboard.writeText(window.lastResultText || "No result yet").then(() => {
-        alert("Result copied to clipboard!");
-      });
+      navigator.clipboard.writeText(window.lastResultText || "").then(() => alert("Result copied."));
     }
-
     function checkAnother() {
       result.classList.add("hidden");
       ctaSection.classList.add("hidden");
-      document.getElementById("eduSection").classList.remove("hidden");
-      document.getElementById("moreInfoSection").classList.remove("hidden");
+      eduSection.classList.remove("hidden");
       input.value = "";
       input.focus();
       window.scrollTo({ top: 0, behavior: "smooth" });

@@ -14,65 +14,93 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <script>
-    tailwind.config = { theme: { extend: { colors: { ink: "#05070f", teal: "#2dd4bf" } } } }
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { ink: "#05070f", teal: "#2dd4bf" }
+        }
+      }
+    };
   </script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
     body {
       font-family: Inter, system-ui, sans-serif;
       background:
-        radial-gradient(900px 500px at 15% -5%, rgba(99,102,241,.28), transparent 55%),
-        radial-gradient(700px 400px at 90% 0%, rgba(45,212,191,.14), transparent 50%),
+        radial-gradient(900px 500px at 15% -5%, rgba(99, 102, 241, 0.28), transparent 55%),
+        radial-gradient(700px 400px at 90% 0%, rgba(45, 212, 191, 0.14), transparent 50%),
         #05070f;
       color: #e2e8f0;
     }
     .glass {
-      background: linear-gradient(165deg, rgba(255,255,255,.07), rgba(255,255,255,.02));
-      border: 1px solid rgba(255,255,255,.1);
+      background: linear-gradient(165deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02));
+      border: 1px solid rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(16px);
     }
     .glass-strong {
-      background: linear-gradient(165deg, rgba(20,27,45,.96), rgba(9,12,24,.98));
-      border: 1px solid rgba(255,255,255,.1);
-      box-shadow: 0 20px 60px rgba(0,0,0,.45);
+      background: linear-gradient(165deg, rgba(20, 27, 45, 0.96), rgba(9, 12, 24, 0.98));
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
     }
-    .lift { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
-    .lift:hover { transform: translateY(-3px); border-color: rgba(45,212,191,.35); }
-    .bar { height: 8px; border-radius: 999px; background: rgba(255,255,255,.08); overflow: hidden; }
-    .bar > span { display: block; height: 100%; width: 0; border-radius: 999px; transition: width .85s cubic-bezier(.2,.8,.2,1); }
-    .loader { width: 44px; height: 44px; border: 3px solid rgba(255,255,255,.12); border-top-color: #2dd4bf; border-radius: 50%; animation: spin .75s linear infinite; }
+    .lift { transition: transform 0.2s ease, border-color 0.2s ease; }
+    .lift:hover { transform: translateY(-3px); border-color: rgba(45, 212, 191, 0.35); }
+    .bar { height: 8px; border-radius: 999px; background: rgba(255, 255, 255, 0.08); overflow: hidden; }
+    .bar > span {
+      display: block; height: 100%; width: 0; border-radius: 999px;
+      transition: width 0.85s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .loader {
+      width: 44px; height: 44px;
+      border: 3px solid rgba(255, 255, 255, 0.12);
+      border-top-color: #2dd4bf;
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+    }
     @keyframes spin { to { transform: rotate(360deg); } }
     .ticker-wrap { overflow: hidden; white-space: nowrap; }
-    .ticker-track { display: inline-block; padding-left: 100%; animation: ticker 42s linear infinite; }
+    .ticker-track {
+      display: inline-block;
+      padding-left: 100%;
+      animation: ticker 42s linear infinite;
+    }
     @keyframes ticker { to { transform: translateX(-100%); } }
-    .chip-ok { background: rgba(52,211,153,.12); border: 1px solid rgba(52,211,153,.35); color: #6ee7b7; }
-    .chip-bad { background: rgba(244,63,94,.12); border: 1px solid rgba(244,63,94,.35); color: #fda4af; }
-    .chip-warn { background: rgba(245,158,11,.12); border: 1px solid rgba(245,158,11,.35); color: #fcd34d; }
-    .chip-mute { background: rgba(148,163,184,.1); border: 1px solid rgba(148,163,184,.25); color: #cbd5e1; }
+    .chip-ok { background: rgba(52, 211, 153, 0.12); border: 1px solid rgba(52, 211, 153, 0.35); color: #6ee7b7; }
+    .chip-bad { background: rgba(244, 63, 94, 0.12); border: 1px solid rgba(244, 63, 94, 0.35); color: #fda4af; }
+    .chip-warn { background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.35); color: #fcd34d; }
+    .chip-mute { background: rgba(148, 163, 184, 0.1); border: 1px solid rgba(148, 163, 184, 0.25); color: #cbd5e1; }
     input::placeholder { color: #64748b; }
+    #mainGrid.mode-focus { display: block; }
+    #mainGrid.mode-focus #resultStage {
+      max-width: 48rem;
+      margin-left: auto;
+      margin-right: auto;
+    }
   </style>
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"YOUR_CLOUDFLARE_TOKEN"}'></script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-X0YD7WX0CD"></script>
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-X0YD7WX0CD');</script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag("js", new Date());
+    gtag("config", "G-X0YD7WX0CD");
+  </script>
 </head>
 <body class="min-h-screen">
+
   <header class="sticky top-0 z-50 border-b border-white/5 bg-[#05070f]/75 backdrop-blur-xl">
     <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-2.5">
-        <div class="w-8 h-8 rounded-lg border border-teal/40 bg-teal/10 flex items-center justify-center">
-          <svg class="w-4 h-4 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3l7 4v5c0 5-3.5 8.5-7 9-3.5-.5-7-4-7-9V7l7-4z"/></svg>
-        </div>
-        <div>
-          <p class="text-white font-semibold leading-none">Sentinel</p>
-          <p class="text-[11px] text-slate-500 mt-1">by Kejani Garage</p>
-        </div>
+      <div>
+        <p class="text-white font-semibold leading-none text-lg">Sentinel</p>
+        <p class="text-[11px] text-slate-500 mt-1">by Kejani Garage</p>
       </div>
       <a href="https://cal.com/alex-mochu/php-fix" target="_blank" class="text-sm px-3.5 py-2 rounded-full bg-white text-ink font-semibold">Book a call</a>
     </div>
   </header>
 
   <div id="statsTicker" class="border-b border-white/5 bg-black/30 text-[11px] text-slate-400">
-    <div class="ticker-wrap py-2.5"><div class="ticker-track" id="tickerText">Loading live platform stats…</div></div>
+    <div class="ticker-wrap py-2.5">
+      <div class="ticker-track" id="tickerText">Loading live platform stats…</div>
+    </div>
   </div>
 
   <main class="max-w-6xl mx-auto px-4 py-12">
@@ -97,7 +125,9 @@
         <label class="block text-sm font-medium text-slate-300 mb-2">Website URL</label>
         <div class="flex flex-col sm:flex-row gap-3 mb-3">
           <input id="urlInput" type="text" placeholder="example.com" class="flex-1 px-4 py-3.5 rounded-2xl bg-black/50 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-teal/50" />
-          <button id="checkBtn" class="px-7 py-3.5 rounded-2xl bg-white text-ink font-bold min-w-[140px]"><span id="btnText">Check Now</span></button>
+          <button id="checkBtn" type="button" class="px-7 py-3.5 rounded-2xl bg-white text-ink font-bold min-w-[140px]">
+            <span id="btnText">Check Now</span>
+          </button>
         </div>
         <label class="block text-sm font-medium text-slate-300 mb-2">Compare API / backend URL <span class="text-slate-500 font-normal">(optional)</span></label>
         <input id="apiInput" type="text" placeholder="api.example.com" class="w-full px-4 py-3 rounded-2xl bg-black/40 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-teal/40 mb-2" />
@@ -115,7 +145,7 @@
         </div>
       </aside>
 
-      <div class="lg:col-span-6 order-1 lg:order-2 space-y-5">
+      <div id="resultStage" class="lg:col-span-6 order-1 lg:order-2 space-y-5">
         <div id="eduSection" class="glass rounded-3xl p-5">
           <h3 class="text-white font-semibold mb-3">Why this check matters</h3>
           <div class="grid sm:grid-cols-2 gap-3 text-sm text-slate-300">
@@ -125,7 +155,10 @@
             <div class="rounded-2xl bg-white/[0.03] border border-white/5 p-3">Patched PHP: 8.2.35, 8.3.36, 8.4.27, 8.5.12.</div>
           </div>
         </div>
-        <div id="loading" class="hidden text-center py-14 glass rounded-3xl"><div class="loader mx-auto mb-4"></div><p class="text-slate-300">Scanning public signals…</p></div>
+        <div id="loading" class="hidden text-center py-14 glass rounded-3xl">
+          <div class="loader mx-auto mb-4"></div>
+          <p class="text-slate-300">Scanning public signals…</p>
+        </div>
         <div id="result" class="hidden space-y-4"></div>
         <div id="ctaSection" class="hidden"></div>
       </div>
@@ -140,7 +173,6 @@
       </aside>
     </div>
 
-    <!-- Analytics -->
     <section id="analyticsSection" class="mb-16">
       <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-6">
         <div>
@@ -156,19 +188,54 @@
           <p class="text-white font-semibold mb-3">Outcome mix</p>
           <div class="max-w-[280px] mx-auto"><canvas id="outcomeChart" height="220"></canvas></div>
         </div>
-        <div class="lg:col-span-7 grid grid-cols-2 gap-4">
-          <div class="glass rounded-3xl p-5 lift bg-gradient-to-br from-indigo-500/10 to-transparent"><p class="text-xs text-slate-400 mb-2">Total checks</p><p class="text-3xl font-black text-white" id="mTotal">0</p></div>
-          <div class="glass rounded-3xl p-5 lift bg-gradient-to-br from-teal/10 to-transparent"><p class="text-xs text-slate-400 mb-2">Unique websites</p><p class="text-3xl font-black text-white" id="mSites">0</p></div>
-          <div class="glass rounded-3xl p-5 lift"><p class="text-xs text-slate-400 mb-2">Unique users</p><p class="text-3xl font-black text-teal" id="mUsers">0</p></div>
-          <div class="glass rounded-3xl p-5 lift"><p class="text-xs text-slate-400 mb-2">Last 24 hours</p><p class="text-3xl font-black text-teal" id="m24">0</p></div>
+        <div class="lg:col-span-7 glass-strong rounded-3xl p-6 lift">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <p class="text-xs uppercase tracking-[0.14em] text-slate-400 mb-1">Trend</p>
+              <p class="text-white font-semibold">Outcome volume comparison</p>
+            </div>
+            <p class="text-[11px] text-slate-500">All-time mix as series</p>
+          </div>
+          <div class="h-56"><canvas id="trendChart"></canvas></div>
         </div>
       </div>
 
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-        <div class="rounded-3xl p-5 lift border border-rose-500/25 bg-gradient-to-br from-rose-500/20 to-transparent"><p class="text-xs text-rose-200 mb-1">Vulnerable</p><p class="text-3xl font-black text-white" id="mVuln">0</p></div>
-        <div class="rounded-3xl p-5 lift border border-amber-500/25 bg-gradient-to-br from-amber-500/20 to-transparent"><p class="text-xs text-amber-200 mb-1">Hidden</p><p class="text-3xl font-black text-white" id="mHidden">0</p></div>
-        <div class="rounded-3xl p-5 lift border border-emerald-500/25 bg-gradient-to-br from-emerald-500/20 to-transparent"><p class="text-xs text-emerald-200 mb-1">Safe</p><p class="text-3xl font-black text-white" id="mSafe">0</p></div>
-        <div class="rounded-3xl p-5 lift border border-slate-500/25 bg-gradient-to-br from-slate-500/20 to-transparent"><p class="text-xs text-slate-300 mb-1">No PHP</p><p class="text-3xl font-black text-white" id="mNoPhp">0</p></div>
+        <div class="glass rounded-3xl p-5 lift bg-gradient-to-br from-indigo-500/10 to-transparent">
+          <p class="text-xs text-slate-400 mb-2">Total checks</p>
+          <p class="text-3xl font-black text-white" id="mTotal">0</p>
+        </div>
+        <div class="glass rounded-3xl p-5 lift bg-gradient-to-br from-teal/10 to-transparent">
+          <p class="text-xs text-slate-400 mb-2">Unique websites</p>
+          <p class="text-3xl font-black text-white" id="mSites">0</p>
+        </div>
+        <div class="glass rounded-3xl p-5 lift">
+          <p class="text-xs text-slate-400 mb-2">Unique users</p>
+          <p class="text-3xl font-black text-teal" id="mUsers">0</p>
+        </div>
+        <div class="glass rounded-3xl p-5 lift">
+          <p class="text-xs text-slate-400 mb-2">Last 24 hours</p>
+          <p class="text-3xl font-black text-teal" id="m24">0</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+        <div class="rounded-3xl p-5 lift border border-rose-500/25 bg-gradient-to-br from-rose-500/20 to-transparent">
+          <p class="text-xs text-rose-200 mb-1">Vulnerable</p>
+          <p class="text-3xl font-black text-white" id="mVuln">0</p>
+        </div>
+        <div class="rounded-3xl p-5 lift border border-amber-500/25 bg-gradient-to-br from-amber-500/20 to-transparent">
+          <p class="text-xs text-amber-200 mb-1">Hidden</p>
+          <p class="text-3xl font-black text-white" id="mHidden">0</p>
+        </div>
+        <div class="rounded-3xl p-5 lift border border-emerald-500/25 bg-gradient-to-br from-emerald-500/20 to-transparent">
+          <p class="text-xs text-emerald-200 mb-1">Safe</p>
+          <p class="text-3xl font-black text-white" id="mSafe">0</p>
+        </div>
+        <div class="rounded-3xl p-5 lift border border-slate-500/25 bg-gradient-to-br from-slate-500/20 to-transparent">
+          <p class="text-xs text-slate-300 mb-1">No PHP</p>
+          <p class="text-3xl font-black text-white" id="mNoPhp">0</p>
+        </div>
       </div>
 
       <div class="grid lg:grid-cols-3 gap-4 mb-4">
@@ -179,17 +246,40 @@
           <p class="text-sm text-slate-300">Repeat rate: <strong id="mRepeat" class="text-white">0</strong>%</p>
           <p class="text-sm text-slate-300">Hidden among PHP-related: <strong id="mHiddenRate" class="text-white">0</strong>%</p>
         </div>
-        <div class="glass rounded-3xl p-5 lift"><p class="font-semibold text-white mb-3">Top countries</p><div id="topCountries" class="space-y-3 text-sm"></div></div>
-        <div class="glass rounded-3xl p-5 lift"><p class="font-semibold text-white mb-3">Frameworks</p><div id="topFrameworks" class="space-y-3 text-sm"></div></div>
+        <div class="glass rounded-3xl p-5 lift">
+          <p class="font-semibold text-white mb-3">Top countries</p>
+          <div id="topCountries" class="space-y-3 text-sm"></div>
+        </div>
+        <div class="glass rounded-3xl p-5 lift">
+          <p class="font-semibold text-white mb-3">Frameworks</p>
+          <div id="topFrameworks" class="space-y-3 text-sm"></div>
+        </div>
       </div>
-      <div class="glass rounded-3xl p-5 lift"><p class="font-semibold text-white mb-3">Top tech signals</p><div id="topSignals" class="grid sm:grid-cols-2 gap-3 text-sm"></div></div>
+      <div class="glass rounded-3xl p-5 lift">
+        <p class="font-semibold text-white mb-3">Top tech signals</p>
+        <div id="topSignals" class="grid sm:grid-cols-2 gap-3 text-sm"></div>
+      </div>
     </section>
 
     <section id="faqSection" class="mb-10">
       <h3 class="text-2xl font-extrabold text-white text-center mb-6">How to use and what results mean</h3>
       <div class="grid md:grid-cols-2 gap-4 text-sm text-slate-300">
-        <div class="glass rounded-3xl p-6"><p class="text-white font-semibold mb-2">How to use</p><ol class="list-decimal list-inside space-y-1"><li>Enter site URL (and optional API URL).</li><li>Click Check Now.</li><li>Read status, headers, and next steps.</li><li>Book a call if you want help.</li></ol></div>
-        <div class="glass rounded-3xl p-6 space-y-2"><p class="text-white font-semibold mb-2">Results</p><p><span class="text-rose-300">Vulnerable</span> — affected PHP detected.</p><p><span class="text-amber-300">Hidden</span> — PHP present, version private.</p><p><span class="text-emerald-300">Safe</span> — patched version signals.</p><p><span class="text-slate-200">No PHP</span> — no clear PHP on this URL.</p></div>
+        <div class="glass rounded-3xl p-6">
+          <p class="text-white font-semibold mb-2">How to use</p>
+          <ol class="list-decimal list-inside space-y-1">
+            <li>Enter site URL (and optional API URL).</li>
+            <li>Click Check Now.</li>
+            <li>Read status, headers, and next steps.</li>
+            <li>Book a call if you want help.</li>
+          </ol>
+        </div>
+        <div class="glass rounded-3xl p-6 space-y-2">
+          <p class="text-white font-semibold mb-2">Results</p>
+          <p><span class="text-rose-300">Vulnerable</span> — affected PHP detected.</p>
+          <p><span class="text-amber-300">Hidden</span> — PHP present, version private.</p>
+          <p><span class="text-emerald-300">Safe</span> — patched version signals.</p>
+          <p><span class="text-slate-200">No PHP</span> — no clear PHP on this URL.</p>
+        </div>
       </div>
     </section>
   </main>
@@ -200,259 +290,601 @@
   </footer>
 
   <script>
-    const STATS_KEY = "sentinel_stats_v1";
-    const STATS_TTL_MS = 10 * 60 * 1000;
-    const toolUrl = "https://sentinel.kejanigarage.com";
-    let outcomeChart = null;
-    let lastData = null;
+    (function () {
+      var STATS_KEY = "sentinel_stats_v1";
+      var STATS_TTL_MS = 10 * 60 * 1000;
+      var toolUrl = "https://sentinel.kejanigarage.com";
+      var outcomeChart = null;
+      var trendChart = null;
 
-    const input = document.getElementById("urlInput");
-    const apiInput = document.getElementById("apiInput");
-    const btn = document.getElementById("checkBtn");
-    const btnText = document.getElementById("btnText");
-    const loading = document.getElementById("loading");
-    const result = document.getElementById("result");
-    const ctaSection = document.getElementById("ctaSection");
-    const eduSection = document.getElementById("eduSection");
+      var input = document.getElementById("urlInput");
+      var apiInput = document.getElementById("apiInput");
+      var btn = document.getElementById("checkBtn");
+      var btnText = document.getElementById("btnText");
+      var loading = document.getElementById("loading");
+      var result = document.getElementById("result");
+      var ctaSection = document.getElementById("ctaSection");
+      var eduSection = document.getElementById("eduSection");
+      var mainGrid = document.getElementById("mainGrid");
 
-    btn.addEventListener("click", runCheck);
-    input.addEventListener("keydown", (e) => { if (e.key === "Enter") runCheck(); });
-    loadStats().then(renderStats).catch(() => {});
-
-    async function loadStats() {
-      try {
-        const cached = localStorage.getItem(STATS_KEY);
-        if (cached) {
-          const parsed = JSON.parse(cached);
-          if (Date.now() - parsed.fetched_at < STATS_TTL_MS) return parsed.data;
-        }
-      } catch {}
-      const res = await fetch("/api/stats");
-      if (!res.ok) throw new Error("stats failed");
-      const data = await res.json();
-      localStorage.setItem(STATS_KEY, JSON.stringify({ fetched_at: Date.now(), data }));
-      return data;
-    }
-
-    function renderOutcomeChart(status) {
-      const ctx = document.getElementById("outcomeChart");
-      if (!ctx || typeof Chart === "undefined") return;
-      const values = [status.vulnerable||0, status.hidden||0, status.safe||0, status.no_php||0, status.error||0];
-      if (outcomeChart) outcomeChart.destroy();
-      outcomeChart = new Chart(ctx, {
-        type: "doughnut",
-        data: {
-          labels: ["Vulnerable", "Hidden", "Safe", "No PHP", "Error"],
-          datasets: [{ data: values, backgroundColor: ["#f43f5e","#f59e0b","#34d399","#64748b","#fb7185"], borderWidth: 0, hoverOffset: 8 }]
-        },
-        options: {
-          cutout: "68%",
-          plugins: { legend: { position: "bottom", labels: { color: "#94a3b8", boxWidth: 10, padding: 12 } } }
-        }
+      btn.addEventListener("click", runCheck);
+      input.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") runCheck();
       });
-    }
 
-    function countryFlagImg(code) {
-      if (!code || code === "Unknown" || String(code).length !== 2) return "🌐";
-      const cc = String(code).trim().toLowerCase();
-      return `<img src="https://flagcdn.com/w40/${cc}.png" width="20" height="15" class="inline-block rounded-sm mr-1.5 align-middle" alt="${cc}" loading="lazy" />`;
-    }
+      loadStats().then(renderStats).catch(function () {});
 
-    function renderRankedCountries(rows) {
-      const el = document.getElementById("topCountries");
-      if (!rows?.length) { el.innerHTML = `<p class="text-slate-500">No data yet</p>`; return; }
-      const max = Math.max(...rows.map(r => r.c), 1);
-      el.innerHTML = rows.map((r,i) => {
-        const pct = Math.max(6, Math.round(100*r.c/max));
-        const name = !r.name || r.name==="Unknown" ? "Unknown" : String(r.name).toUpperCase();
-        const flag = name==="Unknown" ? "🌐" : countryFlagImg(r.name);
-        return `<div><div class="flex justify-between mb-1 text-slate-200"><span>${flag} ${name}</span><span class="font-semibold text-white">${r.c}</span></div><div class="bar"><span data-w="${pct}" style="background:#2dd4bf"></span></div></div>`;
-      }).join("");
-      requestAnimationFrame(() => el.querySelectorAll(".bar>span").forEach(s => s.style.width = s.getAttribute("data-w")+"%"));
-    }
+            function loadStats() {
+        try {
+          var cached = localStorage.getItem(STATS_KEY);
+          if (cached) {
+            var parsed = JSON.parse(cached);
+            if (Date.now() - parsed.fetched_at < STATS_TTL_MS) {
+              return Promise.resolve(parsed.data);
+            }
+          }
+        } catch (e) {}
 
-    function renderRanked(id, rows, color) {
-      const el = document.getElementById(id);
-      if (!rows?.length) { el.innerHTML = `<p class="text-slate-500">No data yet</p>`; return; }
-      const max = Math.max(...rows.map(r => r.c), 1);
-      el.innerHTML = rows.map(r => {
-        const pct = Math.max(6, Math.round(100*r.c/max));
-        return `<div><div class="flex justify-between mb-1 text-slate-200"><span>${r.name}</span><span class="font-semibold text-white">${r.c}</span></div><div class="bar"><span data-w="${pct}" style="background:${color}"></span></div></div>`;
-      }).join("");
-      requestAnimationFrame(() => el.querySelectorAll(".bar>span").forEach(s => s.style.width = s.getAttribute("data-w")+"%"));
-    }
-
-    function renderStats(data) {
-      const t = data.totals||{}, s = data.status||{}, risk = data.risk||{}, derived = data.derived||{};
-      ["mTotal","mSites","mUsers","m24","mVuln","mHidden","mSafe","mNoPhp","mVulnPct","mRepeat","mHiddenRate"].forEach(()=>{});
-      const map = { mTotal:t.scans, mSites:t.unique_sites, mUsers:t.unique_users, m24:t.last_24h, mVuln:s.vulnerable, mHidden:s.hidden, mSafe:s.safe, mNoPhp:s.no_php, mVulnPct:risk.vulnerable_pct, mRepeat:derived.repeat_check_rate, mHiddenRate:derived.hidden_rate_among_php };
-      Object.entries(map).forEach(([id,v]) => { const el=document.getElementById(id); if(el) el.textContent = v||0; });
-      document.getElementById("statsUpdated").textContent = data.updated_at ? "Updated "+new Date(data.updated_at).toLocaleString() : "";
-      renderOutcomeChart(s);
-      renderRankedCountries(data.countries||[]);
-      renderRanked("topFrameworks", data.frameworks||[], "#818cf8");
-      renderRanked("topSignals", data.top_tech_signals||[], "#38bdf8");
-      document.getElementById("tickerText").textContent =
-        `Total ${t.scans||0} · Unique sites ${t.unique_sites||0} · Vulnerable ${s.vulnerable||0} · Hidden ${s.hidden||0} · Safe ${s.safe||0} · No PHP ${s.no_php||0} · `;
-    }
-
-    function chip(ok, label) {
-      return `<span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium ${ok ? "chip-ok" : "chip-bad"}">${ok ? "✓" : "✗"} ${label}</span>`;
-    }
-
-    function hideMarketing() {
-      ["statsTicker","analyticsSection","faqSection","adLeft","adRight"].forEach(id => document.getElementById(id)?.classList.add("hidden"));
-      eduSection.classList.add("hidden");
-    }
-    function showMarketing() {
-      ["statsTicker","analyticsSection","faqSection","adLeft","adRight"].forEach(id => document.getElementById(id)?.classList.remove("hidden"));
-      eduSection.classList.remove("hidden");
-    }
-
-    async function scanOne(url) {
-      const res = await fetch("/api/scan", { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ url }) });
-      return res.json();
-    }
-
-    async function runCheck() {
-      const url = input.value.trim();
-      if (!url) { input.focus(); return; }
-      hideMarketing();
-      btn.disabled = true; btnText.textContent = "Scanning…";
-      loading.classList.remove("hidden"); result.classList.add("hidden"); ctaSection.classList.add("hidden");
-      try {
-        const primary = await scanOne(url);
-        let secondary = null;
-        const apiUrl = apiInput.value.trim();
-        if (apiUrl) secondary = await scanOne(apiUrl);
-        loading.classList.add("hidden");
-        showResult(primary, secondary);
-      } catch {
-        loading.classList.add("hidden");
-        result.innerHTML = `<div class="glass rounded-3xl p-6 text-center border border-rose-500/30"><p class="text-rose-300 font-medium">Something went wrong</p></div>`;
-        result.classList.remove("hidden");
-      } finally {
-        btn.disabled = false; btnText.textContent = "Check Now";
+        return fetch("/api/stats").then(function (res) {
+          if (!res.ok) throw new Error("stats failed");
+          return res.json();
+        }).then(function (data) {
+          localStorage.setItem(
+            STATS_KEY,
+            JSON.stringify({ fetched_at: Date.now(), data: data })
+          );
+          return data;
+        });
       }
-    }
 
-    function showResult(data, secondary) {
-      lastData = data;
-      let border = "border-white/10", titleColor = "text-white", title = "No PHP Detected";
-      if (data.status === "vulnerable") { border = "border-rose-500/40"; titleColor = "text-rose-300"; title = "Vulnerable – Action Required"; }
-      else if (data.status === "hidden") { border = "border-amber-500/40"; titleColor = "text-amber-300"; title = "PHP Detected – Version Hidden"; }
-      else if (data.status === "safe") { border = "border-emerald-500/40"; titleColor = "text-emerald-300"; title = "Looks Safe"; }
-      else if (data.status === "error") { border = "border-rose-500/40"; titleColor = "text-rose-300"; title = "Could not scan"; }
+      function renderOutcomeChart(status) {
+        var ctx = document.getElementById("outcomeChart");
+        if (!ctx || typeof Chart === "undefined") return;
+        var values = [
+          status.vulnerable || 0,
+          status.hidden || 0,
+          status.safe || 0,
+          status.no_php || 0,
+          status.error || 0
+        ];
+        if (outcomeChart) outcomeChart.destroy();
+        outcomeChart = new Chart(ctx, {
+          type: "doughnut",
+          data: {
+            labels: ["Vulnerable", "Hidden", "Safe", "No PHP", "Error"],
+            datasets: [{
+              data: values,
+              backgroundColor: ["#f43f5e", "#f59e0b", "#34d399", "#64748b", "#fb7185"],
+              borderWidth: 0,
+              hoverOffset: 8
+            }]
+          },
+          options: {
+            cutout: "68%",
+            plugins: {
+              legend: {
+                position: "bottom",
+                labels: { color: "#94a3b8", boxWidth: 10, padding: 12 }
+              }
+            }
+          }
+        });
+      }
 
-      const sh = data.security_headers || {};
-      const tls = data.tls || {};
-      const signals = data.tech_signals || [];
-      const cms = data.cms_signals || [];
-      const badge = `<!-- Sentinel --><a href="${toolUrl}" rel="noopener">Checked with Sentinel</a>`;
+      function renderTrendChart(status, totals) {
+        var ctx = document.getElementById("trendChart");
+        if (!ctx || typeof Chart === "undefined") return;
+        var labels = ["Vulnerable", "Hidden", "Safe", "No PHP", "Errors", "Last 24h"];
+        var values = [
+          status.vulnerable || 0,
+          status.hidden || 0,
+          status.safe || 0,
+          status.no_php || 0,
+          status.error || 0,
+          (totals && totals.last_24h) || 0
+        ];
+        if (trendChart) trendChart.destroy();
+        trendChart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: labels,
+            datasets: [{
+              label: "Checks",
+              data: values,
+              borderColor: "#2dd4bf",
+              backgroundColor: "rgba(45,212,191,0.12)",
+              pointBackgroundColor: "#2dd4bf",
+              pointBorderColor: "#042f2e",
+              pointRadius: 5,
+              pointHoverRadius: 7,
+              borderWidth: 3,
+              fill: true,
+              tension: 0.35
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: "rgba(15,23,42,0.95)",
+                titleColor: "#fff",
+                bodyColor: "#cbd5e1",
+                borderColor: "rgba(45,212,191,0.3)",
+                borderWidth: 1
+              }
+            },
+            scales: {
+              x: {
+                ticks: { color: "#94a3b8" },
+                grid: { color: "rgba(255,255,255,0.04)" }
+              },
+              y: {
+                beginAtZero: true,
+                ticks: { color: "#94a3b8", precision: 0 },
+                grid: { color: "rgba(255,255,255,0.06)" }
+              }
+            }
+          }
+        });
+      }
 
-      const headersHtml = `
-        <div class="mt-4 p-4 rounded-2xl bg-white/5 border border-white/10">
-          <p class="text-white font-medium mb-3">Security headers snapshot</p>
-          <div class="flex flex-wrap gap-2">
-            ${chip(!!sh.https, "HTTPS")}
-            ${chip(!!sh.hsts, "HSTS")}
-            ${chip(!!sh.csp, "CSP")}
-            ${chip(!!sh.x_frame_options, "X-Frame-Options")}
-            ${chip(!!sh.x_content_type_options, "X-Content-Type-Options")}
-            ${chip(!!sh.referrer_policy, "Referrer-Policy")}
-          </div>
-          <div class="mt-3 flex flex-wrap gap-2 text-xs">
-            <span class="${tls.https ? "chip-ok" : "chip-bad"} px-2 py-1 rounded-lg">TLS: ${tls.https ? "HTTPS URL" : "Not HTTPS"}</span>
-            <span class="${tls.redirects_to_https ? "chip-ok" : "chip-mute"} px-2 py-1 rounded-lg">HTTP→HTTPS redirect: ${tls.redirects_to_https === true ? "Yes" : tls.redirects_to_https === false ? "No" : "Unknown"}</span>
-            <span class="${tls.mixed_content_hint ? "chip-warn" : "chip-ok"} px-2 py-1 rounded-lg">Mixed content hints: ${tls.mixed_content_hint ? "Possible" : "None spotted"}</span>
-          </div>
-        </div>`;
+      function countryFlagImg(code) {
+        if (!code || code === "Unknown" || String(code).length !== 2) return "🌐";
+        var cc = String(code).trim().toLowerCase();
+        return '<img src="https://flagcdn.com/w40/' + cc + '.png" width="20" height="15" class="inline-block rounded-sm mr-1.5 align-middle" alt="' + cc + '" loading="lazy" />';
+      }
 
-      const playbookHtml = data.playbook?.length ? `
-        <div class="mt-4 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20">
-          <p class="text-amber-200 font-medium mb-2">Hidden PHP playbook</p>
-          <ul class="list-disc list-inside text-sm text-slate-300 space-y-1">${data.playbook.map(i => `<li>${i}</li>`).join("")}</ul>
-        </div>` : "";
+      function renderRankedCountries(rows) {
+        var el = document.getElementById("topCountries");
+        if (!rows || !rows.length) {
+          el.innerHTML = '<p class="text-slate-500">No data yet</p>';
+          return;
+        }
+        var max = Math.max.apply(null, rows.map(function (r) { return r.c; }).concat([1]));
+        el.innerHTML = rows.map(function (r) {
+          var pct = Math.max(6, Math.round((100 * r.c) / max));
+          var name = !r.name || r.name === "Unknown" ? "Unknown" : String(r.name).toUpperCase();
+          var flag = name === "Unknown" ? "🌐" : countryFlagImg(r.name);
+          return (
+            "<div>" +
+            '<div class="flex justify-between mb-1 text-slate-200"><span>' + flag + " " + name +
+            '</span><span class="font-semibold text-white">' + r.c + "</span></div>" +
+            '<div class="bar"><span data-w="' + pct + '" style="background:#2dd4bf"></span></div>' +
+            "</div>"
+          );
+        }).join("");
+        requestAnimationFrame(function () {
+          el.querySelectorAll(".bar > span").forEach(function (s) {
+            s.style.width = s.getAttribute("data-w") + "%";
+          });
+        });
+      }
 
-      const apiHtml = data.status === "no_php" && data.api_suggestion ? `
-        <div class="mt-4 p-4 rounded-2xl bg-indigo-500/10 border border-indigo-400/20 text-sm text-slate-300">
-          <p class="text-white font-medium mb-1">Check your API domain too</p>
-          <p class="mb-2">Frontends often hide the PHP backend. Try: <code class="text-teal">${data.api_suggestion}</code></p>
-          <button class="text-teal underline text-sm" onclick="document.getElementById('apiInput').value='${data.api_suggestion}';document.getElementById('apiInput').focus()">Use this API URL</button>
-        </div>` : "";
+      function renderRanked(id, rows, color) {
+        var el = document.getElementById(id);
+        if (!rows || !rows.length) {
+          el.innerHTML = '<p class="text-slate-500">No data yet</p>';
+          return;
+        }
+        var max = Math.max.apply(null, rows.map(function (r) { return r.c; }).concat([1]));
+        el.innerHTML = rows.map(function (r) {
+          var pct = Math.max(6, Math.round((100 * r.c) / max));
+          return (
+            "<div>" +
+            '<div class="flex justify-between mb-1 text-slate-200"><span>' + r.name +
+            '</span><span class="font-semibold text-white">' + r.c + "</span></div>" +
+            '<div class="bar"><span data-w="' + pct + '" style="background:' + color + '"></span></div>' +
+            "</div>"
+          );
+        }).join("");
+        requestAnimationFrame(function () {
+          el.querySelectorAll(".bar > span").forEach(function (s) {
+            s.style.width = s.getAttribute("data-w") + "%";
+          });
+        });
+      }
 
-      const secondaryHtml = secondary ? `
-        <div class="mt-4 p-4 rounded-2xl glass border border-white/10 text-sm">
-          <p class="text-white font-medium mb-1">API / backend comparison</p>
-          <p class="text-slate-300">Status: <strong class="text-white">${secondary.status}</strong>${secondary.php_version ? ` · PHP ${secondary.php_version}` : ""}${secondary.framework ? ` · ${secondary.framework}` : ""}</p>
-          <p class="text-slate-400 mt-1">${secondary.message || ""}</p>
-        </div>` : "";
+      function setText(id, val) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = val || 0;
+      }
 
-      window.lastResultText = `${title}\n${data.message||""}\n${data.php_version? "Version: "+data.php_version:""}\n\nChecked with Sentinel → ${toolUrl}`;
+      function renderStats(data) {
+        var t = data.totals || {};
+        var s = data.status || {};
+        var risk = data.risk || {};
+        var derived = data.derived || {};
 
-      result.innerHTML = `
-        <div class="glass-strong rounded-3xl p-6 ${border}">
-          <h3 class="text-xl font-semibold ${titleColor} mb-2">${title}</h3>
-          <p class="text-slate-200 mb-2">${data.message || data.error || ""}</p>
-          ${data.details ? `<p class="text-sm text-slate-400 mb-2">${data.details}</p>` : ""}
-          <div class="text-sm text-slate-300 flex flex-wrap gap-3">
-            ${data.php_version ? `<span>Version: <code class="text-teal">${data.php_version}</code></span>` : ""}
-            ${data.framework ? `<span>Framework: ${data.framework}</span>` : ""}
-            ${data.support_status ? `<span>${data.support_status}</span>` : ""}
-          </div>
-          ${data.hygiene ? `<div class="mt-3 p-3 rounded-xl text-sm text-amber-200 bg-amber-500/10 border border-amber-500/20">${data.hygiene}</div>` : ""}
-          ${data.tip ? `<div class="mt-4 p-4 rounded-2xl text-sm bg-white/5 border border-white/10"><strong class="text-white">What to do next:</strong> ${data.tip}</div>` : ""}
-          ${data.host_guidance ? `<div class="mt-3 p-4 rounded-2xl text-sm bg-white/5 border border-white/10"><strong class="text-white">Host guidance:</strong> ${data.host_guidance}</div>` : ""}
-          ${headersHtml}
-          ${cms.length ? `<div class="mt-4 text-sm text-slate-300"><p class="text-white font-medium mb-1">CMS signals</p><ul class="list-disc list-inside">${cms.map(c=>`<li>${c}</li>`).join("")}</ul></div>` : ""}
-          ${signals.length ? `<div class="mt-4 text-sm text-slate-300"><p class="text-white font-medium mb-1">What we found</p><ul class="list-disc list-inside">${signals.map(s=>`<li>${s}</li>`).join("")}</ul></div>` : ""}
-          ${playbookHtml}
-          ${apiHtml}
-          ${secondaryHtml}
-          <div class="mt-4 p-4 rounded-2xl bg-white/5 border border-white/10 text-sm">
-            <p class="text-white font-medium mb-2">Embeddable badge</p>
-            <code class="block text-xs text-slate-400 break-all mb-2">${badge.replace(/</g,"&lt;")}</code>
-            <button onclick="navigator.clipboard.writeText(\`${badge}\`).then(()=>alert('Badge HTML copied'))" class="text-teal text-xs underline">Copy badge HTML</button>
-          </div>
-          <div class="mt-4 p-4 rounded-2xl bg-white/5 border border-white/10 text-sm">
-            <p class="text-white font-medium mb-2">Email me this report</p>
-            <div class="flex flex-col sm:flex-row gap-2">
-              <input id="emailReport" type="email" placeholder="you@company.com" class="flex-1 px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-white text-sm" />
-              <button onclick="emailReportHint()" class="px-4 py-2 rounded-xl bg-white/10 border border-white/15 text-sm text-white">Send copy</button>
-            </div>
-            <p class="text-[11px] text-slate-500 mt-2">No account. For now this opens your email client with the report text.</p>
-          </div>
-        </div>
-        <div class="flex flex-wrap gap-3">
-          <button onclick="navigator.clipboard.writeText(window.lastResultText||'').then(()=>alert('Copied'))" class="px-4 py-2.5 glass rounded-xl text-sm">Copy result</button>
-          <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(window.lastResultText)}" target="_blank" class="px-4 py-2.5 glass rounded-xl text-sm">Share on X</a>
-          <button onclick="checkAnother()" class="px-4 py-2.5 bg-white text-ink font-semibold rounded-xl text-sm">Check another site</button>
-        </div>`;
-      result.classList.remove("hidden");
+        setText("mTotal", t.scans);
+        setText("mSites", t.unique_sites);
+        setText("mUsers", t.unique_users);
+        setText("m24", t.last_24h);
+        setText("mVuln", s.vulnerable);
+        setText("mHidden", s.hidden);
+        setText("mSafe", s.safe);
+        setText("mNoPhp", s.no_php);
+        setText("mVulnPct", risk.vulnerable_pct);
+        setText("mRepeat", derived.repeat_check_rate);
+        setText("mHiddenRate", derived.hidden_rate_among_php);
 
-      if (typeof gtag === "function") gtag("event", "scan_completed", { status: data.status, url: data.url || input.value });
+        var updated = document.getElementById("statsUpdated");
+        if (updated) {
+          updated.textContent = data.updated_at
+            ? "Updated " + new Date(data.updated_at).toLocaleString()
+            : "—";
+        }
 
-      let ctaTitle = "Happy to help", ctaText = "Book a free discovery call for a broader review.", ctaButton = "Book a free discovery call";
-      if (data.status === "vulnerable") { ctaTitle = "Your site needs attention"; ctaText = "I help teams upgrade PHP and harden apps after critical issues."; ctaButton = "Book free emergency review"; }
-      else if (data.status === "hidden") { ctaTitle = "Verify it is patched"; ctaText = "I can help confirm the real version and upgrade safely."; ctaButton = "Book a free verification call"; }
-      else if (data.status === "safe") { ctaTitle = "You look patched"; ctaText = "Want hardening help? Book a free strategy call."; ctaButton = "Book a free strategy call"; }
+        renderOutcomeChart(s);
+        renderTrendChart(s, t);
+        renderRankedCountries(data.countries || []);
+        renderRanked("topFrameworks", data.frameworks || [], "#818cf8");
+        renderRanked("topSignals", data.top_tech_signals || [], "#38bdf8");
 
-      const notes = encodeURIComponent(`Sentinel result for ${data.url||input.value}\nStatus: ${data.status}\n${data.message||""}`);
-      ctaSection.innerHTML = `<div class="glass-strong rounded-3xl p-6"><h3 class="font-semibold text-white text-lg">Alex Mochu</h3><p class="text-sm text-slate-400 mb-3">Senior Fullstack Engineer · Nairobi</p><p class="text-sm text-slate-300 mb-4">Clear next steps for complex technical problems.</p><h4 class="font-semibold text-white mb-1">${ctaTitle}</h4><p class="text-sm text-slate-400 mb-4">${ctaText}</p><a id="bookBtn" href="https://cal.com/alex-mochu/php-fix?notes=${notes}" target="_blank" class="inline-flex px-5 py-3 bg-teal text-ink font-bold rounded-xl">${ctaButton}</a></div>`;
-      ctaSection.classList.remove("hidden");
-    }
+        document.getElementById("tickerText").textContent =
+          "Total " + (t.scans || 0) +
+          " · Unique sites " + (t.unique_sites || 0) +
+          " · Vulnerable " + (s.vulnerable || 0) +
+          " · Hidden " + (s.hidden || 0) +
+          " · Safe " + (s.safe || 0) +
+          " · No PHP " + (s.no_php || 0) + " · ";
+      }
 
-    function emailReportHint() {
-      const email = document.getElementById("emailReport")?.value || "";
-      const body = encodeURIComponent(window.lastResultText || "");
-      window.location.href = `mailto:${email}?subject=${encodeURIComponent("Sentinel site report")}&body=${body}`;
-    }
+      function chip(ok, label) {
+        var cls = ok ? "chip-ok" : "chip-bad";
+        var mark = ok ? "✓" : "✗";
+        return (
+          '<span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium ' +
+          cls + '">' + mark + " " + label + "</span>"
+        );
+      }
 
-    function checkAnother() {
-      result.classList.add("hidden"); ctaSection.classList.add("hidden");
-      showMarketing(); input.value = ""; apiInput.value = ""; input.focus();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+      function enterFocusMode() {
+        mainGrid.classList.add("mode-focus");
+        var ids = ["adLeft", "adRight", "statsTicker", "analyticsSection", "faqSection"];
+        ids.forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) el.classList.add("hidden");
+        });
+        eduSection.classList.add("hidden");
+      }
+
+      function exitFocusMode() {
+        mainGrid.classList.remove("mode-focus");
+        var ids = ["adLeft", "adRight", "statsTicker", "analyticsSection", "faqSection"];
+        ids.forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) el.classList.remove("hidden");
+        });
+        eduSection.classList.remove("hidden");
+      }
+
+      function scanOne(url) {
+        return fetch("/api/scan", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url: url })
+        }).then(function (res) {
+          return res.json();
+        });
+      }
+
+      function runCheck() {
+        var url = input.value.trim();
+        if (!url) {
+          input.focus();
+          return;
+        }
+
+        enterFocusMode();
+        btn.disabled = true;
+        btnText.textContent = "Scanning…";
+        loading.classList.remove("hidden");
+        result.classList.add("hidden");
+        ctaSection.classList.add("hidden");
+
+        var chain = scanOne(url).then(function (primary) {
+          var apiUrl = apiInput.value.trim();
+          if (!apiUrl) return { primary: primary, secondary: null };
+          return scanOne(apiUrl).then(function (secondary) {
+            return { primary: primary, secondary: secondary };
+          });
+        });
+
+        chain
+          .then(function (pair) {
+            loading.classList.add("hidden");
+            showResult(pair.primary, pair.secondary);
+          })
+          .catch(function () {
+            loading.classList.add("hidden");
+            result.innerHTML =
+              '<div class="glass rounded-3xl p-6 text-center border border-rose-500/30">' +
+              '<p class="text-rose-300 font-medium">Something went wrong</p></div>';
+            result.classList.remove("hidden");
+          })
+          .finally(function () {
+            btn.disabled = false;
+            btnText.textContent = "Check Now";
+          });
+      }
+
+            function showResult(data, secondary) {
+        var border = "border-white/10";
+        var titleColor = "text-white";
+        var title = "No PHP Detected";
+
+        if (data.status === "vulnerable") {
+          border = "border-rose-500/40";
+          titleColor = "text-rose-300";
+          title = "Vulnerable – Action Required";
+        } else if (data.status === "hidden") {
+          border = "border-amber-500/40";
+          titleColor = "text-amber-300";
+          title = "PHP Detected – Version Hidden";
+        } else if (data.status === "safe") {
+          border = "border-emerald-500/40";
+          titleColor = "text-emerald-300";
+          title = "Looks Safe";
+        } else if (data.status === "error") {
+          border = "border-rose-500/40";
+          titleColor = "text-rose-300";
+          title = "Could not scan";
+        }
+
+        var sh = data.security_headers || {};
+        var tls = data.tls || {};
+        var signals = data.tech_signals || [];
+        var cms = data.cms_signals || [];
+        var badgeHtml =
+          '<!-- Sentinel --><a href="' + toolUrl + '" rel="noopener">Checked with Sentinel</a>';
+
+        window.lastResultText =
+          title + "\n" +
+          (data.message || "") + "\n" +
+          (data.php_version ? "Version: " + data.php_version : "") +
+          "\n\nChecked with Sentinel -> " + toolUrl;
+        window.lastBadgeHtml = badgeHtml;
+
+        var headersHtml =
+          '<div class="mt-4 p-4 rounded-2xl bg-white/5 border border-white/10">' +
+          '<p class="text-white font-medium mb-3">Security headers snapshot</p>' +
+          '<div class="flex flex-wrap gap-2">' +
+          chip(!!sh.https, "HTTPS") +
+          chip(!!sh.hsts, "HSTS") +
+          chip(!!sh.csp, "CSP") +
+          chip(!!sh.x_frame_options, "X-Frame-Options") +
+          chip(!!sh.x_content_type_options, "X-Content-Type-Options") +
+          chip(!!sh.referrer_policy, "Referrer-Policy") +
+          "</div>" +
+          '<div class="mt-3 flex flex-wrap gap-2 text-xs">' +
+          '<span class="' + (tls.https ? "chip-ok" : "chip-bad") + ' px-2 py-1 rounded-lg">TLS: ' +
+          (tls.https ? "HTTPS URL" : "Not HTTPS") + "</span>" +
+          '<span class="' + (tls.redirects_to_https ? "chip-ok" : "chip-mute") + ' px-2 py-1 rounded-lg">HTTP to HTTPS redirect: ' +
+          (tls.redirects_to_https === true ? "Yes" : tls.redirects_to_https === false ? "No" : "Unknown") +
+          "</span>" +
+          '<span class="' + (tls.mixed_content_hint ? "chip-warn" : "chip-ok") + ' px-2 py-1 rounded-lg">Mixed content hints: ' +
+          (tls.mixed_content_hint ? "Possible" : "None spotted") +
+          "</span></div></div>";
+
+        var playbookHtml = "";
+        if (data.playbook && data.playbook.length) {
+          playbookHtml =
+            '<div class="mt-4 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20">' +
+            '<p class="text-amber-200 font-medium mb-2">Hidden PHP playbook</p>' +
+            '<ul class="list-disc list-inside text-sm text-slate-300 space-y-1">' +
+            data.playbook.map(function (i) { return "<li>" + i + "</li>"; }).join("") +
+            "</ul></div>";
+        }
+
+        var apiHtml = "";
+        if (data.status === "no_php" && data.api_suggestion) {
+          apiHtml =
+            '<div class="mt-4 p-4 rounded-2xl bg-indigo-500/10 border border-indigo-400/20 text-sm text-slate-300">' +
+            '<p class="text-white font-medium mb-1">Check your API domain too</p>' +
+            '<p class="mb-2">Frontends often hide the PHP backend. Try: <code class="text-teal">' +
+            data.api_suggestion +
+            "</code></p>" +
+            '<button type="button" class="text-teal underline text-sm" id="useApiSuggestion">Use this API URL</button>' +
+            "</div>";
+        }
+
+        var secondaryHtml = "";
+        if (secondary) {
+          secondaryHtml =
+            '<div class="mt-4 p-4 rounded-2xl glass border border-white/10 text-sm">' +
+            '<p class="text-white font-medium mb-1">API / backend comparison</p>' +
+            '<p class="text-slate-300">Status: <strong class="text-white">' +
+            secondary.status +
+            "</strong>" +
+            (secondary.php_version ? " · PHP " + secondary.php_version : "") +
+            (secondary.framework ? " · " + secondary.framework : "") +
+            "</p>" +
+            '<p class="text-slate-400 mt-1">' + (secondary.message || "") + "</p></div>";
+        }
+
+        var metaBits = "";
+        if (data.php_version) {
+          metaBits += '<span>Version: <code class="text-teal">' + data.php_version + "</code></span>";
+        }
+        if (data.framework) metaBits += "<span>Framework: " + data.framework + "</span>";
+        if (data.support_status) metaBits += "<span>" + data.support_status + "</span>";
+
+        var cmsHtml = "";
+        if (cms.length) {
+          cmsHtml =
+            '<div class="mt-4 text-sm text-slate-300"><p class="text-white font-medium mb-1">CMS signals</p>' +
+            '<ul class="list-disc list-inside">' +
+            cms.map(function (c) { return "<li>" + c + "</li>"; }).join("") +
+            "</ul></div>";
+        }
+
+        var signalsHtml = "";
+        if (signals.length) {
+          signalsHtml =
+            '<div class="mt-4 text-sm text-slate-300"><p class="text-white font-medium mb-1">What we found</p>' +
+            '<ul class="list-disc list-inside">' +
+            signals.map(function (s) { return "<li>" + s + "</li>"; }).join("") +
+            "</ul></div>";
+        }
+
+        result.innerHTML =
+          '<div class="glass-strong rounded-3xl p-6 ' + border + '">' +
+          '<h3 class="text-xl font-semibold ' + titleColor + ' mb-2">' + title + "</h3>" +
+          '<p class="text-slate-200 mb-2">' + (data.message || data.error || "") + "</p>" +
+          (data.details ? '<p class="text-sm text-slate-400 mb-2">' + data.details + "</p>" : "") +
+          '<div class="text-sm text-slate-300 flex flex-wrap gap-3">' + metaBits + "</div>" +
+          (data.hygiene
+            ? '<div class="mt-3 p-3 rounded-xl text-sm text-amber-200 bg-amber-500/10 border border-amber-500/20">' +
+              data.hygiene +
+              "</div>"
+            : "") +
+          (data.tip
+            ? '<div class="mt-4 p-4 rounded-2xl text-sm bg-white/5 border border-white/10"><strong class="text-white">What to do next:</strong> ' +
+              data.tip +
+              "</div>"
+            : "") +
+          (data.host_guidance
+            ? '<div class="mt-3 p-4 rounded-2xl text-sm bg-white/5 border border-white/10"><strong class="text-white">Host guidance:</strong> ' +
+              data.host_guidance +
+              "</div>"
+            : "") +
+          headersHtml +
+          cmsHtml +
+          signalsHtml +
+          playbookHtml +
+          apiHtml +
+          secondaryHtml +
+          '<div class="mt-4 p-4 rounded-2xl bg-white/5 border border-white/10 text-sm">' +
+          '<p class="text-white font-medium mb-2">Embeddable badge</p>' +
+          '<code id="badgeCode" class="block text-xs text-slate-400 break-all mb-2"></code>' +
+          '<button type="button" id="copyBadgeBtn" class="text-teal text-xs underline">Copy badge HTML</button>' +
+          "</div>" +
+          '<div class="mt-4 p-4 rounded-2xl bg-white/5 border border-white/10 text-sm">' +
+          '<p class="text-white font-medium mb-2">Email me this report</p>' +
+          '<div class="flex flex-col sm:flex-row gap-2">' +
+          '<input id="emailReport" type="email" placeholder="you@company.com" class="flex-1 px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-white text-sm" />' +
+          '<button type="button" id="emailReportBtn" class="px-4 py-2 rounded-xl bg-white/10 border border-white/15 text-sm text-white">Send copy</button>' +
+          "</div>" +
+          '<p class="text-[11px] text-slate-500 mt-2">No account. Opens your email client with the report text.</p>' +
+          "</div></div>" +
+          '<div class="flex flex-wrap gap-3">' +
+          '<button type="button" id="copyResultBtn" class="px-4 py-2.5 glass rounded-xl text-sm">Copy result</button>' +
+          '<a id="shareXBtn" href="#" target="_blank" class="px-4 py-2.5 glass rounded-xl text-sm">Share on X</a>' +
+          '<button type="button" id="checkAnotherBtn" class="px-4 py-2.5 bg-white text-ink font-semibold rounded-xl text-sm">Check another site</button>' +
+          "</div>";
+
+        var badgeCode = document.getElementById("badgeCode");
+        if (badgeCode) badgeCode.textContent = badgeHtml;
+
+        var copyBadgeBtn = document.getElementById("copyBadgeBtn");
+        if (copyBadgeBtn) {
+          copyBadgeBtn.addEventListener("click", function () {
+            navigator.clipboard.writeText(window.lastBadgeHtml || badgeHtml).then(function () {
+              alert("Badge HTML copied");
+            });
+          });
+        }
+
+        var copyResultBtn = document.getElementById("copyResultBtn");
+        if (copyResultBtn) {
+          copyResultBtn.addEventListener("click", function () {
+            navigator.clipboard.writeText(window.lastResultText || "").then(function () {
+              alert("Result copied");
+            });
+          });
+        }
+
+        var emailReportBtn = document.getElementById("emailReportBtn");
+        if (emailReportBtn) {
+          emailReportBtn.addEventListener("click", function () {
+            var email = (document.getElementById("emailReport") || {}).value || "";
+            var body = encodeURIComponent(window.lastResultText || "");
+            window.location.href =
+              "mailto:" + email +
+              "?subject=" + encodeURIComponent("Sentinel site report") +
+              "&body=" + body;
+          });
+        }
+
+        var checkAnotherBtn = document.getElementById("checkAnotherBtn");
+        if (checkAnotherBtn) checkAnotherBtn.addEventListener("click", checkAnother);
+
+        var shareX = document.getElementById("shareXBtn");
+        if (shareX) {
+          shareX.href =
+            "https://twitter.com/intent/tweet?text=" +
+            encodeURIComponent(window.lastResultText || "");
+        }
+
+        var useApi = document.getElementById("useApiSuggestion");
+        if (useApi && data.api_suggestion) {
+          useApi.addEventListener("click", function () {
+            apiInput.value = data.api_suggestion;
+            apiInput.focus();
+          });
+        }
+
+        result.classList.remove("hidden");
+
+        if (typeof gtag === "function") {
+          gtag("event", "scan_completed", {
+            status: data.status,
+            url: data.url || input.value
+          });
+        }
+
+        var ctaTitle = "Happy to help";
+        var ctaText = "Book a free discovery call for a broader review.";
+        var ctaButton = "Book a free discovery call";
+        if (data.status === "vulnerable") {
+          ctaTitle = "Your site needs attention";
+          ctaText = "I help teams upgrade PHP and harden apps after critical issues.";
+          ctaButton = "Book free emergency review";
+        } else if (data.status === "hidden") {
+          ctaTitle = "Verify it is patched";
+          ctaText = "I can help confirm the real version and upgrade safely.";
+          ctaButton = "Book a free verification call";
+        } else if (data.status === "safe") {
+          ctaTitle = "You look patched";
+          ctaText = "Want hardening help? Book a free strategy call.";
+          ctaButton = "Book a free strategy call";
+        }
+
+        var notes = encodeURIComponent(
+          "Sentinel result for " +
+            (data.url || input.value) +
+            "\nStatus: " +
+            data.status +
+            "\n" +
+            (data.message || "")
+        );
+
+        ctaSection.innerHTML =
+          '<div class="glass-strong rounded-3xl p-6">' +
+          '<h3 class="font-semibold text-white text-lg">Alex Mochu</h3>' +
+          '<p class="text-sm text-slate-400 mb-3">Senior Fullstack Engineer · Nairobi</p>' +
+          '<p class="text-sm text-slate-300 mb-4">Clear next steps for complex technical problems.</p>' +
+          '<h4 class="font-semibold text-white mb-1">' + ctaTitle + "</h4>" +
+          '<p class="text-sm text-slate-400 mb-4">' + ctaText + "</p>" +
+          '<a id="bookBtn" href="https://cal.com/alex-mochu/php-fix?notes=' + notes +
+          '" target="_blank" class="inline-flex px-5 py-3 bg-teal text-ink font-bold rounded-xl">' +
+          ctaButton +
+          "</a></div>";
+        ctaSection.classList.remove("hidden");
+      }
+
+      function checkAnother() {
+        result.classList.add("hidden");
+        ctaSection.classList.add("hidden");
+        exitFocusMode();
+        input.value = "";
+        apiInput.value = "";
+        input.focus();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    })();
   </script>
 </body>
 </html>

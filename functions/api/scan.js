@@ -1,8 +1,8 @@
 export async function onRequestPost(context) {
   const { request, env } = context;
-
-  // ----- Simple rate limiting (per IP) -----
   const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+
+  // Rate limit
   try {
     const recent = await env.DB.prepare(
       "SELECT COUNT(*) as c FROM scans WHERE ip = ? AND created_at > datetime('now', '-1 minute')"
@@ -12,24 +12,19 @@ export async function onRequestPost(context) {
     if ((recent?.c || 0) >= 8) {
       return json({ error: "Too many requests. Please wait a minute and try again." }, 429);
     }
-  } catch (_) {
-    // Continue if rate-limit query fails
+  } catch (e) {
+    console.error("rate limit query:", e);
   }
 
   try {
     const body = await request.json();
     let rawUrl = (body.url || "").trim();
+    if (!rawUrl) return json({ error: "Please enter a website URL" }, 400);
 
-    if (!rawUrl) {
-      return json({ error: "Please enter a website URL" }, 400);
-    }
-
-    // Normalize URL
     let url;
     try {
       if (!/^https?:\/\//i.test(rawUrl)) rawUrl = "https://" + rawUrl;
       url = new URL(rawUrl);
-
       if (
         url.hostname === "localhost" ||
         url.hostname.endsWith(".local") ||
@@ -46,7 +41,6 @@ export async function onRequestPost(context) {
 
     const normalized = url.origin + (url.pathname === "/" ? "" : url.pathname);
 
-    // Fetch site
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 9000);
 
@@ -63,13 +57,29 @@ export async function onRequestPost(context) {
       });
     } catch {
       clearTimeout(timeout);
-      return json({
+      const errPayload = {
         status: "error",
         message: "Could not reach the website. It may be down or blocking requests.",
-        tip: "Check the URL and try again. If the site blocks automated requests, results may be limited.",
+        tip: "Check the URL and try again.",
         url: normalized,
         tech_signals: [],
+      };
+      await saveScan(env, {
+        rawUrl,
+        normalized,
+        status: "error",
+        phpVersion: null,
+        phpBranch: null,
+        supportStatus: null,
+        framework: null,
+        xPoweredByExposed: 0,
+        techSignalsJson: "[]",
+        details: "Fetch failed",
+        userAgent: request.headers.get("User-Agent") || "",
+        ip,
+        country: request.headers.get("CF-IPCountry") || null,
       });
+      return json(errPayload);
     }
     clearTimeout(timeout);
 
@@ -87,37 +97,26 @@ export async function onRequestPost(context) {
       bodyText = "";
     }
 
-    // PHP version from headers
     let phpVersion = null;
     const versionMatch = (poweredBy + " " + serverHdr).match(
       /php\/([0-9]+\.[0-9]+\.[0-9]+)/i
     );
     if (versionMatch) phpVersion = versionMatch[1];
 
-    // Framework fingerprints
     const frameworks = [];
     if (
       bodyText.includes("wp-content") ||
       bodyText.includes("wp-includes") ||
       bodyText.includes("wordpress")
-    ) {
+    )
       frameworks.push("WordPress");
-    }
-    if (
-      bodyText.includes("laravel") ||
-      (bodyText.includes("csrf-token") && bodyText.includes("laravel"))
-    ) {
-      frameworks.push("Laravel");
-    }
-    if (bodyText.includes("joomla") || bodyText.includes("/media/system/")) {
+    if (bodyText.includes("laravel")) frameworks.push("Laravel");
+    if (bodyText.includes("joomla") || bodyText.includes("/media/system/"))
       frameworks.push("Joomla");
-    }
-    if (bodyText.includes("magento") || bodyText.includes("mage/")) {
+    if (bodyText.includes("magento") || bodyText.includes("mage/"))
       frameworks.push("Magento");
-    }
-    if (bodyText.includes("drupal") || bodyText.includes("data-drupal-")) {
+    if (bodyText.includes("drupal") || bodyText.includes("data-drupal-"))
       frameworks.push("Drupal");
-    }
 
     const framework = frameworks[0] || null;
     const isPhp =
@@ -127,44 +126,33 @@ export async function onRequestPost(context) {
       bodyText.includes("phpsessid") ||
       bodyText.includes("php/");
 
-    // Other tech signals (detection only, not CVE checks)
     const techSignals = [];
     if (framework) techSignals.push(framework);
     if (
       bodyText.includes("__next") ||
-      bodyText.includes("next.js") ||
-      bodyText.includes("_next/static")
-    ) {
+      bodyText.includes("_next/static") ||
+      bodyText.includes("next.js")
+    )
       techSignals.push("JavaScript frontend (React/Next-style signals)");
-    } else if (bodyText.includes("react") || bodyText.includes("data-reactroot")) {
+    else if (bodyText.includes("react") || bodyText.includes("data-reactroot"))
       techSignals.push("JavaScript frontend (React-style signals)");
-    }
-    if (bodyText.includes("nuxt") || bodyText.includes("__nuxt")) {
+    if (bodyText.includes("nuxt") || bodyText.includes("__nuxt"))
       techSignals.push("JavaScript frontend (Vue/Nuxt-style signals)");
-    } else if (bodyText.includes("vue") && bodyText.includes("data-v-")) {
+    else if (bodyText.includes("data-v-") && bodyText.includes("vue"))
       techSignals.push("JavaScript frontend (Vue-style signals)");
-    }
-    if (bodyText.includes("ng-version") || bodyText.includes("angular")) {
+    if (bodyText.includes("ng-version"))
       techSignals.push("JavaScript frontend (Angular-style signals)");
-    }
-    if (serverHdr.includes("cloudflare") || headers["cf-ray"]) {
+    if (serverHdr.includes("cloudflare") || headers["cf-ray"])
       techSignals.push("Cloudflare");
-    }
     if (serverHdr.includes("nginx")) techSignals.push("Nginx");
     if (serverHdr.includes("apache")) techSignals.push("Apache");
-    if (
-      poweredBy.includes("express") ||
-      serverHdr.includes("express") ||
-      bodyText.includes("x-powered-by: express")
-    ) {
+    if (poweredBy.includes("express") || serverHdr.includes("express"))
       techSignals.push("Node.js / Express-style signals");
-    }
     if (isPhp && !framework) techSignals.push("PHP application signals");
 
-    // Unique signals
     const uniqueSignals = [...new Set(techSignals)];
+    const techSignalsJson = JSON.stringify(uniqueSignals);
 
-    // Support status + decision
     const fixed = {
       "8.5": "8.5.12",
       "8.4": "8.4.27",
@@ -188,12 +176,11 @@ export async function onRequestPost(context) {
 
       if (maj === 8 && min >= 4) supportStatus = "Active";
       else if (maj === 8 && min === 3) supportStatus = "Security-only";
-      else if (maj === 8 && min === 2) supportStatus = "Security-only (EOL Dec 2026)";
+      else if (maj === 8 && min === 2)
+        supportStatus = "Security-only (EOL Dec 2026)";
       else supportStatus = "End-of-Life";
 
-      const branch = `${maj}.${min}`;
-      const fixedVer = fixed[branch];
-
+      const fixedVer = fixed[phpBranch];
       if (fixedVer) {
         const fixedPat = parseInt(fixedVer.split(".")[2], 10);
         if (pat >= fixedPat) {
@@ -202,7 +189,7 @@ export async function onRequestPost(context) {
             "The detected PHP version includes the official patches for the recent critical vulnerabilities (CVE-2026-109618 and CVE-2026-109619).";
           details = `Detected PHP ${phpVersion}.`;
           tip =
-            "Keep PHP updated. If you want help with hardening or modernization, you can book a free strategy call below.";
+            "Keep PHP updated. If you want help with hardening or modernization, book a free strategy call below.";
         } else {
           status = "vulnerable";
           message =
@@ -242,31 +229,21 @@ export async function onRequestPost(context) {
       ? "Security hygiene: The X-Powered-By header is exposed. Consider turning expose_php off in php.ini."
       : null;
 
-    // Save to D1
-    try {
-      await env.DB.prepare(
-        `INSERT INTO scans
-        (url, normalized_url, status, php_version, php_branch, support_status, framework, x_powered_by, details, user_agent, ip, country)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-      )
-        .bind(
-          rawUrl,
-          normalized,
-          status,
-          phpVersion,
-          phpBranch,
-          supportStatus,
-          framework,
-          xPoweredByExposed,
-          details,
-          request.headers.get("User-Agent") || "",
-          ip,
-          request.headers.get("CF-IPCountry") || null
-        )
-        .run();
-    } catch (dbErr) {
-      console.error("D1 save error:", dbErr);
-    }
+    const saveResult = await saveScan(env, {
+      rawUrl,
+      normalized,
+      status,
+      phpVersion,
+      phpBranch,
+      supportStatus,
+      framework,
+      xPoweredByExposed,
+      techSignalsJson,
+      details,
+      userAgent: request.headers.get("User-Agent") || "",
+      ip,
+      country: request.headers.get("CF-IPCountry") || null,
+    });
 
     return json({
       status,
@@ -282,6 +259,8 @@ export async function onRequestPost(context) {
       hygiene,
       url: normalized,
       checked_at: new Date().toISOString(),
+      saved: saveResult.ok,
+      save_error: saveResult.error || null,
     });
   } catch (err) {
     console.error(err);
@@ -289,6 +268,64 @@ export async function onRequestPost(context) {
       { error: "Something went wrong while scanning. Please try again." },
       500
     );
+  }
+}
+
+async function saveScan(env, row) {
+  try {
+    await env.DB.prepare(
+      `INSERT INTO scans (
+        url, normalized_url, status, php_version, php_branch, support_status,
+        framework, x_powered_by, tech_signals, details, user_agent, ip, country
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+    )
+      .bind(
+        row.rawUrl,
+        row.normalized,
+        row.status,
+        row.phpVersion,
+        row.phpBranch,
+        row.supportStatus,
+        row.framework,
+        row.xPoweredByExposed,
+        row.techSignalsJson,
+        row.details,
+        row.userAgent,
+        row.ip,
+        row.country
+      )
+      .run();
+    return { ok: true };
+  } catch (e) {
+    console.error("D1 save error:", e);
+    // Fallback without tech_signals if column missing
+    try {
+      await env.DB.prepare(
+        `INSERT INTO scans (
+          url, normalized_url, status, php_version, php_branch, support_status,
+          framework, x_powered_by, details, user_agent, ip, country
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+      )
+        .bind(
+          row.rawUrl,
+          row.normalized,
+          row.status,
+          row.phpVersion,
+          row.phpBranch,
+          row.supportStatus,
+          row.framework,
+          row.xPoweredByExposed,
+          row.details,
+          row.userAgent,
+          row.ip,
+          row.country
+        )
+        .run();
+      return { ok: true, error: "saved_without_tech_signals" };
+    } catch (e2) {
+      console.error("D1 fallback save error:", e2);
+      return { ok: false, error: String(e2) };
+    }
   }
 }
 

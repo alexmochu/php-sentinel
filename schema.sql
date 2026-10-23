@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS scans (
   support_status TEXT,              -- Active / Security-only / End-of-Life
   framework     TEXT,
   x_powered_by  INTEGER DEFAULT 0,  -- 1 if header was exposed
+  tech_signals TEXT,
   details       TEXT,
   user_agent    TEXT,
   ip            TEXT,

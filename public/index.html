@@ -6,25 +6,61 @@
   <title>PHP Sentinel – Free PHP risk check and public tech signals</title>
   <meta name="description" content="Free tool to check if a website shows signs of vulnerable PHP, hidden PHP, or other public technology signals. No login. Clear next steps." />
   <link rel="canonical" href="https://sentinel.kejanigarage.com/" />
-  <meta property="og:title" content="PHP Sentinel – Free PHP2Shell Vulnerability Checker" />
-  <meta property="og:description" content="Instantly check PHP exposure and public tech signals for your website." />
+  <meta property="og:title" content="PHP Sentinel – Free PHP risk check" />
+  <meta property="og:description" content="Paste a URL. Check public PHP risk signals and what the site appears built with." />
   <meta property="og:image" content="https://sentinel.kejanigarage.com/og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" href="/og-image.png" type="image/png" />
   <meta name="theme-color" content="#0F172A" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    tailwind.config = { theme: { extend: { colors: { navy: "#0F172A", teal: "#0D9488" } } } }
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { navy: "#0F172A", teal: "#0D9488" }
+        }
+      }
+    }
   </script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-    body { font-family: 'Inter', system-ui, sans-serif; }
-    .loader { width: 48px; height: 48px; border: 4px solid #e2e8f0; border-top-color: #0D9488; border-radius: 50%; animation: spin .8s linear infinite; }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    body { font-family: Inter, system-ui, sans-serif; }
+    .loader {
+      width: 48px; height: 48px;
+      border: 4px solid #e2e8f0; border-top-color: #0D9488;
+      border-radius: 50%; animation: spin .8s linear infinite;
+    }
     @keyframes spin { to { transform: rotate(360deg); } }
+    .ticker-wrap { overflow: hidden; white-space: nowrap; }
+    .ticker-track {
+      display: inline-block; padding-left: 100%;
+      animation: ticker 45s linear infinite;
+    }
+    @keyframes ticker {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+    .bar {
+      height: 10px; border-radius: 999px; background: #e2e8f0; overflow: hidden;
+    }
+    .bar > span {
+      display: block; height: 100%; width: 0;
+      border-radius: 999px; transition: width 800ms ease;
+    }
+    .risk-glow {
+      background: radial-gradient(ellipse at top left, rgba(244,63,94,0.18), transparent 55%),
+                  linear-gradient(135deg, #0F172A 0%, #1e293b 100%);
+    }
+    .card-lift {
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .card-lift:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+    }
+    #topCountries img { object-fit: cover; }
   </style>
-  <!-- Cloudflare Web Analytics: put your token -->
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"YOUR_CLOUDFLARE_TOKEN"}'></script>
-  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-X0YD7WX0CD"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -34,57 +70,70 @@
   </script>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen">
+
   <header class="border-b border-slate-200 bg-white">
-    <div class="max-w-6xl mx-auto px-4 py-5 flex items-center justify-between">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-lg bg-navy flex items-center justify-center"><span class="text-teal font-bold text-lg">P</span></div>
+        <div class="w-9 h-9 rounded-lg bg-navy flex items-center justify-center">
+          <span class="text-teal font-bold text-lg">P</span>
+        </div>
         <div>
           <h1 class="font-semibold text-navy text-lg leading-tight">PHP Sentinel</h1>
           <p class="text-xs text-slate-500">by Kejani Garage</p>
         </div>
       </div>
-      <a href="https://kejanigarage.com" target="_blank" class="text-sm text-slate-500 hover:text-teal">kejanigarage.com</a>
+      <a href="https://kejanigarage.com" target="_blank" class="text-sm text-slate-500 hover:text-teal transition">kejanigarage.com</a>
     </div>
   </header>
 
+  <div id="statsTicker" class="bg-navy text-slate-300 text-xs border-b border-slate-800">
+    <div class="ticker-wrap py-2">
+      <div class="ticker-track" id="tickerText">Loading live platform stats…</div>
+    </div>
+  </div>
+
   <main class="max-w-6xl mx-auto px-4 py-10">
+
     <div class="text-center mb-8 max-w-3xl mx-auto">
-    <h2 class="text-3xl sm:text-4xl font-bold text-navy tracking-tight mb-3">
-    Free check for PHP risk and what your site publicly reveals
-    </h2>
-    <p class="text-slate-600 text-lg">
-    Paste a URL. We inspect public headers and page signals to see if PHP looks present, whether the version appears patched for the recent critical flaws, and what else the site seems built with.
-    </p>
+      <h2 class="text-3xl sm:text-4xl font-bold text-navy tracking-tight mb-3">
+        Free check for PHP risk and public tech signals
+      </h2>
+      <p class="text-slate-600 text-lg">
+        Paste a URL. We inspect public headers and page signals for PHP exposure, patch posture for recent critical flaws, and what the site appears built with.
+      </p>
     </div>
 
-    <!-- Input first -->
     <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8 mb-8">
       <label class="block text-sm font-medium text-slate-700 mb-2">Website URL</label>
       <div class="flex flex-col sm:flex-row gap-3">
-        <input id="urlInput" type="text" placeholder="example.com or https://shop.example.com"
-          class="flex-1 px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal" />
-        <button id="checkBtn" class="px-6 py-3 bg-navy hover:bg-slate-800 text-white font-medium rounded-xl min-w-[140px]">
+        <input
+          id="urlInput"
+          type="text"
+          placeholder="example.com or https://shop.example.com"
+          class="flex-1 px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal focus:border-transparent"
+          autocomplete="off"
+        />
+        <button id="checkBtn" class="px-6 py-3 bg-navy hover:bg-slate-800 text-white font-medium rounded-xl min-w-[140px] transition">
           <span id="btnText">Check Now</span>
         </button>
       </div>
-        <p class="mt-3 text-xs text-slate-500">
-        Checks public PHP exposure, framework signals, and other visible tech hints. Does not log in or run exploits.
-        </p>
+      <p class="mt-3 text-xs text-slate-500">No login. Public signals only. Does not run exploits.</p>
     </div>
 
-    <!-- 3-column: ads + middle content -->
-    <div class="grid lg:grid-cols-12 gap-6 mb-10">
-      <!-- Left ad -->
-      <aside class="lg:col-span-3 order-2 lg:order-1">
-        <div class="bg-white border border-slate-200 rounded-2xl p-5 sticky top-4">
-          <p class="text-xs font-medium text-teal uppercase tracking-wide mb-2">Need help?</p>
+    <div id="mainGrid" class="grid lg:grid-cols-12 gap-6 mb-10">
+
+      <aside id="adLeft" class="lg:col-span-3 order-2 lg:order-1">
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 card-lift sticky top-4">
+          <p class="text-xs font-semibold text-teal uppercase tracking-wide mb-2">Need help?</p>
           <h3 class="font-semibold text-navy mb-2">Fixing or upgrading PHP?</h3>
-          <p class="text-sm text-slate-600 mb-4">If the check shows risk, or you want a second pair of eyes, book a free discovery call.</p>
-          <a href="https://cal.com/alex-mochu/php-fix" target="_blank" class="inline-flex w-full justify-center px-4 py-2.5 bg-teal hover:bg-teal/90 text-white text-sm font-medium rounded-xl">Book a free call</a>
+          <p class="text-sm text-slate-600 mb-4">If the result looks risky, book a free call and we will map the next step together.</p>
+          <a href="https://cal.com/alex-mochu/php-fix" target="_blank"
+             class="inline-flex w-full justify-center px-4 py-2.5 bg-teal hover:bg-teal/90 text-white text-sm font-medium rounded-xl transition">
+            Book a free call
+          </a>
         </div>
       </aside>
 
-      <!-- Center -->
       <div class="lg:col-span-6 order-1 lg:order-2 space-y-6">
         <div id="eduSection" class="bg-white border border-slate-200 rounded-2xl p-5">
           <h3 class="font-semibold text-navy mb-3">Why this check matters</h3>
@@ -105,23 +154,127 @@
         <div id="ctaSection" class="hidden"></div>
       </div>
 
-      <!-- Right ad -->
-      <aside class="lg:col-span-3 order-3">
-        <div class="bg-white border border-slate-200 rounded-2xl p-5 sticky top-4">
-          <p class="text-xs font-medium text-slate-500 uppercase tracking-wide mb-2">Kejani Garage</p>
+      <aside id="adRight" class="lg:col-span-3 order-3">
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 card-lift sticky top-4">
+          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Kejani Garage</p>
           <h3 class="font-semibold text-navy mb-2">Product and engineering help</h3>
           <p class="text-sm text-slate-600 mb-4">Support for teams running PHP, WordPress, Laravel and modern web stacks.</p>
-          <a href="https://kejanigarage.com" target="_blank" class="inline-flex w-full justify-center px-4 py-2.5 border border-slate-300 hover:bg-slate-50 text-slate-800 text-sm font-medium rounded-xl">Visit website</a>
+          <a href="https://kejanigarage.com" target="_blank"
+             class="inline-flex w-full justify-center px-4 py-2.5 border border-slate-300 hover:bg-slate-50 text-slate-800 text-sm font-medium rounded-xl transition">
+            Visit website
+          </a>
         </div>
       </aside>
     </div>
 
-    <!-- FAQ -->
-    <section class="max-w-3xl mx-auto mb-10">
-      <h3 class="text-xl font-semibold text-navy mb-4">How to use and what results mean</h3>
+    <section id="analyticsSection" class="mb-12">
+      <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-5">
+        <div>
+          <h3 class="text-xl font-bold text-navy">Platform pulse</h3>
+          <p class="text-sm text-slate-500">Live aggregate checks from people using PHP Sentinel.</p>
+        </div>
+        <p class="text-xs text-slate-400" id="statsUpdated">—</p>
+      </div>
+
+      <div class="risk-glow text-white rounded-2xl p-6 mb-4 card-lift">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <p class="text-xs uppercase tracking-wider text-rose-200/90 mb-1">Risk pulse</p>
+            <p class="text-4xl sm:text-5xl font-extrabold tracking-tight">
+              <span id="mVulnPct">0</span>%
+            </p>
+            <p class="text-sm text-slate-300 mt-1">of all checks flagged vulnerable</p>
+          </div>
+          <div class="grid grid-cols-2 gap-3 text-sm">
+            <div class="bg-white/10 rounded-xl px-4 py-3">
+              <p class="text-slate-300 text-xs">Repeat check rate</p>
+              <p class="text-xl font-bold"><span id="mRepeat">0</span>%</p>
+            </div>
+            <div class="bg-white/10 rounded-xl px-4 py-3">
+              <p class="text-slate-300 text-xs">Hidden among PHP-related</p>
+              <p class="text-xl font-bold"><span id="mHiddenRate">0</span>%</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+        <div class="bg-white border border-slate-200 rounded-2xl p-4 card-lift">
+          <p class="text-xs text-slate-500 mb-1">Total checks</p>
+          <p class="text-2xl font-bold text-navy" id="mTotal">0</p>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-2xl p-4 card-lift">
+          <p class="text-xs text-slate-500 mb-1">Unique websites</p>
+          <p class="text-2xl font-bold text-navy" id="mSites">0</p>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-2xl p-4 card-lift">
+          <p class="text-xs text-slate-500 mb-1">Unique users</p>
+          <p class="text-2xl font-bold text-teal" id="mUsers">0</p>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-2xl p-4 card-lift">
+          <p class="text-xs text-slate-500 mb-1">Last 24 hours</p>
+          <p class="text-2xl font-bold text-teal" id="m24">0</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+        <div class="bg-rose-50 border border-rose-200 rounded-2xl p-4 card-lift">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+            <p class="text-xs text-rose-700 font-medium">Vulnerable</p>
+          </div>
+          <p class="text-2xl font-bold text-rose-800" id="mVuln">0</p>
+        </div>
+        <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 card-lift">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+            <p class="text-xs text-amber-700 font-medium">Version hidden</p>
+          </div>
+          <p class="text-2xl font-bold text-amber-800" id="mHidden">0</p>
+        </div>
+        <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 card-lift">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <p class="text-xs text-emerald-700 font-medium">Safe</p>
+          </div>
+          <p class="text-2xl font-bold text-emerald-800" id="mSafe">0</p>
+        </div>
+        <div class="bg-slate-100 border border-slate-200 rounded-2xl p-4 card-lift">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="w-2 h-2 rounded-full bg-slate-500"></span>
+            <p class="text-xs text-slate-600 font-medium">No PHP</p>
+          </div>
+          <p class="text-2xl font-bold text-slate-800" id="mNoPhp">0</p>
+        </div>
+      </div>
+
+      <div class="grid lg:grid-cols-3 gap-4 mb-4">
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 card-lift">
+          <p class="font-semibold text-navy mb-3">PHP-related vs other</p>
+          <div id="phpStackBar" class="h-3 rounded-full overflow-hidden flex bg-slate-100 mb-3"></div>
+          <div class="space-y-2 text-sm" id="phpVsOther"></div>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 card-lift">
+          <p class="font-semibold text-navy mb-3">Top countries</p>
+          <div class="space-y-3 text-sm" id="topCountries"></div>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 card-lift">
+          <p class="font-semibold text-navy mb-3">Frameworks</p>
+          <div class="space-y-3 text-sm" id="topFrameworks"></div>
+        </div>
+      </div>
+
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 card-lift">
+        <p class="font-semibold text-navy mb-3">Top tech signals</p>
+        <div class="grid sm:grid-cols-2 gap-3 text-sm" id="topSignals"></div>
+      </div>
+    </section>
+
+    <section id="faqSection" class="max-w-3xl mx-auto mb-10">
+      <h3 class="text-xl font-bold text-navy mb-4">How to use and what results mean</h3>
       <div class="bg-white border border-slate-200 rounded-2xl divide-y divide-slate-100 text-sm text-slate-700">
         <div class="p-5">
-          <p class="font-medium text-navy mb-2">How to use</p>
+          <p class="font-semibold text-navy mb-2">How to use</p>
           <ol class="list-decimal list-inside space-y-1">
             <li>Enter a website URL.</li>
             <li>Click Check Now.</li>
@@ -130,20 +283,20 @@
           </ol>
         </div>
         <div class="p-5 space-y-3">
-          <p class="font-medium text-navy">What the results mean</p>
+          <p class="font-semibold text-navy">What the results mean</p>
           <p><strong>Vulnerable</strong> — A PHP version known to be affected was detected. Upgrade is recommended.</p>
           <p><strong>Version Hidden</strong> — PHP is present, but the version is not public. Verify on the server.</p>
           <p><strong>Safe</strong> — The detected version includes the official patches for the CVEs this tool checks.</p>
           <p><strong>No PHP Detected</strong> — This URL did not show clear PHP signals. A separate API or backend may still use PHP.</p>
         </div>
         <div class="p-5 space-y-2">
-          <p class="font-medium text-navy">What this tool checks</p>
+          <p class="font-semibold text-navy">What this tool checks</p>
           <p>Public headers, common framework signals, PHP version when exposed, and whether that version is below the fixed releases for CVE-2026-109618 and CVE-2026-109619. It also reports other public technology signals when present.</p>
-          <p class="font-medium text-navy pt-2">What it does not do</p>
+          <p class="font-semibold text-navy pt-2">What it does not do</p>
           <p>It does not log into your server, run exploits, or guarantee visibility when versions are hidden. For non-PHP stacks it describes what public signals suggest; it is not a full vulnerability audit of every language.</p>
         </div>
         <div class="p-5">
-          <p class="font-medium text-navy mb-2">Currently checked (PHP)</p>
+          <p class="font-semibold text-navy mb-2">Currently checked (PHP)</p>
           <ul class="space-y-1">
             <li>CVE-2026-109618 and CVE-2026-109619 (critical RCE)</li>
             <li>Fixed versions: 8.5.12, 8.4.27, 8.3.36, 8.2.35</li>
@@ -160,6 +313,9 @@
   </footer>
 
   <script>
+    const STATS_KEY = "php_sentinel_stats_v1";
+    const STATS_TTL_MS = 10 * 60 * 1000;
+
     const input = document.getElementById("urlInput");
     const btn = document.getElementById("checkBtn");
     const btnText = document.getElementById("btnText");
@@ -169,12 +325,194 @@
     const eduSection = document.getElementById("eduSection");
 
     btn.addEventListener("click", runCheck);
-    input.addEventListener("keydown", e => { if (e.key === "Enter") runCheck(); });
+    input.addEventListener("keydown", (e) => { if (e.key === "Enter") runCheck(); });
+
+    loadStats().then(renderStats).catch(() => {});
+
+    async function loadStats() {
+      try {
+        const cached = localStorage.getItem(STATS_KEY);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Date.now() - parsed.fetched_at < STATS_TTL_MS) return parsed.data;
+        }
+      } catch {}
+      const res = await fetch("/api/stats");
+      if (!res.ok) throw new Error("stats failed");
+      const data = await res.json();
+      localStorage.setItem(STATS_KEY, JSON.stringify({ fetched_at: Date.now(), data }));
+      return data;
+    }
+
+    function countryFlagImg(code) {
+      if (!code || code === "Unknown" || String(code).length !== 2) {
+        return `<span class="inline-flex w-5 h-4 items-center justify-center text-sm" title="Unknown">🌐</span>`;
+      }
+      const cc = String(code).trim().toLowerCase();
+      return `<img
+        src="https://flagcdn.com/w40/${cc}.png"
+        srcset="https://flagcdn.com/w40/${cc}.png 1x, https://flagcdn.com/w80/${cc}.png 2x"
+        width="20"
+        height="15"
+        alt="${cc.toUpperCase()}"
+        title="${cc.toUpperCase()}"
+        class="inline-block rounded-[2px] mr-1.5 align-middle shadow-sm"
+        loading="lazy"
+        onerror="this.style.display='none'; this.nextElementSibling && (this.nextElementSibling.style.display='inline');"
+      /><span style="display:none">🌐</span>`;
+    }
+
+    function renderRankedCountries(rows) {
+      const el = document.getElementById("topCountries");
+      if (!el) return;
+
+      if (!rows || !rows.length) {
+        el.innerHTML = `<p class="text-slate-400">No country data yet</p>`;
+        return;
+      }
+
+      const max = Math.max(...rows.map((r) => r.c), 1);
+      const medals = ["#f59e0b", "#94a3b8", "#b45309"];
+
+      el.innerHTML = rows
+        .map((r, i) => {
+          const pct = Math.max(6, Math.round((100 * r.c) / max));
+          const isUnknown = !r.name || r.name === "Unknown";
+          const flag = countryFlagImg(isUnknown ? "" : r.name);
+          const name = isUnknown ? "Unknown" : String(r.name).toUpperCase();
+          const dot = i < 3 ? medals[i] : "#0F172A";
+
+          return `<div>
+            <div class="flex justify-between gap-2 mb-1 items-center">
+              <span class="truncate flex items-center min-w-0">
+                <span class="w-2 h-2 rounded-full shrink-0 mr-2" style="background:${dot}"></span>
+                ${flag}
+                <span class="font-medium text-slate-800">${name}</span>
+              </span>
+              <span class="font-semibold text-slate-900 shrink-0">${r.c}</span>
+            </div>
+            <div class="bar"><span data-w="${pct}" style="background:#0F172A"></span></div>
+          </div>`;
+        })
+        .join("");
+
+      requestAnimationFrame(() => {
+        el.querySelectorAll(".bar > span").forEach((span) => {
+          span.style.width = span.getAttribute("data-w") + "%";
+        });
+      });
+    }
+
+    function renderStats(data) {
+      const t = data.totals || {};
+      const s = data.status || {};
+      const risk = data.risk || {};
+      const derived = data.derived || {};
+      const php = data.php_vs_other || {};
+
+      setText("mTotal", t.scans || 0);
+      setText("mSites", t.unique_sites || 0);
+      setText("mUsers", t.unique_users || 0);
+      setText("m24", t.last_24h || 0);
+      setText("mVuln", s.vulnerable || 0);
+      setText("mHidden", s.hidden || 0);
+      setText("mSafe", s.safe || 0);
+      setText("mNoPhp", s.no_php || 0);
+      setText("mVulnPct", risk.vulnerable_pct || 0);
+      setText("mRepeat", derived.repeat_check_rate || 0);
+      setText("mHiddenRate", derived.hidden_rate_among_php || 0);
+      setText("statsUpdated", data.updated_at ? "Updated " + new Date(data.updated_at).toLocaleString() : "");
+
+      const phpRelated = php.php_related || 0;
+      const noPhp = php.no_php || 0;
+      const errors = php.errors || 0;
+      const sum = Math.max(phpRelated + noPhp + errors, 1);
+      const stack = document.getElementById("phpStackBar");
+      if (stack) {
+        stack.innerHTML = `
+          <div style="width:${(100 * phpRelated) / sum}%;background:#0D9488"></div>
+          <div style="width:${(100 * noPhp) / sum}%;background:#64748b"></div>
+          <div style="width:${(100 * errors) / sum}%;background:#f43f5e"></div>`;
+      }
+
+      document.getElementById("phpVsOther").innerHTML = [
+        ["PHP-related", phpRelated, "#0D9488"],
+        ["No PHP", noPhp, "#64748b"],
+        ["Errors", errors, "#f43f5e"]
+      ].map(([label, val, color]) => legendRow(label, val, color)).join("");
+
+      renderRankedCountries(data.countries || []);
+      renderRanked("topFrameworks", data.frameworks || [], "#0D9488");
+      renderRanked("topSignals", data.top_tech_signals || [], "#0369a1");
+
+      const top = (data.countries && data.countries[0]) || null;
+      const topCountryLabel = top
+        ? `${String(top.name || "??").toUpperCase()} (${top.c})`
+        : "—";
+
+      document.getElementById("tickerText").textContent =
+        `Total checks ${t.scans || 0}  ·  Unique sites ${t.unique_sites || 0}  ·  Unique users ${t.unique_users || 0}  ·  Vulnerable ${s.vulnerable || 0}  ·  Hidden ${s.hidden || 0}  ·  Safe ${s.safe || 0}  ·  No PHP ${s.no_php || 0}  ·  Top country ${topCountryLabel}  ·  Vulnerable share ${risk.vulnerable_pct || 0}%  ·  Repeat rate ${derived.repeat_check_rate || 0}%  ·  `;
+    }
+
+    function setText(id, val) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = val;
+    }
+
+    function legendRow(label, val, color) {
+      return `<div class="flex items-center justify-between"><span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full" style="background:${color}"></span>${label}</span><span class="font-semibold">${val}</span></div>`;
+    }
+
+    function renderRanked(id, rows, color) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (!rows || !rows.length) {
+        el.innerHTML = `<p class="text-slate-400">No data yet</p>`;
+        return;
+      }
+      const max = Math.max(...rows.map((r) => r.c), 1);
+      const medals = ["#f59e0b", "#94a3b8", "#b45309"];
+      el.innerHTML = rows.map((r, i) => {
+        const pct = Math.max(6, Math.round((100 * r.c) / max));
+        const dot = i < 3 ? medals[i] : color;
+        return `<div>
+          <div class="flex justify-between gap-2 mb-1">
+            <span class="truncate flex items-center gap-2"><span class="w-2 h-2 rounded-full shrink-0" style="background:${dot}"></span>${r.name}</span>
+            <span class="font-semibold">${r.c}</span>
+          </div>
+          <div class="bar"><span data-w="${pct}" style="background:${color}"></span></div>
+        </div>`;
+      }).join("");
+      requestAnimationFrame(() => {
+        el.querySelectorAll(".bar > span").forEach((span) => {
+          span.style.width = span.getAttribute("data-w") + "%";
+        });
+      });
+    }
+
+    function hideMarketing() {
+      document.getElementById("statsTicker").classList.add("hidden");
+      document.getElementById("analyticsSection").classList.add("hidden");
+      document.getElementById("faqSection").classList.add("hidden");
+      document.getElementById("adLeft").classList.add("hidden");
+      document.getElementById("adRight").classList.add("hidden");
+      eduSection.classList.add("hidden");
+    }
+
+    function showMarketing() {
+      document.getElementById("statsTicker").classList.remove("hidden");
+      document.getElementById("analyticsSection").classList.remove("hidden");
+      document.getElementById("faqSection").classList.remove("hidden");
+      document.getElementById("adLeft").classList.remove("hidden");
+      document.getElementById("adRight").classList.remove("hidden");
+      eduSection.classList.remove("hidden");
+    }
 
     async function runCheck() {
       const url = input.value.trim();
       if (!url) { input.focus(); return; }
-      eduSection.classList.add("hidden");
+
+      hideMarketing();
       btn.disabled = true;
       btnText.textContent = "Scanning…";
       loading.classList.remove("hidden");
@@ -201,16 +539,14 @@
     }
 
     function showResult(data) {
-      let color = "slate", title = "No PHP Detected";
+      let color = "slate";
+      let title = "No PHP Detected";
       if (data.status === "vulnerable") { color = "rose"; title = "Vulnerable – Action Required"; }
       else if (data.status === "hidden") { color = "amber"; title = "PHP Detected – Version Hidden"; }
       else if (data.status === "safe") { color = "emerald"; title = "Looks Safe"; }
+      else if (data.status === "error") { color = "rose"; title = "Could not scan"; }
 
       const signals = Array.isArray(data.tech_signals) ? data.tech_signals : [];
-      const signalsHtml = signals.length
-        ? `<div class="mt-4 p-4 bg-white/60 rounded-xl text-sm"><p class="font-medium text-slate-900 mb-2">What we found on this URL</p><ul class="list-disc list-inside space-y-1 text-slate-700">${signals.map(s => `<li>${s}</li>`).join("")}</ul><p class="mt-2 text-xs text-slate-500">Based on public signals only. Separate APIs or backends are not checked unless you enter those URLs too.</p></div>`
-        : "";
-
       const toolUrl = "https://sentinel.kejanigarage.com";
       const summary = `${title}\n${data.message || ""}${data.php_version ? "\nVersion: " + data.php_version : ""}`;
       window.lastResultText = `${summary}\n\nChecked with PHP Sentinel → ${toolUrl}`;
@@ -221,16 +557,16 @@
           <h3 class="text-xl font-semibold text-${color}-900 mb-2">${title}${data.support_status ? ` <span class="text-xs font-medium bg-white/80 px-2 py-0.5 rounded-full">${data.support_status}</span>` : ""}</h3>
           <p class="text-${color}-800 mb-2">${data.message || data.error || ""}</p>
           ${data.details ? `<p class="text-sm text-${color}-700 mb-2">${data.details}</p>` : ""}
-          <div class="text-sm text-${color}-800 flex flex-wrap gap-3">
-            ${data.php_version ? `<span>Version: <code class="bg-white/70 px-1 rounded">${data.php_version}</code></span>` : ""}
+          <div class="text-sm text-${color}-800 flex flex-wrap gap-3 mb-1">
+            ${data.php_version ? `<span>Version: <code class="bg-white/70 px-1.5 py-0.5 rounded">${data.php_version}</code></span>` : ""}
             ${data.framework ? `<span>Framework: ${data.framework}</span>` : ""}
           </div>
           ${data.hygiene ? `<div class="mt-3 p-3 bg-amber-50 border border-amber-100 rounded-lg text-sm text-amber-800">${data.hygiene}</div>` : ""}
-          ${data.tip ? `<div class="mt-4 p-4 bg-slate-50 rounded-xl text-sm text-slate-700"><strong>What to do next:</strong> ${data.tip}</div>` : ""}
-          ${signalsHtml}
+          ${data.tip ? `<div class="mt-4 p-4 bg-white/70 rounded-xl text-sm text-slate-700"><strong>What to do next:</strong> ${data.tip}</div>` : ""}
+          ${signals.length ? `<div class="mt-4 p-4 bg-white/60 rounded-xl text-sm"><p class="font-medium text-slate-900 mb-2">What we found on this URL</p><ul class="list-disc list-inside space-y-1 text-slate-700">${signals.map((s) => `<li>${s}</li>`).join("")}</ul><p class="mt-2 text-xs text-slate-500">Based on public signals only. Separate APIs or backends are not checked unless you enter those URLs too.</p></div>` : ""}
         </div>
         <div class="flex flex-wrap gap-3">
-          <button onclick="copyResult()" class="px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm">Copy result</button>
+          <button onclick="navigator.clipboard.writeText(window.lastResultText||'').then(()=>alert('Result copied'))" class="px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm">Copy result</button>
           <a href="https://twitter.com/intent/tweet?text=${shareText}" target="_blank" class="px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm">Share on X</a>
           <a href="https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(toolUrl)}" target="_blank" class="px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm">Share on LinkedIn</a>
           <button onclick="checkAnother()" class="px-4 py-2.5 bg-navy text-white rounded-xl text-sm">Check another site</button>
@@ -246,46 +582,48 @@
         });
       }
 
-      let ctaTitle = "Happy to help", ctaText = "You can book a free discovery call for a broader review or upgrade help.", ctaButton = "Book a free discovery call";
+      let ctaTitle = "Happy to help";
+      let ctaText = "Book a free discovery call if you want a broader review.";
+      let ctaButton = "Book a free discovery call";
       if (data.status === "vulnerable") {
         ctaTitle = "Your site needs attention";
-        ctaText = "I help teams upgrade PHP and harden applications after critical issues like this.";
+        ctaText = "I help teams upgrade PHP and harden applications after critical issues.";
         ctaButton = "Book free emergency review";
       } else if (data.status === "hidden") {
-        ctaTitle = "Version hidden — verify it is patched";
-        ctaText = "I can help you confirm the real version and upgrade safely.";
+        ctaTitle = "Verify it is patched";
+        ctaText = "I can help confirm the real version and upgrade safely.";
         ctaButton = "Book a free verification call";
       } else if (data.status === "safe") {
         ctaTitle = "You look patched";
-        ctaText = "If you want long-term hardening or modernization help, book a free strategy call.";
+        ctaText = "Want hardening or modernization help? Book a free strategy call.";
         ctaButton = "Book a free strategy call";
       }
 
+      const notes = encodeURIComponent(
+        `PHP Sentinel result for ${data.url || input.value}\nStatus: ${data.status}\n${data.php_version || ""}\n${data.message || ""}`
+      );
       ctaSection.innerHTML = `
-        <div class="bg-white rounded-2xl border border-slate-200 p-6">
+        <div class="bg-white border border-slate-200 rounded-2xl p-6">
           <h3 class="font-semibold text-navy text-lg">Alex Mochu</h3>
           <p class="text-sm text-slate-500 mb-3">Senior Fullstack Engineer · Nairobi</p>
-          <p class="text-slate-600 text-sm mb-4">Alex builds tools that turn complex technical problems into clear next steps. He helps teams patch, modernize, and future-proof PHP applications.</p>
+          <p class="text-sm text-slate-600 mb-4">Alex builds tools that turn complex technical problems into clear next steps. He helps teams patch, modernize, and future-proof PHP applications.</p>
           <h4 class="font-semibold text-navy mb-1">${ctaTitle}</h4>
-          <p class="text-slate-600 text-sm mb-4">${ctaText}</p>
-          <a id="bookBtn" href="https://cal.com/alex-mochu/php-fix" target="_blank" class="inline-flex items-center gap-2 px-5 py-3 bg-teal hover:bg-teal/90 text-white font-medium rounded-xl">${ctaButton}</a>
+          <p class="text-sm text-slate-600 mb-4">${ctaText}</p>
+          <a id="bookBtn" href="https://cal.com/alex-mochu/php-fix?notes=${notes}" target="_blank"
+             class="inline-flex items-center gap-2 px-5 py-3 bg-teal hover:bg-teal/90 text-white font-medium rounded-xl transition">${ctaButton}</a>
         </div>`;
-      const notes = encodeURIComponent(`PHP Sentinel result for ${data.url || input.value}\nStatus: ${data.status}\n${data.php_version || ""}\n${data.message || ""}`);
-      const bookBtn = document.getElementById("bookBtn");
-      bookBtn.href = `https://cal.com/alex-mochu/php-fix?notes=${notes}`;
-      bookBtn.addEventListener("click", () => {
-        if (typeof gtag === "function") gtag("event", "book_call_click", { status: data.status, url: data.url || input.value });
+      document.getElementById("bookBtn").addEventListener("click", () => {
+        if (typeof gtag === "function") {
+          gtag("event", "book_call_click", { status: data.status, url: data.url || input.value });
+        }
       });
       ctaSection.classList.remove("hidden");
     }
 
-    function copyResult() {
-      navigator.clipboard.writeText(window.lastResultText || "").then(() => alert("Result copied."));
-    }
     function checkAnother() {
       result.classList.add("hidden");
       ctaSection.classList.add("hidden");
-      eduSection.classList.remove("hidden");
+      showMarketing();
       input.value = "";
       input.focus();
       window.scrollTo({ top: 0, behavior: "smooth" });

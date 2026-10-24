@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Threat Timeline 2026 – Sentinel by Kejani Garage</title>
+  <meta name="description" content="Public critical vulnerabilities, breaches, supply-chain incidents, and AI-related security events from January to October 2026. Curated for Sentinel users." />
+  <link rel="canonical" href="https://sentinel.kejanigarage.com/threats.html" />
+  <meta property="og:title" content="Threat Timeline 2026 – Sentinel" />
+  <meta property="og:image" content="https://sentinel.kejanigarage.com/og-image.png" />
+  <link rel="icon" href="/og-image.png" type="image/png" />
+  <meta name="theme-color" content="#05070f" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { ink: "#05070f", teal: "#2dd4bf" }
+        }
+      }
+    };
+  </script>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      background:
+        radial-gradient(900px 500px at 12% -8%, rgba(99, 102, 241, 0.22), transparent 55%),
+        radial-gradient(700px 420px at 92% 0%, rgba(45, 212, 191, 0.12), transparent 50%),
+        #05070f;
+      color: #e2e8f0;
+    }
+    .glass {
+      background: linear-gradient(165deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02));
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(16px);
+    }
+    .glass-strong {
+      background: linear-gradient(165deg, rgba(20, 27, 45, 0.96), rgba(9, 12, 24, 0.98));
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    }
+    .lift { transition: transform 0.2s ease, border-color 0.2s ease; }
+    .lift:hover { transform: translateY(-2px); border-color: rgba(45, 212, 191, 0.35); }
+    .sev-critical { background: rgba(244, 63, 94, 0.15); border-color: rgba(244, 63, 94, 0.4); color: #fda4af; }
+    .sev-high { background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.4); color: #fcd34d; }
+    .sev-medium { background: rgba(56, 189, 248, 0.12); border-color: rgba(56, 189, 248, 0.35); color: #7dd3fc; }
+    .sev-research { background: rgba(148, 163, 184, 0.12); border-color: rgba(148, 163, 184, 0.3); color: #cbd5e1; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.5rem; border-radius: 0.4rem;
+      font-size: 0.7rem; font-weight: 500;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      color: #94a3b8;
+    }
+    .chip-cve { color: #2dd4bf; border-color: rgba(45, 212, 191, 0.3); }
+    .filter-btn.active {
+      background: #fff; color: #05070f; border-color: transparent;
+    }
+    .timeline-line {
+      position: absolute; left: 1.15rem; top: 0; bottom: 0;
+      width: 2px; background: rgba(255,255,255,0.08);
+    }
+    @media (min-width: 768px) {
+      .timeline-line { left: 1.4rem; }
+    }
+    .dot {
+      width: 0.75rem; height: 0.75rem; border-radius: 999px;
+      background: #2dd4bf; box-shadow: 0 0 0 4px rgba(45, 212, 191, 0.15);
+      flex-shrink: 0;
+    }
+    .dot-critical { background: #f43f5e; box-shadow: 0 0 0 4px rgba(244, 63, 94, 0.2); }
+    .dot-high { background: #f59e0b; box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2); }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <header class="sticky top-0 z-50 border-b border-white/5 bg-[#05070f]/80 backdrop-blur-xl">
+    <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+      <a href="/" class="block">
+        <p class="text-white font-semibold leading-none text-lg">Sentinel</p>
+        <p class="text-[11px] text-slate-500 mt-1">by Kejani Garage</p>
+      </a>
+      <nav class="flex items-center gap-3 text-sm">
+        <a href="/" class="text-slate-400 hover:text-white transition">Checker</a>
+        <span class="text-teal font-medium">Threats</span>
+        <a href="https://cal.com/alex-mochu/php-fix" target="_blank" class="ml-2 px-3.5 py-2 rounded-full bg-white text-ink font-semibold">Book a call</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-10">
+    <section class="mb-8">
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass text-xs text-teal mb-4">
+        <span class="w-1.5 h-1.5 rounded-full bg-teal animate-pulse"></span>
+        Public intelligence · Jan–Oct 2026
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mb-3">Threat Timeline 2026</h1>
+      <p class="text-slate-400 text-base sm:text-lg max-w-2xl">
+        Critical runtime flaws, framework issues, company breaches, supply-chain hits, and AI-assisted attacks reported this year. Built so Sentinel users can see why patching and public-signal hygiene matter.
+      </p>
+    </section>
+
+    <!-- Stats strip -->
+    <section id="statsStrip" class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+      <div class="glass rounded-2xl p-4">
+        <p class="text-[11px] uppercase tracking-wider text-slate-500 mb-1">Events</p>
+        <p class="text-2xl font-black text-white" id="statTotal">—</p>
+      </div>
+      <div class="glass rounded-2xl p-4">
+        <p class="text-[11px] uppercase tracking-wider text-slate-500 mb-1">Critical</p>
+        <p class="text-2xl font-black text-rose-300" id="statCritical">—</p>
+      </div>
+      <div class="glass rounded-2xl p-4">
+        <p class="text-[11px] uppercase tracking-wider text-slate-500 mb-1">With CVEs</p>
+        <p class="text-2xl font-black text-teal" id="statCves">—</p>
+      </div>
+      <div class="glass rounded-2xl p-4">
+        <p class="text-[11px] uppercase tracking-wider text-slate-500 mb-1">In the wild</p>
+        <p class="text-2xl font-black text-amber-300" id="statWild">—</p>
+      </div>
+    </section>
+
+    <!-- Filters (collapsible) -->
+    <section class="glass-strong rounded-2xl mb-6 sticky top-[4.25rem] z-40 overflow-hidden">
+      <div class="flex flex-wrap items-center gap-2 p-3 sm:p-3.5">
+        <input
+          id="searchInput"
+          type="search"
+          placeholder="Search title, CVE, product…"
+          class="flex-1 min-w-[10rem] px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-white text-sm focus:outline-none focus:ring-2 focus:ring-teal/40"
+        />
+        <select id="sortSelect" class="px-2.5 py-2 rounded-xl bg-black/40 border border-white/10 text-white text-sm focus:outline-none">
+          <option value="date-desc">Newest</option>
+          <option value="date-asc">Oldest</option>
+          <option value="severity">Severity</option>
+        </select>
+        <button
+          type="button"
+          id="filterToggle"
+          aria-expanded="false"
+          class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-white/15 text-sm text-slate-300 hover:border-teal/40 hover:text-white transition"
+        >
+          <svg id="filterChevron" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          Filters
+          <span id="filterBadge" class="hidden ml-0.5 min-w-[1.25rem] h-5 px-1.5 rounded-full bg-teal text-ink text-[11px] font-bold items-center justify-center"></span>
+        </button>
+        <p class="text-xs text-slate-500 w-full sm:w-auto sm:ml-auto"><span id="visibleCount">0</span> shown</p>
+      </div>
+      <div id="filterPanel" class="hidden border-t border-white/10 px-3 sm:px-4 pb-4 pt-3 space-y-3">
+        <div>
+          <p class="text-[11px] uppercase tracking-wider text-slate-500 mb-2">Category</p>
+          <div id="categoryFilters" class="flex flex-wrap gap-2"></div>
+        </div>
+        <div>
+          <p class="text-[11px] uppercase tracking-wider text-slate-500 mb-2">Severity</p>
+          <div id="severityFilters" class="flex flex-wrap gap-2"></div>
+        </div>
+        <button type="button" id="resetFiltersInline" class="text-xs text-teal hover:underline">Reset filters</button>
+      </div>
+    </section>
+
+    <!-- Timeline -->
+    <section id="timeline" class="relative space-y-0 mb-12">
+      <div class="timeline-line hidden md:block"></div>
+      <div id="eventList" class="space-y-5"></div>
+      <div id="emptyState" class="hidden text-center py-16 glass rounded-3xl">
+        <p class="text-slate-400">No events match your filters.</p>
+        <button type="button" id="resetFilters" class="mt-4 text-teal text-sm underline">Reset filters</button>
+      </div>
+    </section>
+
+    <section class="glass rounded-3xl p-6 mb-10 text-sm text-slate-400">
+      <p class="text-white font-semibold mb-2">About this timeline</p>
+      <p class="mb-2">Public reporting only. Dates prefer official announcement or widely confirmed disclosure. Not a full CVE feed. No exploit instructions.</p>
+      <p>Want a free check on your own site? <a href="/" class="text-teal hover:underline">Open the Sentinel checker</a>.</p>
+    </section>
+  </main>
+
+  <footer class="border-t border-white/5 py-8 text-center text-sm text-slate-500">
+    <p>Sentinel · Built by <a href="https://kejanigarage.com" class="text-teal hover:underline">Kejani Garage</a></p>
+    <p class="mt-1">Threat data is curated for awareness, not operational threat intel.</p>
+  </footer>
+
+  <script>
+    (function () {
+      var DATA = null;
+      var activeCategory = "all";
+      var activeSeverity = "all";
+      var searchQ = "";
+      var sortMode = "date-desc";
+
+      var CATEGORY_LABELS = {
+        all: "All",
+        runtime_language: "Runtime / language",
+        framework_cms: "Framework / CMS",
+        enterprise_software: "Enterprise software",
+        company_breach: "Company breach",
+        supply_chain: "Supply chain",
+        ai_agent_attacks: "AI agent attacks",
+        ai_product_incident: "AI product incident",
+        infrastructure_pki: "Infrastructure / PKI"
+      };
+
+      var SEVERITY_ORDER = { critical: 0, high: 1, medium: 2, research: 3 };
+
+      var categoryFilters = document.getElementById("categoryFilters");
+      var severityFilters = document.getElementById("severityFilters");
+      var eventList = document.getElementById("eventList");
+      var emptyState = document.getElementById("emptyState");
+      var searchInput = document.getElementById("searchInput");
+      var sortSelect = document.getElementById("sortSelect");
+      var filterPanel = document.getElementById("filterPanel");
+      var filterToggle = document.getElementById("filterToggle");
+      var filterChevron = document.getElementById("filterChevron");
+      var filterBadge = document.getElementById("filterBadge");
+
+      function setFilterOpen(open) {
+        if (open) {
+          filterPanel.classList.remove("hidden");
+          filterToggle.setAttribute("aria-expanded", "true");
+          filterChevron.style.transform = "rotate(180deg)";
+        } else {
+          filterPanel.classList.add("hidden");
+          filterToggle.setAttribute("aria-expanded", "false");
+          filterChevron.style.transform = "";
+        }
+      }
+
+      filterToggle.addEventListener("click", function () {
+        setFilterOpen(filterPanel.classList.contains("hidden"));
+      });
+
+      var scrollCollapseTimer = null;
+      window.addEventListener(
+        "scroll",
+        function () {
+          if (filterPanel.classList.contains("hidden")) return;
+          if (scrollCollapseTimer) return;
+          scrollCollapseTimer = setTimeout(function () {
+            scrollCollapseTimer = null;
+            if (window.scrollY > 120) setFilterOpen(false);
+          }, 120);
+        },
+        { passive: true }
+      );
+
+      fetch("/threats-2026.json")
+        .then(function (r) {
+          if (!r.ok) throw new Error("Failed to load threats data");
+          return r.json();
+        })
+        .then(function (json) {
+          DATA = json;
+          buildFilterButtons();
+          updateStats();
+          render();
+        })
+        .catch(function () {
+          eventList.innerHTML =
+            '<div class="glass rounded-3xl p-8 text-center text-rose-300">Could not load threat data. Ensure threats-2026.json is in the public folder.</div>';
+        });
+
+      function buildFilterButtons() {
+        var cats = ["all"].concat(Object.keys(CATEGORY_LABELS).filter(function (k) { return k !== "all"; }));
+        categoryFilters.innerHTML = cats.map(function (c) {
+          return (
+            '<button type="button" data-cat="' + c + '" class="filter-btn px-3 py-1.5 rounded-full text-xs border border-white/15 text-slate-300 hover:border-teal/40 transition' +
+            (c === "all" ? " active" : "") + '">' +
+            (CATEGORY_LABELS[c] || c) +
+            "</button>"
+          );
+        }).join("");
+
+        var sevs = ["all", "critical", "high", "medium", "research"];
+        severityFilters.innerHTML = sevs.map(function (s) {
+          return (
+            '<button type="button" data-sev="' + s + '" class="filter-btn px-3 py-1.5 rounded-full text-xs border border-white/15 text-slate-300 hover:border-teal/40 transition' +
+            (s === "all" ? " active" : "") + '">' +
+            (s === "all" ? "All" : s.charAt(0).toUpperCase() + s.slice(1)) +
+            "</button>"
+          );
+        }).join("");
+
+        categoryFilters.addEventListener("click", function (e) {
+          var btn = e.target.closest("[data-cat]");
+          if (!btn) return;
+          activeCategory = btn.getAttribute("data-cat");
+          categoryFilters.querySelectorAll(".filter-btn").forEach(function (b) {
+            b.classList.toggle("active", b.getAttribute("data-cat") === activeCategory);
+          });
+          render();
+        });
+
+        severityFilters.addEventListener("click", function (e) {
+          var btn = e.target.closest("[data-sev]");
+          if (!btn) return;
+          activeSeverity = btn.getAttribute("data-sev");
+          severityFilters.querySelectorAll(".filter-btn").forEach(function (b) {
+            b.classList.toggle("active", b.getAttribute("data-sev") === activeSeverity);
+          });
+          render();
+        });
+      }
+
+      searchInput.addEventListener("input", function () {
+        searchQ = (searchInput.value || "").trim().toLowerCase();
+        render();
+      });
+
+      sortSelect.addEventListener("change", function () {
+        sortMode = sortSelect.value;
+        render();
+      });
+
+      function resetAllFilters() {
+        activeCategory = "all";
+        activeSeverity = "all";
+        searchQ = "";
+        searchInput.value = "";
+        sortMode = "date-desc";
+        sortSelect.value = "date-desc";
+        categoryFilters.querySelectorAll(".filter-btn").forEach(function (b) {
+          b.classList.toggle("active", b.getAttribute("data-cat") === "all");
+        });
+        severityFilters.querySelectorAll(".filter-btn").forEach(function (b) {
+          b.classList.toggle("active", b.getAttribute("data-sev") === "all");
+        });
+        render();
+      }
+
+      document.getElementById("resetFilters").addEventListener("click", resetAllFilters);
+      document.getElementById("resetFiltersInline").addEventListener("click", resetAllFilters);
+
+      function updateFilterBadge() {
+        var n = 0;
+        if (activeCategory !== "all") n++;
+        if (activeSeverity !== "all") n++;
+        if (searchQ) n++;
+        if (n > 0) {
+          filterBadge.textContent = String(n);
+          filterBadge.classList.remove("hidden");
+          filterBadge.classList.add("inline-flex");
+        } else {
+          filterBadge.classList.add("hidden");
+          filterBadge.classList.remove("inline-flex");
+        }
+      }
+
+      function updateStats() {
+        if (!DATA || !DATA.events) return;
+        var events = DATA.events;
+        var critical = events.filter(function (e) { return e.severity === "critical"; }).length;
+        var withCve = events.filter(function (e) { return e.cves && e.cves.length; }).length;
+        var wild = events.filter(function (e) { return e.exploitation && e.exploitation.in_the_wild; }).length;
+        document.getElementById("statTotal").textContent = events.length;
+        document.getElementById("statCritical").textContent = critical;
+        document.getElementById("statCves").textContent = withCve;
+        document.getElementById("statWild").textContent = wild;
+      }
+
+      function filteredEvents() {
+        if (!DATA || !DATA.events) return [];
+        var list = DATA.events.slice();
+
+        if (activeCategory !== "all") {
+          list = list.filter(function (e) { return e.category === activeCategory; });
+        }
+        if (activeSeverity !== "all") {
+          list = list.filter(function (e) { return e.severity === activeSeverity; });
+        }
+        if (searchQ) {
+          list = list.filter(function (e) {
+            var blob = [
+              e.title || "",
+              e.subtitle || "",
+              e.summary || "",
+              (e.cves || []).join(" "),
+              (e.tags || []).join(" "),
+              JSON.stringify(e.affected || {})
+            ].join(" ").toLowerCase();
+            return blob.indexOf(searchQ) !== -1;
+          });
+        }
+
+        if (sortMode === "date-asc") {
+          list.sort(function (a, b) { return (a.date || "").localeCompare(b.date || ""); });
+        } else if (sortMode === "severity") {
+          list.sort(function (a, b) {
+            var sa = SEVERITY_ORDER[a.severity] != null ? SEVERITY_ORDER[a.severity] : 9;
+            var sb = SEVERITY_ORDER[b.severity] != null ? SEVERITY_ORDER[b.severity] : 9;
+            if (sa !== sb) return sa - sb;
+            return (b.date || "").localeCompare(a.date || "");
+          });
+        } else {
+          list.sort(function (a, b) { return (b.date || "").localeCompare(a.date || ""); });
+        }
+
+        return list;
+      }
+
+      function sevClass(sev) {
+        if (sev === "critical") return "sev-critical";
+        if (sev === "high") return "sev-high";
+        if (sev === "medium") return "sev-medium";
+        return "sev-research";
+      }
+
+      function dotClass(sev) {
+        if (sev === "critical") return "dot-critical";
+        if (sev === "high") return "dot-high";
+        return "";
+      }
+
+      function escapeHtml(s) {
+        if (s == null) return "";
+        return String(s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function render() {
+        var list = filteredEvents();
+        document.getElementById("visibleCount").textContent = list.length;
+        updateFilterBadge();
+
+        if (!list.length) {
+          eventList.innerHTML = "";
+          emptyState.classList.remove("hidden");
+          return;
+        }
+        emptyState.classList.add("hidden");
+
+        eventList.innerHTML = list.map(function (e) {
+          var cves = (e.cves || []).map(function (c) {
+            return '<span class="chip chip-cve">' + escapeHtml(c) + "</span>";
+          }).join(" ");
+
+          var tags = (e.tags || []).slice(0, 6).map(function (t) {
+            return '<span class="chip">' + escapeHtml(t) + "</span>";
+          }).join(" ");
+
+          var fixed = "";
+          if (e.fixed_versions && e.fixed_versions.length) {
+            fixed =
+              '<p class="text-xs text-slate-400 mt-2"><span class="text-emerald-300 font-medium">Fixed in:</span> ' +
+              escapeHtml(e.fixed_versions.join(", ")) +
+              "</p>";
+          }
+
+          var wild = e.exploitation && e.exploitation.in_the_wild
+            ? '<span class="chip" style="color:#fda4af;border-color:rgba(244,63,94,0.35)">In the wild</span>'
+            : "";
+
+          var products = "";
+          if (e.affected && e.affected.products && e.affected.products.length) {
+            products =
+              '<p class="text-xs text-slate-400 mt-1"><span class="text-slate-300">Affects:</span> ' +
+              escapeHtml(e.affected.products.slice(0, 5).join(", ")) +
+              (e.affected.products.length > 5 ? "…" : "") +
+              "</p>";
+          }
+
+          var scale = "";
+          if (e.affected && e.affected.scale) {
+            scale =
+              '<p class="text-xs text-slate-400"><span class="text-slate-300">Scale:</span> ' +
+              escapeHtml(String(e.affected.scale)) +
+              "</p>";
+          }
+
+          var relevance = e.sentinel_relevance
+            ? '<div class="mt-3 p-3 rounded-xl bg-teal/5 border border-teal/20 text-xs text-slate-300"><span class="text-teal font-medium">Sentinel note:</span> ' +
+              escapeHtml(e.sentinel_relevance) +
+              "</div>"
+            : "";
+
+          var sources = "";
+          if (e.sources && e.sources.length) {
+            sources =
+              '<div class="mt-3 flex flex-wrap gap-2">' +
+              e.sources.slice(0, 3).map(function (u, i) {
+                return (
+                  '<a href="' + escapeHtml(u) + '" target="_blank" rel="noopener" class="text-[11px] text-teal/80 hover:text-teal underline">' +
+                  "Source " + (i + 1) +
+                  "</a>"
+                );
+              }).join("") +
+              "</div>";
+          }
+
+          return (
+            '<article class="relative md:pl-12">' +
+            '<div class="hidden md:flex absolute left-0 top-6 items-center justify-center w-8">' +
+            '<span class="dot ' + dotClass(e.severity) + '"></span></div>' +
+            '<div class="glass-strong rounded-3xl p-5 lift">' +
+            '<div class="flex flex-wrap items-center gap-2 mb-2">' +
+            '<span class="px-2 py-0.5 rounded-lg text-[11px] font-semibold border ' + sevClass(e.severity) + '">' +
+            escapeHtml((e.severity || "info").toUpperCase()) +
+            "</span>" +
+            '<span class="chip">' + escapeHtml(CATEGORY_LABELS[e.category] || e.category) + "</span>" +
+            wild +
+            (e.cvss != null ? '<span class="chip">CVSS ' + escapeHtml(String(e.cvss)) + "</span>" : "") +
+            "</div>" +
+            '<p class="text-[11px] text-slate-500 mb-1">' + escapeHtml(e.date_label || e.date) + "</p>" +
+            '<h2 class="text-lg sm:text-xl font-bold text-white mb-1">' + escapeHtml(e.title) + "</h2>" +
+            (e.subtitle ? '<p class="text-sm text-teal/90 mb-2">' + escapeHtml(e.subtitle) + "</p>" : "") +
+            '<p class="text-sm text-slate-300 leading-relaxed">' + escapeHtml(e.summary) + "</p>" +
+            (e.impact ? '<p class="text-sm text-slate-400 mt-2"><span class="text-slate-200 font-medium">Impact:</span> ' + escapeHtml(e.impact) + "</p>" : "") +
+            products +
+            scale +
+            fixed +
+            '<div class="mt-3 flex flex-wrap gap-1.5">' + cves + tags + "</div>" +
+            relevance +
+            sources +
+            "</div></article>"
+          );
+        }).join("");
+      }
+    })();
+  </script>
+</body>
+</html>

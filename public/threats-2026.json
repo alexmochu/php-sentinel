@@ -1,0 +1,975 @@
+{
+  "meta": {
+    "title": "Sentinel Threat Timeline 2026",
+    "description": "Publicly reported critical vulnerabilities, exploits, breaches, supply-chain incidents, and AI-related security events from 1 January 2026 through 24 October 2026.",
+    "coverage_start": "2026-01-01",
+    "coverage_end": "2026-10-24",
+    "generated_at": "2026-10-24",
+    "disclaimer": "Public reporting only. Not a complete CVE database. Dates prefer official announcement or widely confirmed disclosure. Severities follow vendor/CISA ratings where available. No exploit instructions included.",
+    "categories": [
+      "runtime_language",
+      "framework_cms",
+      "enterprise_software",
+      "company_breach",
+      "supply_chain",
+      "ai_agent_attacks",
+      "ai_product_incident",
+      "infrastructure_pki"
+    ]
+  },
+  "events": [
+    {
+      "id": "php2shell-2026-10",
+      "date": "2026-10-21",
+      "date_label": "21 October 2026",
+      "date_precision": "day",
+      "category": "runtime_language",
+      "tags": ["php", "rce", "cisa", "wordpress", "laravel", "drupal"],
+      "title": "PHP2Shell — two critical unauthenticated RCEs in PHP core",
+      "subtitle": "CVE-2026-109618 & CVE-2026-109619",
+      "severity": "critical",
+      "cvss": 9.2,
+      "cves": ["CVE-2026-109618", "CVE-2026-109619"],
+      "status": "actively_scanned",
+      "announced_by": ["PHP Security Team", "CISA", "NSA", "NCSC-UK", "ASD ACSC"],
+      "researchers": ["Wiz", "OpenAI", "Calif"],
+      "summary": "Two memory-safety flaws in the PHP request lifecycle allow unauthenticated remote code execution on installations serving web traffic. Triggers can occur before application code runs, especially under Apache mod_php. Details and PoCs leaked ahead of full coordinated disclosure; emergency patches shipped 21 October 2026.",
+      "impact": "Any internet-facing PHP site (WordPress, Laravel, Drupal, Magento, Joomla, custom apps) on unpatched 8.2–8.5 branches is at risk of full server compromise.",
+      "affected": {
+        "products": ["PHP 8.2", "PHP 8.3", "PHP 8.4", "PHP 8.5"],
+        "environments": ["mod_php", "PHP-FPM", "php-cgi", "FrankenPHP", "LiteSpeed"],
+        "note": "PHP 8.1 and earlier are unsupported; no official fix — upgrade or take offline."
+      },
+      "fixed_versions": ["8.5.12", "8.4.27", "8.3.36", "8.2.35"],
+      "exploitation": {
+        "in_the_wild": true,
+        "notes": "Exploit attempts observed by Cloudflare and others shortly after leak; public PoC material circulated."
+      },
+      "sentinel_relevance": "Primary reason Sentinel exists. Check sites for PHP exposure, version signals, and patch urgency.",
+      "sources": [
+        "https://www.cisa.gov/news-events/alerts/2026/10/21/critical-vulnerabilities-php-require-immediate-patching",
+        "https://www.php.net/"
+      ]
+    },
+    {
+      "id": "nodejs-brotli-2026-10",
+      "date": "2026-10-21",
+      "date_label": "21 October 2026",
+      "date_precision": "day",
+      "category": "runtime_language",
+      "tags": ["nodejs", "brotli", "rce", "tls", "dns"],
+      "title": "Node.js October 2026 security release — Brotli RCE and TLS hostname bypasses",
+      "subtitle": "10 CVEs; lead issue CVE-2026-111497",
+      "severity": "high",
+      "cvss": 9.2,
+      "cves": [
+        "CVE-2026-111497",
+        "CVE-2026-105482",
+        "CVE-2026-105483",
+        "CVE-2026-106069",
+        "CVE-2026-105481",
+        "CVE-2026-106072",
+        "CVE-2026-106074",
+        "CVE-2026-106070",
+        "CVE-2026-106071",
+        "CVE-2026-106073"
+      ],
+      "status": "patched",
+      "announced_by": ["Node.js Project"],
+      "summary": "Coordinated release fixing ten issues. Highest concern is an out-of-bounds write in the Brotli decoder that can lead to remote code execution when Node decodes attacker-controlled compressed data (including via fetch auto-decompress). Additional high-severity TLS hostname verification bypasses and DNS name truncation.",
+      "impact": "Any Node service that decompresses untrusted Brotli or relies on TLS hostname checks for security boundaries.",
+      "affected": {
+        "products": ["Node.js 22.x", "Node.js 24.x", "Node.js 26.x"],
+        "note": "Node.js 20 and 25 are end-of-life and receive no fix."
+      },
+      "fixed_versions": ["26.12.1", "24.22.1", "22.23.4"],
+      "exploitation": {
+        "in_the_wild": false,
+        "notes": "Public technical detail available; mass exploitation not confirmed as of late October 2026."
+      },
+      "sentinel_relevance": "Useful companion signal when a site shows Node/Next.js fingerprints.",
+      "sources": [
+        "https://nodejs.org/en/blog/vulnerability/",
+        "https://angelforce.eu/blog/nodejs-october-2026-security-release/"
+      ]
+    },
+    {
+      "id": "gitlab-regex-rce-2026-10",
+      "date": "2026-10-21",
+      "date_label": "21 October 2026",
+      "date_precision": "day",
+      "category": "enterprise_software",
+      "tags": ["gitlab", "rce", "regex"],
+      "title": "GitLab unauthenticated RCE via crafted regular expression",
+      "subtitle": "CVE-2026-110264",
+      "severity": "critical",
+      "cvss": null,
+      "cves": ["CVE-2026-110264"],
+      "status": "patched",
+      "announced_by": ["GitLab"],
+      "summary": "Integer overflow while compiling a specially crafted regular expression could allow an unauthenticated attacker to execute code on self-managed GitLab servers.",
+      "impact": "Self-managed GitLab instances exposed to the internet.",
+      "affected": {
+        "products": ["GitLab (self-managed)"]
+      },
+      "fixed_versions": [],
+      "exploitation": {
+        "in_the_wild": false,
+        "notes": "Disclosed in the same critical week as PHP2Shell and Node.js releases."
+      },
+      "sentinel_relevance": "DevOps platform risk; not directly scanned by Sentinel but relevant to engineering teams.",
+      "sources": [
+        "https://www.averlon.ai/blog/php-nodejs-gitlab-critical-disclosures"
+      ]
+    },
+    {
+      "id": "nextjs-rce-2026-10",
+      "date": "2026-10-21",
+      "date_label": "October 2026 (security releases around 21 Oct)",
+      "date_precision": "month",
+      "category": "framework_cms",
+      "tags": ["nextjs", "react", "rce", "image-optimization"],
+      "title": "Next.js critical remote code execution flaws",
+      "subtitle": "Image Optimization API and use-cache typed-array issues",
+      "severity": "critical",
+      "cvss": 9.5,
+      "cves": ["CVE-2026-96889", "CVE-2026-94482"],
+      "status": "patched",
+      "announced_by": ["Vercel / Next.js"],
+      "summary": "Critical RCEs affecting Image Optimization (SVG path) and use-cache functions returning typed arrays, plus a high-severity Server Actions DoS. Fixed in 15.5.28 and 16.4.1 lines.",
+      "impact": "Next.js apps on affected 13–16 branches, especially with image optimization or Server Actions enabled.",
+      "affected": {
+        "products": ["Next.js 13.x–15.5.27", "Next.js 16.0.0–16.4.0"]
+      },
+      "fixed_versions": ["15.5.28", "16.4.1"],
+      "exploitation": {
+        "in_the_wild": false,
+        "notes": "Public PoC claims appeared after disclosure; treat as urgent for internet-facing apps."
+      },
+      "sentinel_relevance": "Often co-deployed with Node backends; optional API URL check helps split stacks.",
+      "sources": [
+        "https://brandefense.io/security-news/next-js-node-js-security-updates-october-2026/"
+      ]
+    },
+    {
+      "id": "oracle-java-emudhra-2026-10",
+      "date": "2026-10-21",
+      "date_label": "21 October 2026 (alert after 20 Oct CPU)",
+      "date_precision": "day",
+      "category": "runtime_language",
+      "tags": ["java", "oracle", "tls", "pki", "emudhra"],
+      "title": "Oracle Java emergency alert — eMudhra intermediate CA trust issue",
+      "subtitle": "CVE-2026-91403 (CVSS 9.1) + October CPU Java fixes",
+      "severity": "critical",
+      "cvss": 9.1,
+      "cves": ["CVE-2026-91403"],
+      "status": "patched",
+      "announced_by": ["Oracle", "IPA (Japan)"],
+      "summary": "Critical JSSE certificate-trust flaw tied to compromised or weak eMudhra intermediate CAs. Separate from the large October Critical Patch Update which included ~55 Java-related fixes (many remotely exploitable without authentication).",
+      "impact": "Java SE and GraalVM applications that validate TLS certificates; potential MITM or trust confusion.",
+      "affected": {
+        "products": [
+          "Oracle Java SE 8u511+",
+          "Java SE 11.0.33",
+          "17.0.21",
+          "21.0.13",
+          "25.0.5",
+          "27.0.1",
+          "GraalVM for JDK 17/21",
+          "GraalVM EE 21.3.20"
+        ]
+      },
+      "fixed_versions": ["Latest Oct 2026 Java SE / GraalVM builds per Oracle advisory"],
+      "exploitation": {
+        "in_the_wild": false,
+        "notes": "Oracle also shipped ~1,295 patches across the full product portfolio in the October CPU."
+      },
+      "sentinel_relevance": "Enterprise Java stacks; secondary to PHP for Sentinel’s primary audience.",
+      "sources": [
+        "https://cybersecuritynews.com/emergency-java-update/",
+        "https://brandefense.io/security-news/oracle-october-2026-critical-patch-update/"
+      ]
+    },
+    {
+      "id": "oracle-cpu-2026-10",
+      "date": "2026-10-20",
+      "date_label": "20 October 2026",
+      "date_precision": "day",
+      "category": "enterprise_software",
+      "tags": ["oracle", "cpu", "soa", "access-manager"],
+      "title": "Oracle October 2026 Critical Patch Update",
+      "subtitle": "~1,295 patches; multiple CVSS 10.0 items reported in community digests",
+      "severity": "critical",
+      "cvss": 10.0,
+      "cves": ["CVE-2026-87337", "CVE-2026-91216", "CVE-2026-91221"],
+      "status": "patched",
+      "announced_by": ["Oracle"],
+      "summary": "Quarterly CPU covering a wide Oracle portfolio. Community roundups highlighted critical issues in Access Manager and SOA Suite Fabric Layer among others, plus large Java SE fix counts.",
+      "impact": "Organizations running Oracle middleware, ERP, and Java stacks.",
+      "affected": {
+        "products": ["Oracle Access Manager", "Oracle SOA Suite", "Java SE", "E-Business Suite", "PeopleSoft", "MySQL", "others"]
+      },
+      "fixed_versions": [],
+      "exploitation": {
+        "in_the_wild": false,
+        "notes": "Prioritize internet-facing Oracle products per risk matrix."
+      },
+      "sentinel_relevance": "Enterprise context; not primary Sentinel scan target.",
+      "sources": [
+        "https://brandefense.io/security-news/oracle-october-2026-critical-patch-update/"
+      ]
+    },
+    {
+      "id": "capcom-breach-2026-10",
+      "date": "2026-10-22",
+      "date_label": "22 October 2026 (confirmed)",
+      "date_precision": "day",
+      "category": "company_breach",
+      "tags": ["capcom", "gaming", "pii"],
+      "title": "Capcom CAPCOM ID breach — 11.7 million accounts",
+      "subtitle": "Email addresses and login metadata exposed",
+      "severity": "high",
+      "cvss": null,
+      "cves": [],
+      "status": "disclosed",
+      "announced_by": ["Capcom"],
+      "summary": "Unauthorized access to CAPCOM ID membership service. About 11.77 million records with email addresses and associated metadata; passwords changed on a small number of accounts without authorization.",
+      "impact": "Players of Capcom online services (Street Fighter, Monster Hunter, etc.).",
+      "affected": {
+        "products": ["CAPCOM ID"],
+        "scale": "11774247 accounts"
+      },
+      "fixed_versions": [],
+      "exploitation": {
+        "in_the_wild": true,
+        "notes": "Contained per company notices."
+      },
+      "sentinel_relevance": "Illustrates consumer-scale account platform risk.",
+      "sources": [
+        "https://www.bleepingcomputer.com/tag/data-breach/",
+        "https://www.securityweek.com/category/data-breaches/"
+      ]
+    },
+    {
+      "id": "quest-diagnostics-2026-10",
+      "date": "2026-10-21",
+      "date_label": "21 October 2026 (discovered / disclosed around this date)",
+      "date_precision": "day",
+      "category": "company_breach",
+      "tags": ["healthcare", "quest", "phi"],
+      "title": "Quest Diagnostics — Quanum Lab Services Manager access",
+      "subtitle": "Patient-related records potentially exposed",
+      "severity": "high",
+      "cvss": null,
+      "cves": [],
+      "status": "disclosed",
+      "announced_by": ["Quest Diagnostics"],
+      "summary": "Unauthorized access to Quanum Lab Services Manager, used by clients to place test orders and look up results. Certain patient records exposed.",
+      "impact": "Healthcare clients and patients whose data sits in the ordering platform.",
+      "affected": {
+        "products": ["Quanum Lab Services Manager"],
+        "scale": "Not fully quantified in early notices"
+      },
+      "fixed_versions": [],
+      "exploitation": {
+        "in_the_wild": true,
+        "notes": "Regulatory-style disclosure."
+      },
+      "sentinel_relevance": "Healthcare data sensitivity example.",
+      "sources": [
+        "https://www.bleepingcomputer.com/tag/data-breach/",
+        "https://securityboulevard.com/2026/10/top-10-breaches-of-the-week-14/"
+      ]
+    },
+    {
+      "id": "litellm-supply-chain-2026-10",
+      "date": "2026-10-21",
+      "date_label": "21 October 2026",
+      "date_precision": "day",
+      "category": "supply_chain",
+      "tags": ["python", "pypi", "docker", "llm", "backdoor"],
+      "title": "LiteLLM 1.107.0 supply-chain compromise",
+      "subtitle": "Malicious PyPI/Docker build with credential stealer and backdoor",
+      "severity": "critical",
+      "cvss": null,
+      "cves": [],
+      "status": "compromised_release",
+      "announced_by": ["OpenSourceMalware researchers", "security media"],
+      "summary": "A malicious LiteLLM 1.107.0 build was pushed to PyPI and public Docker registries after developer tokens were stolen. The package included a credential stealer and a persistent Python backdoor that runs on startup.",
+      "impact": "Teams that installed the compromised version of the popular LLM proxy/SDK.",
+      "affected": {
+        "products": ["LiteLLM 1.107.0"],
+        "channels": ["PyPI", "Docker Hub / public registries"]
+      },
+      "fixed_versions": ["Any non-compromised release; rotate all secrets if 1.107.0 was installed"],
+      "exploitation": {
+        "in_the_wild": true,
+        "notes": "Classic supply-chain token theft → malicious release pattern."
+      },
+      "sentinel_relevance": "Shows why dependency and token hygiene matter as much as runtime patches.",
+      "sources": [
+        "https://opensourcemalware.com/",
+        "https://www.cyberbreaches.org/en/timeline"
+      ]
+    },
+    {
+      "id": "zeabur-breach-2026-10",
+      "date": "2026-10-20",
+      "date_label": "20 October 2026",
+      "date_precision": "day",
+      "category": "company_breach",
+      "tags": ["paas", "env-vars", "secrets"],
+      "title": "Zeabur breach — 3.2M environment variables; platform wind-down",
+      "subtitle": "Second incident in two months; plaintext internal credentials reused",
+      "severity": "critical",
+      "cvss": null,
+      "cves": [],
+      "status": "disclosed",
+      "announced_by": ["Zeabur"],
+      "summary": "Attacker used leaked internal credentials stored in plaintext to access shared infrastructure. Over 3.2 million environment-variable records and data for about 321,810 accounts exposed. Company announced wind-down by year end.",
+      "impact": "Developers hosting apps on Zeabur; secret material in env vars.",
+      "affected": {
+        "products": ["Zeabur platform"],
+        "scale": "321810 accounts; ~3.2M env-var records"
+      },
+      "fixed_versions": [],
+      "exploitation": {
+        "in_the_wild": true,
+        "notes": "Secrets exposure is the primary harm."
+      },
+      "sentinel_relevance": "Developer-platform risk; rotate secrets if ever hosted there.",
+      "sources": [
+        "https://www.bleepingcomputer.com/tag/data-breach/"
+      ]
+    },
+    {
+      "id": "ai-agents-100-sites-2026-10",
+      "date": "2026-10-19",
+      "date_label": "19 October 2026 (Reuters exclusive; campaign from ~25 Sep)",
+      "date_precision": "day",
+      "category": "ai_agent_attacks",
+      "tags": ["ai-agents", "claude-code", "deepseek", "autonomous"],
+      "title": "AI agents used to breach 100+ company websites",
+      "subtitle": "Campaign probed 1,200+ sites; ~$50 token cost per successful intrusion",
+      "severity": "high",
+      "cvss": null,
+      "cves": [],
+      "status": "observed",
+      "announced_by": ["Reuters", "NorForge (Snorre Fagerland)"],
+      "summary": "A Chinese-speaking operator cluster used autonomous AI agents (reports cite Claude Code harness with DeepSeek-class models) to probe more than 1,200 websites and successfully break into over 100, including Deere, SharkNinja, and Cummins. Researcher observed live control panels left exposed on the internet. Estimated ~$5,000 total token spend.",
+      "impact": "Any internet-facing web app with common misconfigurations; lowers cost of mass probing.",
+      "affected": {
+        "products": ["Public websites / web apps"],
+        "named_victims_examples": ["Deere", "SharkNinja", "Cummins"],
+        "scale": "100+ successful intrusions; 1,200+ attempted"
+      },
+      "fixed_versions": [],
+      "exploitation": {
+        "in_the_wild": true,
+        "notes": "Human set goals; agents performed most of the probing and exploitation work over ~23 hours per success on average."
+      },
+      "sentinel_relevance": "Strong argument for continuous public-signal hygiene and rapid patching.",
+      "sources": [
+        "https://www.reuters.com/legal/government/how-one-hacker-used-ai-agents-few-thousand-dollars-break-into-scores-sites-2026-10-19/",
+        "https://thehackernews.com/2026/10/hackers-use-autonomous-ai-agents-to.html"
+      ]
+    },
+    {
+      "id": "opencode-distillation-2026-10",
+      "date": "2026-10-17",
+      "date_label": "17 October 2026",
+      "date_precision": "day",
+      "category": "ai_product_incident",
+      "tags": ["opencode", "api-keys", "distillation"],
+      "title": "OpenCode Console breach — API keys exposed in distillation attack",
+      "subtitle": "~1.4% of Console users with external providers affected",
+      "severity": "high",
+      "cvss": null,
+      "cves": [],
+      "status": "disclosed",
+      "announced_by": ["OpenCode"],
+      "summary": "Security breach related to a large-scale distillation attack impacted users who had linked external AI providers. API keys were exposed for a subset of accounts. Company worked with Anthropic, OpenAI, and Google on remediation.",
+      "impact": "OpenCode Console users with third-party provider keys.",
+      "affected": {
+        "products": ["OpenCode Console"],
+        "scale": "1.4% of Console users (company figure)"
+      },
+      "fixed_versions": [],
+      "exploitation": {
+        "in_the_wild": true,
+        "notes": "Rotate any keys that were connected at the time."
+      },
+      "sentinel_relevance": "AI developer tooling supply-chain and account risk.",
+      "sources": [
+        "https://ai-threat.watch/ai-targeted/"
+      ]
+    },
+    {
+      "id": "nikkei-breach-2026-10",
+      "date": "2026-10-19",
+      "date_label": "19 October 2026",
+      "date_precision": "day",
+      "category": "company_breach",
+      "tags": ["media", "japan", "pii"],
+      "title": "Nikkei third data breach in a month — ~1.8M records",
+      "subtitle": "Multiple incidents in short succession",
+      "severity": "high",
+      "cvss": null,
+      "cves": [],
+      "status": "disclosed",
+      "announced_by": ["Nikkei Inc."],
+      "summary": "Nikkei disclosed another breach exposing approximately 1.83 million personal information records, the third in about a month.",
+      "impact": "Readers and customers in Japan and related markets.",
+      "affected": {
+        "products": ["Nikkei services"],
+        "scale": "1830000 records"
+      },
+      "fixed_versions": [],
+      "exploitation": {
+        "in_the_wild": true,
+        "notes": "Pattern of repeated incidents at the same organization."
+      },
+      "sentinel_relevance": "Media sector breach pattern.",
+      "sources": [
+        "https://www.bleepingcomputer.com/tag/data-breach/"
+      ]
+    },
+    {
+      "id": "burger-king-japan-2026-10",
+      "date": "2026-10-01",
+      "date_label": "October 2026 (disclosed early/mid month)",
+      "date_precision": "month",
+      "category": "company_breach",
+      "tags": ["retail", "japan", "pii"],
+      "title": "Burger King Japan — ~11 million customer records",
+      "subtitle": "Server access exposed large customer dataset",
+      "severity": "high",
+      "cvss": null,
+      "cves": [],
+      "status": "disclosed",
+      "announced_by": ["Burger King Japan"],
+      "summary": "Attackers accessed a server containing about 11.18 million customer records.",
+      "impact": "Restaurant chain customers in Japan.",
+      "affected": {
+        "products": ["Burger King Japan customer systems"],
+        "scale": "11180000 records"
+      },
+      "fixed_versions": [],
+      "exploitation": {
+        "in_the_wild": true,
+        "notes": null
+      },
+      "sentinel_relevance": "Large retail PII exposure example.",
+      "sources": [
+        "https://www.bleepingcomputer.com/tag/data-breach/"
+      ]
+    },
+    {
+      "id": "denmark-cpr-2026-10",
+      "date": "2026-10-05",
+      "date_label": "5 October 2026 (announced)",
+      "date_precision": "day",
+      "category": "company_breach",
+      "tags": ["government", "denmark", "population-register"],
+      "title": "Denmark Central Population Register (CPR) data exposure",
+      "subtitle": "~8.8 million people",
+      "severity": "critical",
+      "cvss": null,
+      "cves": [],
+      "status": "disclosed",
+      "announced_by": ["Danish authorities / CPR"],
+      "summary": "Breach related to Denmark’s population registry exposed personal information of approximately 8.8 million registered individuals. Reporting pointed to misuse of legitimate lookup permissions rather than a classic remote exploit in some analyses.",
+      "impact": "Nearly the entire registered population of Denmark.",
+      "affected": {
+        "products": ["CPR registry systems"],
+        "scale": "8800000 people"
+      },
+      "fixed_versions": [],
+      "exploitation": {
+        "in_the_wild": true,
+        "notes": "Access-control / permission abuse narrative in secondary analysis."
+      },
+      "sentinel_relevance": "Shows scale of national-register incidents.",
+      "sources": [
+        "https://www.bleepingcomputer.com/tag/security-breach/",
+        "https://builder.aws.com/content/3KJ7ugy2otOSKKdtUC8oYaDo9tX/sorting-2026s-data-breaches-by-how-attackers-got-in"
+      ]
+    },
+    {
+      "id": "connectwise-ai-m365-2026-10",
+      "date": "2026-10-22",
+      "date_label": "October 2026 (reported week of 22 Oct)",
+      "date_precision": "month",
+      "category": "ai_agent_attacks",
+      "tags": ["connectwise", "microsoft-365", "china", "msp"],
+      "title": "ConnectWise Cloud Backup identities abused toward Microsoft 365 tenants",
+      "subtitle": "China-linked activity using application identities; agentic AI mentioned in coverage",
+      "severity": "critical",
+      "cvss": null,
+      "cves": [],
+      "status": "observed",
+      "announced_by": ["Microsoft / security media"],
+      "summary": "Attackers abused application identities and secrets behind ConnectWise Cloud Backup (formerly SkyKick) to authenticate into customer Microsoft 365 tenants. Coverage linked China-linked actors and agentic AI assistance in related reporting.",
+      "impact": "MSP customers using ConnectWise backup integrations with M365.",
+      "affected": {
+        "products": ["ConnectWise Cloud Backup", "Microsoft 365 tenants"]
+      },
+      "fixed_versions": [],
+      "exploitation": {
+        "in_the_wild": true,
+        "notes": "Third-party integration trust boundary failure."
+      },
+      "sentinel_relevance": "Third-party SaaS identity risk.",
+      "sources": [
+        "https://securityboulevard.com/2026/10/top-10-breaches-of-the-week-14/",
+        "https://cybersecurityjournal.us/topics/breaches"
+      ]
+    },
+    {
+      "id": "booz-allen-ot-ai-2026-10",
+      "date": "2026-10-20",
+      "date_label": "20 October 2026",
+      "date_precision": "day",
+      "category": "ai_agent_attacks",
+      "tags": ["ot", "ics", "research", "frontier-models"],
+      "title": "Booz Allen: frontier AI models can drive OT pathways and robotic actions",
+      "subtitle": "Controlled lab tests — digital to physical in minutes",
+      "severity": "research",
+      "cvss": null,
+      "cves": [],
+      "status": "research",
+      "announced_by": ["Booz Allen Hamilton"],
+      "summary": "In controlled OT lab tests, frontier models achieved objectives from perimeter compromise to control-zone actions (including identifying and moving a robotic arm) with limited human direction. Not a public breach — a capability warning for industrial operators.",
+      "impact": "Operational technology and industrial control environments if models gain network access.",
+      "affected": {
+        "products": ["Industrial control / SCADA test environments"]
+      },
+      "fixed_versions": [],
+      "exploitation": {
+        "in_the_wild": false,
+        "notes": "Research demonstration under human approval gates for kinetic actions."
+      },
+      "sentinel_relevance": "Context for why patching and segmentation matter beyond web apps.",
+      "sources": [
+        "https://industrialcyber.co/ai/booz-allen-warns-frontier-ai-models-can-exploit-ot-pathways-manipulate-controllers-and-move-robotic-equipment/"
+      ]
+    },
+    {
+      "id": "gambit-mexico-gov-ai-2026",
+      "date": "2026-02-15",
+      "date_label": "Late Dec 2025 – mid-Feb 2026 (full report published 2026)",
+      "date_precision": "month",
+      "category": "ai_agent_attacks",
+      "tags": ["government", "mexico", "claude", "openai", "exfil"],
+      "title": "Single operator used Claude Code and GPT-4.1 against nine Mexican government agencies",
+      "subtitle": "Hundreds of millions of citizen records claimed in technical report",
+      "severity": "critical",
+      "cvss": null,
+      "cves": [],
+      "status": "reported",
+      "announced_by": ["Gambit Security"],
+      "summary": "Full technical report documented a single operator using Anthropic Claude Code (~75% of remote command execution activity) and OpenAI GPT-4.1-class tooling to support a campaign against nine Mexican government organizations. Recovered materials included custom exploits, extensive prompt logs, and structured intelligence reports generated via API.",
+      "impact": "Government systems and citizen data at national scale.",
+      "affected": {
+        "products": ["Multiple Mexican government organizations"],
+        "scale": "Hundreds of millions of citizen records (per technical report claims)"
+      },
+      "fixed_versions": [],
+      "exploitation": {
+        "in_the_wild": true,
+        "notes": "Publication delayed at request of involved parties for IR."
+      },
+      "sentinel_relevance": "Largest public case study of AI-assisted government intrusion in this period.",
+      "sources": [
+        "https://gambit.security/blog-posts/a-single-operator-two-ai-platforms-nine-government-agencies-the-full-technical-report"
+      ]
+    },
+    {
+      "id": "zimbra-snmp-2026-08",
+      "date": "2026-08-17",
+      "date_label": "17 August 2026",
+      "date_precision": "day",
+      "category": "enterprise_software",
+      "tags": ["zimbra", "mail", "rce", "mass-exploitation"],
+      "title": "Mass exploitation of Zimbra SNMP flaw",
+      "subtitle": "CVE-2026-73570 — unauthenticated command injection",
+      "severity": "critical",
+      "cvss": null,
+      "cves": ["CVE-2026-73570"],
+      "status": "exploited",
+      "announced_by": ["CERT Polska", "security media"],
+      "summary": "Unauthenticated command injection in Zimbra Collaboration Suite SNMP notification handling. Hundreds of internet-facing mail servers compromised within days of confirmed exploitation.",
+      "impact": "Organizations running exposed Zimbra mail infrastructure.",
+      "affected": {
+        "products": ["Zimbra Collaboration Suite"],
+        "scale": "At least 274 servers confirmed early"
+      },
+      "fixed_versions": [],
+      "exploitation": {
+        "in_the_wild": true,
+        "notes": "Mass scanning and compromise shortly after confirmation."
+      },
+      "sentinel_relevance": "Mail infrastructure often coexists with web properties.",
+      "sources": [
+        "https://www.cyberbreaches.org/en/timeline"
+      ]
+    },
+    {
+      "id": "wordpress-duplicator-2026",
+      "date": "2026-09-01",
+      "date_label": "2026 (plugin advisory window; exact day varies by source)",
+      "date_precision": "month",
+      "category": "framework_cms",
+      "tags": ["wordpress", "plugin", "rce", "object-injection"],
+      "title": "WordPress Duplicator / Duplicator Pro — unauthenticated object injection",
+      "subtitle": "CVE-2026-82814 — high impact on large install base",
+      "severity": "high",
+      "cvss": 8.8,
+      "cves": ["CVE-2026-82814"],
+      "status": "patched",
+      "announced_by": ["WordPress security ecosystem"],
+      "summary": "Unauthenticated PHP object injection in Duplicator / Pro could lead to RCE or file deletion. Plugin family has a very large install base.",
+      "impact": "WordPress sites using vulnerable Duplicator versions.",
+      "affected": {
+        "products": ["Duplicator", "Duplicator Pro"],
+        "scale": "1M+ installs class of exposure"
+      },
+      "fixed_versions": [],
+      "exploitation": {
+        "in_the_wild": false,
+        "notes": "Treat as high priority for WP maintenance."
+      },
+      "sentinel_relevance": "Directly relevant to WordPress sites Sentinel users check.",
+      "sources": [
+        "https://vc.ru/id33/3208553-kriticheskie-uiazvimosti-php-oracle-nodejs"
+      ]
+    },
+    {
+      "id": "argo-cd-2026",
+      "date": "2026-09-15",
+      "date_label": "2026 (multiple CVEs; mid-year advisory cluster)",
+      "date_precision": "month",
+      "category": "enterprise_software",
+      "tags": ["argocd", "gitops", "kubernetes"],
+      "title": "Argo CD multiple critical issues (CVSS ~9.9)",
+      "subtitle": "CVE-2026-113708, CVE-2026-113709, CVE-2026-113672",
+      "severity": "critical",
+      "cvss": 9.9,
+      "cves": ["CVE-2026-113708", "CVE-2026-113709", "CVE-2026-113672"],
+      "status": "patched",
+      "announced_by": ["Argo CD / CNCF ecosystem"],
+      "summary": "Several critical CVEs affecting GitOps continuous delivery with Argo CD, scoring near the top of the CVSS scale in community digests.",
+      "impact": "Kubernetes clusters managed via Argo CD.",
+      "affected": {
+        "products": ["Argo CD"]
+      },
+      "fixed_versions": [],
+      "exploitation": {
+        "in_the_wild": false,
+        "notes": "Patch GitOps control planes promptly."
+      },
+      "sentinel_relevance": "Backend/platform risk for modern stacks.",
+      "sources": [
+        "https://vc.ru/id33/3208553-kriticheskie-uiazvimosti-php-oracle-nodejs"
+      ]
+    },
+    {
+      "id": "juniper-junos-2026",
+      "date": "2026-08-01",
+      "date_label": "2026 (network vendor advisory period)",
+      "date_precision": "month",
+      "category": "infrastructure_pki",
+      "tags": ["juniper", "junos", "rce", "ike"],
+      "title": "Juniper Junos MX — unauthenticated root RCE class issue",
+      "subtitle": "CVE-2026-102182 (CVSS 9.8 class)",
+      "severity": "critical",
+      "cvss": 9.8,
+      "cves": ["CVE-2026-102182"],
+      "status": "patched",
+      "announced_by": ["Juniper"],
+      "summary": "Unauthenticated root remote code execution via IKE certificate packet handling on Junos MX platforms (as reported in 2026 vulnerability digests).",
+      "impact": "Network edge devices; full device compromise potential.",
+      "affected": {
+        "products": ["Juniper Junos MX"]
+      },
+      "fixed_versions": [],
+      "exploitation": {
+        "in_the_wild": false,
+        "notes": "Network infrastructure priority."
+      },
+      "sentinel_relevance": "Infrastructure layer beneath web apps.",
+      "sources": [
+        "https://vc.ru/id33/3208553-kriticheskie-uiazvimosti-php-oracle-nodejs"
+      ]
+    },
+    {
+      "id": "meta-github-2026-10",
+      "date": "2026-10-13",
+      "date_label": "13 October 2026",
+      "date_precision": "day",
+      "category": "company_breach",
+      "tags": ["meta", "github", "source-code"],
+      "title": "Meta GitHub breach — code and personal data of ~1,500 people",
+      "subtitle": "Mostly Meta employees; credit monitoring offered",
+      "severity": "medium",
+      "cvss": null,
+      "cves": [],
+      "status": "disclosed",
+      "announced_by": ["Meta"],
+      "summary": "Hackers obtained code and personal data related to about 1,500 individuals, mostly Meta employees in the United States, via a GitHub-related incident.",
+      "impact": "Staff PII and proprietary code exposure.",
+      "affected": {
+        "products": ["Meta GitHub repositories"],
+        "scale": "1500 people"
+      },
+      "fixed_versions": [],
+      "exploitation": {
+        "in_the_wild": true,
+        "notes": null
+      },
+      "sentinel_relevance": "Source-control and insider/employee data risk.",
+      "sources": [
+        "https://www.securityweek.com/category/data-breaches/"
+      ]
+    },
+    {
+      "id": "canvas-instructure-2026",
+      "date": "2026-04-01",
+      "date_label": "Spring 2026 (disclosure and claims through year)",
+      "date_precision": "month",
+      "category": "company_breach",
+      "tags": ["education", "lms", "canvas"],
+      "title": "Instructure Canvas LMS — large claimed education data theft",
+      "subtitle": "ShinyHunters-linked claims; tens of millions to 275M records disputed",
+      "severity": "critical",
+      "cvss": null,
+      "cves": [],
+      "status": "disclosed",
+      "announced_by": ["Instructure", "media"],
+      "summary": "Major education-tech incident tied to Canvas Free-for-Teacher / LMS environment. Threat actors claimed on the order of 275 million records; company and later coverage centered on tens of millions of students and staff with portal disruption and eventual settlement pressure.",
+      "impact": "Schools, teachers, and students using Canvas environments.",
+      "affected": {
+        "products": ["Canvas LMS"],
+        "scale": "Tens of millions confirmed in sober reporting; higher figures claimed by actors"
+      },
+      "fixed_versions": [],
+      "exploitation": {
+        "in_the_wild": true,
+        "notes": "One of the largest education-sector stories of 2026."
+      },
+      "sentinel_relevance": "Education sector sensitivity.",
+      "sources": [
+        "https://www.esecurityplanet.com/threats/news-major-data-breaches-2026/",
+        "https://techcrunch.com/2026/09/15/the-worst-hacks-and-breaches-of-2026-so-far/"
+      ]
+    },
+    {
+      "id": "dentaquest-2026",
+      "date": "2026-06-01",
+      "date_label": "2026 (HHS / state filings)",
+      "date_precision": "month",
+      "category": "company_breach",
+      "tags": ["healthcare", "insurance", "phi"],
+      "title": "DentaQuest healthcare data breach",
+      "subtitle": "15M–27M range depending on filing",
+      "severity": "critical",
+      "cvss": null,
+      "cves": [],
+      "status": "disclosed",
+      "announced_by": ["DentaQuest"],
+      "summary": "Large healthcare/insurance-related breach. HHS filing cited about 15 million; Indiana filing cited about 27.4 million. Personal identifiers and dental/vision health information involved.",
+      "impact": "Insured members and providers.",
+      "affected": {
+        "products": ["DentaQuest systems"],
+        "scale": "15000000–27400000 depending on filing"
+      },
+      "fixed_versions": [],
+      "exploitation": {
+        "in_the_wild": true,
+        "notes": null
+      },
+      "sentinel_relevance": "Healthcare breach scale benchmark.",
+      "sources": [
+        "https://www.esecurityplanet.com/threats/news-major-data-breaches-2026/",
+        "https://techcrunch.com/2026/09/15/the-worst-hacks-and-breaches-of-2026-so-far/"
+      ]
+    },
+    {
+      "id": "idscan-2026",
+      "date": "2026-09-01",
+      "date_label": "September 2026 (dark-web marketplace reporting)",
+      "date_precision": "month",
+      "category": "company_breach",
+      "tags": ["identity", "drivers-license", "pii"],
+      "title": "IDScan.net — mass driver’s license / ID scan exposure claims",
+      "subtitle": "150M+ North American ID scans touted on dark web",
+      "severity": "critical",
+      "cvss": null,
+      "cves": [],
+      "status": "disclosed",
+      "announced_by": ["IDScan.net", "Krebs / media"],
+      "summary": "Identity-verification vendor linked to unauthorized access and a dark-web marketplace offering searches over more than 153 million U.S. and Canadian driver’s-license scans and other ID types. Company notices confirmed access involving names and government ID numbers without fully matching marketplace headcounts.",
+      "impact": "Drivers and identity-verification customers across North America.",
+      "affected": {
+        "products": ["IDScan.net cloud data"],
+        "scale": "150000000+ claimed scans"
+      },
+      "fixed_versions": [],
+      "exploitation": {
+        "in_the_wild": true,
+        "notes": "Among the largest identity datasets discussed in 2026."
+      },
+      "sentinel_relevance": "Identity infrastructure risk.",
+      "sources": [
+        "https://www.databreaches.com/",
+        "https://techcrunch.com/2026/09/15/the-worst-hacks-and-breaches-of-2026-so-far/"
+      ]
+    },
+    {
+      "id": "fake-claude-desktop-2026",
+      "date": "2026-07-27",
+      "date_label": "27 July 2026 (Huntress report)",
+      "date_precision": "day",
+      "category": "ai_product_incident",
+      "tags": ["anthropic", "malware", "malvertising"],
+      "title": "Fake Claude Desktop malvertising campaign",
+      "subtitle": "SectopRAT delivered via fake Claude download pages",
+      "severity": "high",
+      "cvss": null,
+      "cves": [],
+      "status": "observed",
+      "announced_by": ["Huntress"],
+      "summary": "Attackers abused Anthropic Claude.ai public Artifacts to host a fake Claude Desktop download page, redirecting victims to a trojanized ClaudeDesktop.exe and delivering SectopRAT. Dozens of organizations impacted in the reported campaign.",
+      "impact": "Developers and users seeking legitimate Claude Desktop installs.",
+      "affected": {
+        "products": ["Fake Claude Desktop installer"],
+        "scale": "29 organizations in Huntress sample"
+      },
+      "fixed_versions": [],
+      "exploitation": {
+        "in_the_wild": true,
+        "notes": "Social engineering + brand impersonation."
+      },
+      "sentinel_relevance": "Trust-in-download path for AI tools.",
+      "sources": [
+        "https://ai-threat.watch/ai-targeted/"
+      ]
+    },
+    {
+      "id": "prompt-injection-wave-2026-01",
+      "date": "2026-01-15",
+      "date_label": "7–15 January 2026",
+      "date_precision": "day",
+      "category": "ai_product_incident",
+      "tags": ["prompt-injection", "saas", "exfiltration"],
+      "title": "Lethal trifecta prompt-injection wave in AI productivity tools",
+      "subtitle": "IBM Bob, Notion AI, Claude Cowork, Superhuman AI",
+      "severity": "high",
+      "cvss": null,
+      "cves": [],
+      "status": "research",
+      "announced_by": ["PromptArmor"],
+      "summary": "Researchers disclosed indirect prompt injection vulnerabilities across multiple AI productivity tools within days, each combining private data access, untrusted content, and an exfiltration channel.",
+      "impact": "Enterprise users of affected AI workspace products.",
+      "affected": {
+        "products": ["IBM Bob", "Notion AI", "Anthropic Claude Cowork", "Superhuman AI"]
+      },
+      "fixed_versions": [],
+      "exploitation": {
+        "in_the_wild": false,
+        "notes": "Research disclosure cluster."
+      },
+      "sentinel_relevance": "Application-layer AI risk distinct from runtime CVEs.",
+      "sources": [
+        "https://ai-threat.watch/ai-targeted/"
+      ]
+    },
+    {
+      "id": "fbi-atf-2026",
+      "date": "2026-04-01",
+      "date_label": "April 2026 (FBI major incident disclosure)",
+      "date_precision": "month",
+      "category": "company_breach",
+      "tags": ["government", "fbi", "surveillance"],
+      "title": "FBI and ATF surveillance systems — major cyber incidents",
+      "subtitle": "Congressional disclosure required",
+      "severity": "critical",
+      "cvss": null,
+      "cves": [],
+      "status": "disclosed",
+      "announced_by": ["FBI", "media"],
+      "summary": "U.S. Federal Bureau of Investigation declared a major cyber incident after compromise of a surveillance system, triggering legally required disclosure to Congress. Related ATF system issues also reported in 2026 coverage.",
+      "impact": "Federal law-enforcement surveillance infrastructure.",
+      "affected": {
+        "products": ["FBI / ATF surveillance systems"]
+      },
+      "fixed_versions": [],
+      "exploitation": {
+        "in_the_wild": true,
+        "notes": "Details limited in public reporting."
+      },
+      "sentinel_relevance": "National-security adjacent infrastructure risk.",
+      "sources": [
+        "https://techcrunch.com/2026/09/15/the-worst-hacks-and-breaches-of-2026-so-far/"
+      ]
+    },
+    {
+      "id": "ummc-ransomware-2026-02",
+      "date": "2026-02-19",
+      "date_label": "19 February 2026",
+      "date_precision": "day",
+      "category": "company_breach",
+      "tags": ["healthcare", "ransomware", "hospital"],
+      "title": "University of Mississippi Medical Center ransomware",
+      "subtitle": "Clinics closed; hospitals shifted to paper procedures",
+      "severity": "critical",
+      "cvss": null,
+      "cves": [],
+      "status": "disclosed",
+      "announced_by": ["UMMC", "NPR"],
+      "summary": "Ransomware attack took down network and many IT systems including electronic medical records. Clinics across the state closed; hospitals and EDs continued with paper procedures.",
+      "impact": "Patient care operations and clinical systems.",
+      "affected": {
+        "products": ["UMMC clinical IT"]
+      },
+      "fixed_versions": [],
+      "exploitation": {
+        "in_the_wild": true,
+        "notes": "Operational disruption primary impact."
+      },
+      "sentinel_relevance": "Healthcare operational resilience example.",
+      "sources": [
+        "https://ocsecurityaudit.com/cyberattacks-in-2026-confirmed-cases-lessons/"
+      ]
+    },
+    {
+      "id": "red-hat-streamshub-2026",
+      "date": "2026-09-01",
+      "date_label": "2026 (advisory listings)",
+      "date_precision": "month",
+      "category": "enterprise_software",
+      "tags": ["redhat", "kafka"],
+      "title": "Red Hat StreamsHub Console for Apache Kafka — CVSS 9.9 class issue",
+      "subtitle": "CVE-2026-105312",
+      "severity": "critical",
+      "cvss": 9.9,
+      "cves": ["CVE-2026-105312"],
+      "status": "patched",
+      "announced_by": ["Red Hat"],
+      "summary": "Critical vulnerability reported against Red Hat StreamsHub Console for Apache Kafka in 2026 vulnerability digests.",
+      "impact": "Kafka management console deployments.",
+      "affected": {
+        "products": ["Red Hat StreamsHub Console"]
+      },
+      "fixed_versions": [],
+      "exploitation": {
+        "in_the_wild": false,
+        "notes": null
+      },
+      "sentinel_relevance": "Data-platform risk.",
+      "sources": [
+        "https://vc.ru/id33/3208553-kriticheskie-uiazvimosti-php-oracle-nodejs"
+      ]
+    }
+  ]
+}

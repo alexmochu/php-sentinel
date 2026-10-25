@@ -21,7 +21,7 @@
     };
   </script>
   <style>
-    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap");
     body {
       font-family: Inter, system-ui, sans-serif;
       background:
@@ -29,6 +29,11 @@
         radial-gradient(700px 420px at 92% 0%, rgba(45, 212, 191, 0.12), transparent 50%),
         #05070f;
       color: #e2e8f0;
+    }
+    .font-display {
+      font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+      letter-spacing: -0.02em;
+      font-weight: 600;
     }
     .glass {
       background: linear-gradient(165deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02));
@@ -71,21 +76,128 @@
     }
     .dot-critical { background: #f43f5e; box-shadow: 0 0 0 4px rgba(244, 63, 94, 0.2); }
     .dot-high { background: #f59e0b; box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2); }
+    /* Nav */
+    .nav-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: #94a3b8;
+      transition: color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+    }
+    .nav-pill:hover {
+      color: #f8fafc;
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .nav-pill.is-active {
+      color: #0f172a;
+      background: #2dd4bf;
+      box-shadow: 0 0 0 1px rgba(45, 212, 191, 0.35), 0 8px 20px rgba(45, 212, 191, 0.18);
+      font-weight: 600;
+    }
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: #05070f;
+      background: #fff;
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 8px 24px rgba(0, 0, 0, 0.25);
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+    .nav-cta:hover {
+      background: #f1f5f9;
+      transform: translateY(-1px);
+    }
+    .nav-shell {
+      display: none;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    @media (min-width: 640px) {
+      .nav-shell { display: inline-flex; }
+    }
+    .nav-mobile-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.04);
+      color: #e2e8f0;
+    }
+    @media (min-width: 640px) {
+      .nav-mobile-btn { display: none; }
+    }
+    .nav-drawer {
+      display: none;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(5, 7, 15, 0.96);
+      backdrop-filter: blur(16px);
+    }
+    .nav-drawer.open { display: block; }
+    @media (min-width: 640px) {
+      .nav-drawer { display: none !important; }
+    }
+    .nav-drawer a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.9rem 1rem;
+      border-radius: 0.85rem;
+      color: #cbd5e1;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .nav-drawer a:hover { background: rgba(255, 255, 255, 0.05); color: #fff; }
+    .nav-drawer a.is-active {
+      background: rgba(45, 212, 191, 0.12);
+      color: #2dd4bf;
+    }
   </style>
 </head>
 <body class="min-h-screen">
 
   <header class="sticky top-0 z-50 border-b border-white/5 bg-[#05070f]/80 backdrop-blur-xl">
-    <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-      <a href="/" class="block">
-        <p class="text-white font-semibold leading-none text-lg">Sentinel</p>
+    <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between gap-3">
+      <a href="/" class="block shrink-0">
+        <p class="font-display text-white leading-none text-xl tracking-tight">Sentinel</p>
         <p class="text-[11px] text-slate-500 mt-1">by Kejani Garage</p>
       </a>
-      <nav class="flex items-center gap-3 text-sm">
-        <a href="/" class="text-slate-400 hover:text-white transition">Checker</a>
-        <span class="text-teal font-medium">Threats</span>
-        <a href="https://cal.com/alex-mochu/php-fix" target="_blank" class="ml-2 px-3.5 py-2 rounded-full bg-white text-ink font-semibold">Book a call</a>
-      </nav>
+
+      <div class="flex items-center gap-2 sm:gap-3">
+        <nav class="nav-shell" aria-label="Primary">
+          <a href="/" class="nav-pill">Checker</a>
+          <a href="/threats.html" class="nav-pill is-active" aria-current="page">Threats</a>
+        </nav>
+        <a href="https://cal.com/alex-mochu/php-fix" target="_blank" rel="noopener" class="nav-cta hidden sm:inline-flex">
+          Book a call
+          <svg class="w-3.5 h-3.5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </a>
+        <button type="button" id="navToggle" class="nav-mobile-btn" aria-expanded="false" aria-controls="navDrawer" aria-label="Open menu">
+          <svg id="navIconOpen" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16M4 12h16M4 17h16"/></svg>
+          <svg id="navIconClose" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+    </div>
+    <div id="navDrawer" class="nav-drawer">
+      <div class="max-w-5xl mx-auto px-4 py-3 space-y-1">
+        <a href="/">Checker <span class="text-xs text-slate-500">Scan a site</span></a>
+        <a href="/threats.html" class="is-active">Threat Timeline <span class="text-xs text-teal">2026</span></a>
+        <a href="https://cal.com/alex-mochu/php-fix" target="_blank" rel="noopener">Book a free call <span class="text-xs text-slate-500">Cal.com</span></a>
+      </div>
     </div>
   </header>
 
@@ -93,12 +205,20 @@
     <section class="mb-8">
       <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass text-xs text-teal mb-4">
         <span class="w-1.5 h-1.5 rounded-full bg-teal animate-pulse"></span>
-        Public intelligence · Jan–Oct 2026
+        High-impact only · Jan–Oct 2026
       </div>
-      <h1 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mb-3">Threat Timeline 2026</h1>
-      <p class="text-slate-400 text-base sm:text-lg max-w-2xl">
-        Critical runtime flaws, framework issues, company breaches, supply-chain hits, and AI-assisted attacks reported this year. Built so Sentinel users can see why patching and public-signal hygiene matter.
+      <h1 class="font-display text-3xl sm:text-5xl text-white tracking-tight mb-3">Threat Timeline 2026</h1>
+      <p class="text-slate-400 text-base sm:text-lg max-w-2xl mb-4">
+        Critical runtime flaws, frameworks, PKI failures, major supply-chain hits, large breaches, and AI-agent incidents — with CVEs and fixed versions where public.
       </p>
+      <div class="glass rounded-2xl p-4 text-sm text-slate-400 border border-amber-500/20 bg-amber-500/5 max-w-3xl">
+        <p class="text-amber-200/90 font-medium mb-1">This is a curated high-impact list, not everything that happened in 2026.</p>
+        <p>
+          Public trackers list <strong class="text-slate-300">hundreds</strong> of incidents this year (ransomware claims, local notices, mid-size leaks).
+          We deliberately omit most mid and small events so operators can focus on the threats that change risk for web runtimes, CMS stacks, edge devices, and large data exposures.
+          Software entries include CVE IDs and fixed version numbers when vendors published them.
+        </p>
+      </div>
     </section>
 
     <!-- Stats strip -->
@@ -172,6 +292,10 @@
 
     <section class="glass rounded-3xl p-6 mb-10 text-sm text-slate-400">
       <p class="text-white font-semibold mb-2">About this timeline</p>
+      <p class="mb-2">
+        <strong class="text-slate-300">High-impact curation only.</strong>
+        We do not list every mid-size ransomware claim or small local notice. Public databases track hundreds of 2026 incidents; this page prioritizes critical runtimes (PHP, Node, Java), frameworks (Next.js, Laravel, Drupal, GitLab), PKI failures, major supply-chain compromises, large breaches, and AI-agent attacks — with CVEs and fixed versions when published.
+      </p>
       <p class="mb-2">Public reporting only. Dates prefer official announcement or widely confirmed disclosure. Not a full CVE feed. No exploit instructions.</p>
       <p>Want a free check on your own site? <a href="/" class="text-teal hover:underline">Open the Sentinel checker</a>.</p>
     </section>
@@ -505,7 +629,7 @@
             (e.cvss != null ? '<span class="chip">CVSS ' + escapeHtml(String(e.cvss)) + "</span>" : "") +
             "</div>" +
             '<p class="text-[11px] text-slate-500 mb-1">' + escapeHtml(e.date_label || e.date) + "</p>" +
-            '<h2 class="text-lg sm:text-xl font-bold text-white mb-1">' + escapeHtml(e.title) + "</h2>" +
+            '<h2 class="font-display text-lg sm:text-xl text-white mb-1">' + escapeHtml(e.title) + "</h2>" +
             (e.subtitle ? '<p class="text-sm text-teal/90 mb-2">' + escapeHtml(e.subtitle) + "</p>" : "") +
             '<p class="text-sm text-slate-300 leading-relaxed">' + escapeHtml(e.summary) + "</p>" +
             (e.impact ? '<p class="text-sm text-slate-400 mt-2"><span class="text-slate-200 font-medium">Impact:</span> ' + escapeHtml(e.impact) + "</p>" : "") +
@@ -519,6 +643,20 @@
           );
         }).join("");
       }
+    })();
+
+    (function () {
+      var toggle = document.getElementById("navToggle");
+      var drawer = document.getElementById("navDrawer");
+      var iconOpen = document.getElementById("navIconOpen");
+      var iconClose = document.getElementById("navIconClose");
+      if (!toggle || !drawer) return;
+      toggle.addEventListener("click", function () {
+        var open = drawer.classList.toggle("open");
+        toggle.setAttribute("aria-expanded", open ? "true" : "false");
+        if (iconOpen) iconOpen.classList.toggle("hidden", open);
+        if (iconClose) iconClose.classList.toggle("hidden", !open);
+      });
     })();
   </script>
 </body>

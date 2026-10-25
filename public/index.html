@@ -23,7 +23,7 @@
     };
   </script>
   <style>
-    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap");
     body {
       font-family: Inter, system-ui, sans-serif;
       background:
@@ -31,6 +31,11 @@
         radial-gradient(700px 400px at 90% 0%, rgba(45, 212, 191, 0.14), transparent 50%),
         #05070f;
       color: #e2e8f0;
+    }
+    .font-display {
+      font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+      letter-spacing: -0.02em;
+      font-weight: 600;
     }
     .glass {
       background: linear-gradient(165deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02));
@@ -75,6 +80,96 @@
       margin-left: auto;
       margin-right: auto;
     }
+    /* Nav */
+    .nav-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: #94a3b8;
+      transition: color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+    }
+    .nav-pill:hover {
+      color: #f8fafc;
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .nav-pill.is-active {
+      color: #0f172a;
+      background: #2dd4bf;
+      box-shadow: 0 0 0 1px rgba(45, 212, 191, 0.35), 0 8px 20px rgba(45, 212, 191, 0.18);
+      font-weight: 600;
+    }
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: #05070f;
+      background: #fff;
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 8px 24px rgba(0, 0, 0, 0.25);
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+    .nav-cta:hover {
+      background: #f1f5f9;
+      transform: translateY(-1px);
+    }
+    .nav-shell {
+      display: none;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    @media (min-width: 640px) {
+      .nav-shell { display: inline-flex; }
+    }
+    .nav-mobile-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.04);
+      color: #e2e8f0;
+    }
+    @media (min-width: 640px) {
+      .nav-mobile-btn { display: none; }
+    }
+    .nav-drawer {
+      display: none;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(5, 7, 15, 0.96);
+      backdrop-filter: blur(16px);
+    }
+    .nav-drawer.open { display: block; }
+    @media (min-width: 640px) {
+      .nav-drawer { display: none !important; }
+    }
+    .nav-drawer a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.9rem 1rem;
+      border-radius: 0.85rem;
+      color: #cbd5e1;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .nav-drawer a:hover { background: rgba(255, 255, 255, 0.05); color: #fff; }
+    .nav-drawer a.is-active {
+      background: rgba(45, 212, 191, 0.12);
+      color: #2dd4bf;
+    }
   </style>
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"YOUR_CLOUDFLARE_TOKEN"}'></script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-X0YD7WX0CD"></script>
@@ -87,17 +182,34 @@
 </head>
 <body class="min-h-screen">
 
-  <header class="sticky top-0 z-50 border-b border-white/5 bg-[#05070f]/75 backdrop-blur-xl">
-    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-      <div>
-        <p class="text-white font-semibold leading-none text-lg">Sentinel</p>
+  <header class="sticky top-0 z-50 border-b border-white/5 bg-[#05070f]/80 backdrop-blur-xl">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-3">
+      <a href="/" class="block shrink-0">
+        <p class="font-display text-white leading-none text-xl tracking-tight">Sentinel</p>
         <p class="text-[11px] text-slate-500 mt-1">by Kejani Garage</p>
+      </a>
+
+      <div class="flex items-center gap-2 sm:gap-3">
+        <nav class="nav-shell" aria-label="Primary">
+          <a href="/" class="nav-pill is-active" aria-current="page">Checker</a>
+          <a href="/threats.html" class="nav-pill">Threats</a>
+        </nav>
+        <a href="https://cal.com/alex-mochu/php-fix" target="_blank" rel="noopener" class="nav-cta hidden sm:inline-flex">
+          Book a call
+          <svg class="w-3.5 h-3.5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </a>
+        <button type="button" id="navToggle" class="nav-mobile-btn" aria-expanded="false" aria-controls="navDrawer" aria-label="Open menu">
+          <svg id="navIconOpen" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16M4 12h16M4 17h16"/></svg>
+          <svg id="navIconClose" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
       </div>
-      <nav class="flex items-center gap-3 text-sm">
-        <span class="text-teal font-medium">Checker</span>
-        <a href="/threats.html" class="text-slate-400 hover:text-white transition">Threats</a>
-        <a href="https://cal.com/alex-mochu/php-fix" target="_blank" class="ml-1 px-3.5 py-2 rounded-full bg-white text-ink font-semibold">Book a call</a>
-      </nav>
+    </div>
+    <div id="navDrawer" class="nav-drawer">
+      <div class="max-w-6xl mx-auto px-4 py-3 space-y-1">
+        <a href="/" class="is-active">Checker <span class="text-xs text-teal">Live</span></a>
+        <a href="/threats.html">Threat Timeline <span class="text-xs text-slate-500">2026</span></a>
+        <a href="https://cal.com/alex-mochu/php-fix" target="_blank" rel="noopener">Book a free call <span class="text-xs text-slate-500">Cal.com</span></a>
+      </div>
     </div>
   </header>
 
@@ -113,7 +225,7 @@
         <span class="w-1.5 h-1.5 rounded-full bg-teal animate-pulse"></span>
         Free public signal check
       </div>
-      <h1 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tight leading-[1.05] mb-5">
+      <h1 class="font-display text-4xl sm:text-6xl text-white tracking-tight leading-[1.05] mb-5">
         See if your site is exposed—
         <span class="bg-gradient-to-r from-teal via-cyan-300 to-indigo-300 bg-clip-text text-transparent">before attackers do</span>
       </h1>
@@ -181,7 +293,7 @@
       <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-6">
         <div>
           <p class="text-xs uppercase tracking-[0.16em] text-teal mb-2">Live platform pulse</p>
-          <h3 class="text-2xl sm:text-3xl font-extrabold text-white">What the network is showing</h3>
+          <h3 class="font-display text-2xl sm:text-3xl text-white">What the network is showing</h3>
         </div>
         <p class="text-xs text-slate-500" id="statsUpdated">—</p>
       </div>
@@ -266,7 +378,7 @@
     </section>
 
     <section id="faqSection" class="mb-10">
-      <h3 class="text-2xl font-extrabold text-white text-center mb-6">How to use and what results mean</h3>
+      <h3 class="font-display text-2xl text-white text-center mb-6">How to use and what results mean</h3>
       <div class="grid md:grid-cols-2 gap-4 text-sm text-slate-300">
         <div class="glass rounded-3xl p-6">
           <p class="text-white font-semibold mb-2">How to use</p>
@@ -888,6 +1000,20 @@
         input.focus();
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
+    })();
+
+    (function () {
+      var toggle = document.getElementById("navToggle");
+      var drawer = document.getElementById("navDrawer");
+      var iconOpen = document.getElementById("navIconOpen");
+      var iconClose = document.getElementById("navIconClose");
+      if (!toggle || !drawer) return;
+      toggle.addEventListener("click", function () {
+        var open = drawer.classList.toggle("open");
+        toggle.setAttribute("aria-expanded", open ? "true" : "false");
+        if (iconOpen) iconOpen.classList.toggle("hidden", open);
+        if (iconClose) iconClose.classList.toggle("hidden", !open);
+      });
     })();
   </script>
 </body>

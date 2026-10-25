@@ -256,8 +256,9 @@
         <div class="glass rounded-3xl p-5 lift sticky top-24">
           <p class="text-[11px] font-semibold text-teal uppercase tracking-wider mb-2">Need help?</p>
           <h3 class="text-white font-semibold text-lg mb-2">Fix or upgrade with clarity</h3>
-          <p class="text-sm text-slate-400 mb-4">Book a free call and we map the next practical step.</p>
-          <a href="https://cal.com/alex-mochu/php-fix" target="_blank" class="inline-flex w-full justify-center px-4 py-2.5 rounded-xl bg-teal text-ink text-sm font-bold">Book a free call</a>
+          <p class="text-sm text-slate-400 mb-4">Message first or book a free call — both are fine.</p>
+          <a href="https://cal.com/alex-mochu/php-fix" target="_blank" rel="noopener" class="inline-flex w-full justify-center px-4 py-2.5 rounded-xl bg-teal text-ink text-sm font-bold mb-2">Book a free call</a>
+          <button type="button" id="sidebarMsgBtn" class="inline-flex w-full justify-center px-4 py-2.5 rounded-xl border border-white/15 text-sm font-medium text-white hover:bg-white/5 transition">Send a message</button>
         </div>
       </aside>
 
@@ -406,6 +407,11 @@
   </footer>
 
   <script>
+    // Optional: international WhatsApp number without + (e.g. "2547XXXXXXXX")
+    window.SENTINEL_WHATSAPP = window.SENTINEL_WHATSAPP || "";
+    // Optional LinkedIn profile URL
+    window.SENTINEL_LINKEDIN = window.SENTINEL_LINKEDIN || "https://www.linkedin.com/in/";
+
     (function () {
       var STATS_KEY = "sentinel_stats_v1";
       var STATS_TTL_MS = 10 * 60 * 1000;
@@ -951,44 +957,249 @@
           });
         }
 
-        var ctaTitle = "Happy to help";
-        var ctaText = "Book a free discovery call for a broader review.";
+        var ctaTitle = "Need a hand?";
+        var ctaText = "Leave a note or book a free call — your choice.";
         var ctaButton = "Book a free discovery call";
+        var msgHint = "Not ready to book? Send a short note. I reply by email.";
         if (data.status === "vulnerable") {
           ctaTitle = "Your site needs attention";
           ctaText = "I help teams upgrade PHP and harden apps after critical issues.";
           ctaButton = "Book free emergency review";
+          msgHint = "Prefer writing first? Describe what you run and I will reply with next steps.";
         } else if (data.status === "hidden") {
           ctaTitle = "Verify it is patched";
           ctaText = "I can help confirm the real version and upgrade safely.";
           ctaButton = "Book a free verification call";
+          msgHint = "Send the hosting type (cPanel, VPS, managed) and I will point you to where the version lives.";
         } else if (data.status === "safe") {
           ctaTitle = "You look patched";
-          ctaText = "Want hardening help? Book a free strategy call.";
+          ctaText = "Want hardening or a second opinion?";
           ctaButton = "Book a free strategy call";
+          msgHint = "Ask about headers, TLS, or upgrade paths — no call required.";
+        } else {
+          ctaTitle = "Still want a review?";
+          ctaText = "Happy to look at hardening even when PHP is not public.";
+          ctaButton = "Book a free strategy call";
+          msgHint = "Tell me what stack you use and what you are worried about.";
         }
 
+        var siteForForm = data.url || input.value || "";
         var notes = encodeURIComponent(
           "Sentinel result for " +
-            (data.url || input.value) +
+            siteForForm +
             "\nStatus: " +
             data.status +
             "\n" +
             (data.message || "")
         );
 
+        var waNumber = window.SENTINEL_WHATSAPP || "";
+        var waLink = waNumber
+          ? "https://wa.me/" +
+            waNumber +
+            "?text=" +
+            encodeURIComponent(
+              "Hi Alex — Sentinel check for " + siteForForm + " (" + data.status + "). "
+            )
+          : "";
+
         ctaSection.innerHTML =
-          '<div class="glass-strong rounded-3xl p-6">' +
+          '<div class="glass-strong rounded-3xl p-6 space-y-5">' +
+          '<div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">' +
+          '<div>' +
           '<h3 class="font-semibold text-white text-lg">Alex Mochu</h3>' +
-          '<p class="text-sm text-slate-400 mb-3">Senior Fullstack Engineer · Nairobi</p>' +
-          '<p class="text-sm text-slate-300 mb-4">Clear next steps for complex technical problems.</p>' +
-          '<h4 class="font-semibold text-white mb-1">' + ctaTitle + "</h4>" +
-          '<p class="text-sm text-slate-400 mb-4">' + ctaText + "</p>" +
-          '<a id="bookBtn" href="https://cal.com/alex-mochu/php-fix?notes=' + notes +
-          '" target="_blank" class="inline-flex px-5 py-3 bg-teal text-ink font-bold rounded-xl">' +
+          '<p class="text-sm text-slate-400">Senior Fullstack Engineer · Nairobi · PHP &amp; frameworks</p>' +
+          '<p class="text-sm text-slate-300 mt-2 max-w-md">Clear next steps for complex technical problems. Message first if you prefer — booking is optional.</p>' +
+          "</div>" +
+          '<div class="flex flex-wrap gap-2 shrink-0">' +
+          (waLink
+            ? '<a href="' +
+              waLink +
+              '" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20 transition">WhatsApp</a>'
+            : "") +
+          '<a href="' +
+          (window.SENTINEL_LINKEDIN || "https://www.linkedin.com/") +
+          '" id="ctaLinkedIn" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium border border-white/10 text-slate-300 hover:text-white hover:bg-white/5 transition">LinkedIn</a>' +
+          "</div></div>" +
+          '<div class="border-t border-white/10 pt-5">' +
+          '<h4 class="font-semibold text-white mb-1">' +
+          ctaTitle +
+          "</h4>" +
+          '<p class="text-sm text-slate-400 mb-4">' +
+          ctaText +
+          "</p>" +
+          '<div class="flex flex-col sm:flex-row gap-2 mb-5">' +
+          '<a id="bookBtn" href="https://cal.com/alex-mochu/php-fix?notes=' +
+          notes +
+          '" target="_blank" rel="noopener" class="inline-flex justify-center items-center gap-2 px-5 py-3 bg-teal text-ink font-bold rounded-xl hover:brightness-110 transition">' +
           ctaButton +
-          "</a></div>";
+          "</a>" +
+          '<button type="button" id="toggleMsgBtn" class="inline-flex justify-center items-center gap-2 px-5 py-3 rounded-xl border border-white/15 text-white font-medium hover:bg-white/5 transition">Send a message instead</button>' +
+          "</div>" +
+          '<div id="msgPanel" class="hidden">' +
+          '<p class="text-sm text-slate-400 mb-3">' +
+          msgHint +
+          "</p>" +
+          '<form id="msgForm" class="space-y-3" novalidate>' +
+          '<input type="text" name="website" id="msgHp" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />' +
+          '<div class="grid sm:grid-cols-2 gap-3">' +
+          '<div>' +
+          '<label class="block text-xs text-slate-500 mb-1" for="msgEmail">Email</label>' +
+          '<input id="msgEmail" type="email" required placeholder="you@company.com" class="w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-teal/50" />' +
+          "</div>" +
+          '<div>' +
+          '<label class="block text-xs text-slate-500 mb-1" for="msgSite">Site (optional)</label>' +
+          '<input id="msgSite" type="url" value="' +
+          escapeAttr(siteForForm) +
+          '" placeholder="https://…" class="w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-teal/50" />' +
+          "</div></div>" +
+          '<div>' +
+          '<label class="block text-xs text-slate-500 mb-1" for="msgBody">Message</label>' +
+          '<textarea id="msgBody" required rows="3" placeholder="What are you running, and what do you need help with?" class="w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-teal/50 resize-y"></textarea>' +
+          "</div>" +
+          '<label class="flex items-start gap-2 text-sm text-slate-300 cursor-pointer select-none">' +
+          '<input id="msgWantsCall" type="checkbox" class="mt-1 rounded border-white/20 bg-white/5 text-teal focus:ring-teal" />' +
+          '<span>I would also like a free 15‑min call <span class="text-slate-500">(optional)</span></span>' +
+          "</label>" +
+          '<input type="hidden" id="msgStatus" value="' +
+          escapeAttr(data.status || "") +
+          '" />' +
+          '<div class="flex flex-wrap items-center gap-3 pt-1">' +
+          '<button type="submit" id="msgSubmit" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-ink font-bold text-sm hover:bg-slate-100 transition">Send message</button>' +
+          '<span id="msgStatusLine" class="text-sm text-slate-500"></span>' +
+          "</div>" +
+          "</form>" +
+          '<div id="msgSuccess" class="hidden mt-3 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-200">' +
+          '<p class="font-medium text-emerald-100 mb-1">Message sent</p>' +
+          '<p id="msgSuccessText">Thanks — I will reply by email. No account needed.</p>' +
+          '<p id="msgSuccessCall" class="hidden mt-2">You asked for a call — you can still <a id="msgCalAfter" href="https://cal.com/alex-mochu/php-fix?notes=' +
+          notes +
+          '" target="_blank" rel="noopener" class="underline text-teal">pick a slot here</a>.</p>' +
+          "</div></div></div></div>";
+
         ctaSection.classList.remove("hidden");
+
+        var toggleMsgBtn = document.getElementById("toggleMsgBtn");
+        var msgPanel = document.getElementById("msgPanel");
+        if (toggleMsgBtn && msgPanel) {
+          toggleMsgBtn.addEventListener("click", function () {
+            msgPanel.classList.toggle("hidden");
+            if (!msgPanel.classList.contains("hidden")) {
+              var em = document.getElementById("msgEmail");
+              if (em) em.focus();
+              toggleMsgBtn.textContent = "Hide message form";
+            } else {
+              toggleMsgBtn.textContent = "Send a message instead";
+            }
+          });
+        }
+
+        var msgForm = document.getElementById("msgForm");
+        if (msgForm) {
+          msgForm.addEventListener("submit", function (ev) {
+            ev.preventDefault();
+            submitMessageForm({
+              notes: notes,
+              status: data.status || "",
+              site: siteForForm,
+            });
+          });
+        }
+
+        if (typeof gtag === "function") {
+          gtag("event", "cta_shown", { status: data.status });
+        }
+
+        // Sidebar "Send a message" scrolls to form once CTA is open
+        var sidebarMsgBtn = document.getElementById("sidebarMsgBtn");
+        if (sidebarMsgBtn) {
+          sidebarMsgBtn.onclick = function () {
+            var panel = document.getElementById("msgPanel");
+            var toggle = document.getElementById("toggleMsgBtn");
+            if (panel && panel.classList.contains("hidden") && toggle) toggle.click();
+            ctaSection.scrollIntoView({ behavior: "smooth", block: "start" });
+          };
+        }
+      }
+
+      function escapeAttr(s) {
+        return String(s || "")
+          .replace(/&/g, "&amp;")
+          .replace(/"/g, "&quot;")
+          .replace(/</g, "&lt;");
+      }
+
+      function submitMessageForm(ctx) {
+        var emailEl = document.getElementById("msgEmail");
+        var siteEl = document.getElementById("msgSite");
+        var bodyEl = document.getElementById("msgBody");
+        var wantsEl = document.getElementById("msgWantsCall");
+        var statusEl = document.getElementById("msgStatus");
+        var hpEl = document.getElementById("msgHp");
+        var submitBtn = document.getElementById("msgSubmit");
+        var statusLine = document.getElementById("msgStatusLine");
+        var successBox = document.getElementById("msgSuccess");
+        var successCall = document.getElementById("msgSuccessCall");
+        var form = document.getElementById("msgForm");
+
+        if (!emailEl || !bodyEl) return;
+
+        var payload = {
+          email: (emailEl.value || "").trim(),
+          message: (bodyEl.value || "").trim(),
+          site_url: (siteEl && siteEl.value) || ctx.site || "",
+          scan_status: (statusEl && statusEl.value) || ctx.status || "",
+          wants_call: !!(wantsEl && wantsEl.checked),
+          source: "checker_result",
+          website: (hpEl && hpEl.value) || "",
+        };
+
+        if (!payload.email || payload.email.indexOf("@") < 1) {
+          if (statusLine) statusLine.textContent = "Enter a valid email.";
+          return;
+        }
+        if (payload.message.length < 5) {
+          if (statusLine) statusLine.textContent = "Write a short message first.";
+          return;
+        }
+
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.textContent = "Sending…";
+        }
+        if (statusLine) statusLine.textContent = "";
+
+        fetch("/api/message", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        })
+          .then(function (r) {
+            return r.json().then(function (j) {
+              return { ok: r.ok, status: r.status, body: j };
+            });
+          })
+          .then(function (res) {
+            if (!res.ok || !res.body || !res.body.ok) {
+              throw new Error((res.body && res.body.error) || "Send failed");
+            }
+            if (form) form.classList.add("hidden");
+            if (successBox) successBox.classList.remove("hidden");
+            if (payload.wants_call && successCall) successCall.classList.remove("hidden");
+            if (typeof gtag === "function") {
+              gtag("event", "message_sent", {
+                status: payload.scan_status,
+                wants_call: payload.wants_call,
+              });
+            }
+          })
+          .catch(function (err) {
+            if (statusLine) statusLine.textContent = err.message || "Could not send. Try again or book a call.";
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.textContent = "Send message";
+            }
+          });
       }
 
       function checkAnother() {

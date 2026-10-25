@@ -1,17 +1,9 @@
 /**
  * Cloudflare Pages Function: POST /api/message
- * Saves contact notes to D1 and notifies you via Resend.
- *
  * Deploy as: functions/api/message.js
  *
- * Required secrets / vars:
- *   RESEND_API_KEY   (secret)
- *   NOTIFY_EMAIL     (e.g. alex@kejanigarage.com)
- *   EMAIL_FROM       (verified Resend sender, e.g. Sentinel <noreply@kejanigarage.com>)
- *   DB               (D1 binding: php-sentinel-db)
- *
- * Optional:
- *   CORS_ORIGIN      (default *)
+ * Secrets / vars:
+ *   RESEND_API_KEY, NOTIFY_EMAIL, EMAIL_FROM, DB (D1)
  */
 
 const RATE_WINDOW_MS = 15 * 60 * 1000;
@@ -35,12 +27,22 @@ function json(body, status, origin) {
 }
 
 function isValidEmail(email) {
-  return typeof email === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()) && email.length <= 254;
+  return (
+    typeof email === "string" &&
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()) &&
+    email.length <= 254
+  );
 }
 
 function cleanText(s, max) {
   if (typeof s !== "string") return "";
   return s.trim().slice(0, max);
+}
+
+function cleanPhone(s) {
+  if (typeof s !== "string") return "";
+  // keep digits, +, spaces, dashes, parentheses
+  return s.trim().replace(/[^\d+\s\-()]/g, "").slice(0, 40);
 }
 
 function rateLimit(ip) {
@@ -80,6 +82,14 @@ async function sendResend({ apiKey, from, to, subject, html, text, replyTo }) {
   return { ok: true, data };
 }
 
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
 export async function onRequestOptions(context) {
   const origin = context.env.CORS_ORIGIN || "*";
   return new Response(null, { status: 204, headers: corsHeaders(origin) });
@@ -106,7 +116,6 @@ export async function onRequestPost(context) {
       return json({ ok: false, error: "Invalid JSON body" }, 400, origin);
     }
 
-    // Honeypot — bots fill this; humans never see it
     if (body.website || body.company_url || body.hp) {
       return json({ ok: true, id: 0 }, 200, origin);
     }
@@ -114,15 +123,21 @@ export async function onRequestPost(context) {
     const email = cleanText(body.email || "", 254);
     const message = cleanText(body.message || "", 4000);
     const siteUrl = cleanText(body.site_url || body.url || "", 500);
+    const phone = cleanPhone(body.phone || body.whatsapp || body.phone_number || "");
     const scanStatus = cleanText(body.scan_status || "", 40);
     const source = cleanText(body.source || "checker", 40) || "checker";
-    const wantsCall = body.wants_call === true || body.wants_call === 1 || body.wants_call === "1" ? 1 : 0;
+    const wantsCall =
+      body.wants_call === true || body.wants_call === 1 || body.wants_call === "1" ? 1 : 0;
 
     if (!isValidEmail(email)) {
       return json({ ok: false, error: "Please enter a valid email." }, 400, origin);
     }
     if (!message || message.length < 5) {
-      return json({ ok: false, error: "Please write a short message (at least a few words)." }, 400, origin);
+      return json(
+        { ok: false, error: "Please write a short message (at least a few words)." },
+        400,
+        origin
+      );
     }
 
     if (!env.DB) {
@@ -132,10 +147,20 @@ export async function onRequestPost(context) {
     const ua = (request.headers.get("User-Agent") || "").slice(0, 300);
 
     const insert = await env.DB.prepare(
-      `INSERT INTO messages (email, message, site_url, scan_status, wants_call, source, ip, user_agent)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+      `INSERT INTO messages (email, message, site_url, phone, scan_status, wants_call, source, ip, user_agent)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
     )
-      .bind(email, message, siteUrl || null, scanStatus || null, wantsCall, source, ip, ua)
+      .bind(
+        email,
+        message,
+        siteUrl || null,
+        phone || null,
+        scanStatus || null,
+        wantsCall,
+        source,
+        ip,
+        ua
+      )
       .run();
 
     const id = insert?.meta?.last_row_id || null;
@@ -144,12 +169,15 @@ export async function onRequestPost(context) {
     const from = env.EMAIL_FROM || "Sentinel <noreply@kejanigarage.com>";
     const subject = wantsCall
       ? `[Sentinel] Call requested · ${siteUrl || email}`
-      : `[Sentinel] New message · ${siteUrl || email}`;
+      : phone
+        ? `[Sentinel] Message + phone · ${siteUrl || email}`
+        : `[Sentinel] New message · ${siteUrl || email}`;
 
     const text = [
       "New Sentinel message",
       "-------------------",
       `From: ${email}`,
+      phone ? `Phone / WhatsApp: ${phone}` : null,
       siteUrl ? `Site: ${siteUrl}` : null,
       scanStatus ? `Scan status: ${scanStatus}` : null,
       `Wants call: ${wantsCall ? "YES" : "no"}`,
@@ -167,6 +195,7 @@ export async function onRequestPost(context) {
       <div style="font-family:system-ui,sans-serif;max-width:560px;line-height:1.5;color:#0f172a">
         <h2 style="margin:0 0 12px">New Sentinel message</h2>
         <p style="margin:0 0 8px"><strong>From:</strong> ${escapeHtml(email)}</p>
+        ${phone ? `<p style="margin:0 0 8px"><strong>Phone / WhatsApp:</strong> ${escapeHtml(phone)}</p>` : ""}
         ${siteUrl ? `<p style="margin:0 0 8px"><strong>Site:</strong> ${escapeHtml(siteUrl)}</p>` : ""}
         ${scanStatus ? `<p style="margin:0 0 8px"><strong>Scan status:</strong> ${escapeHtml(scanStatus)}</p>` : ""}
         <p style="margin:0 0 8px"><strong>Wants call:</strong> ${wantsCall ? "YES" : "no"}</p>
@@ -206,14 +235,10 @@ export async function onRequestPost(context) {
     );
   } catch (err) {
     console.error(err);
-    return json({ ok: false, error: "Something went wrong. Try again or book a call." }, 500, origin);
+    return json(
+      { ok: false, error: "Something went wrong. Try again or book a call." },
+      500,
+      origin
+    );
   }
-}
-
-function escapeHtml(s) {
-  return String(s)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
 }

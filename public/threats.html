@@ -166,6 +166,61 @@
       background: rgba(45, 212, 191, 0.12);
       color: #2dd4bf;
     }
+    .talk-wrap { position: relative; display: none; }
+    @media (min-width: 640px) { .talk-wrap { display: block; } }
+    .talk-menu {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 0.5rem);
+      min-width: 15.5rem;
+      padding: 0.4rem;
+      border-radius: 1rem;
+      background: linear-gradient(165deg, rgba(20, 27, 45, 0.98), rgba(9, 12, 24, 0.99));
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+      display: none;
+      z-index: 60;
+    }
+    .talk-menu.open { display: block; }
+    .talk-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+      width: 100%;
+      text-align: left;
+      padding: 0.7rem 0.75rem;
+      border-radius: 0.75rem;
+      color: #e2e8f0;
+      transition: background 0.15s ease;
+    }
+    .talk-item:hover { background: rgba(255, 255, 255, 0.06); }
+    .talk-item .ti-title { font-size: 0.8125rem; font-weight: 600; color: #f8fafc; }
+    .talk-item .ti-sub { font-size: 0.7rem; color: #94a3b8; margin-top: 0.1rem; }
+    .talk-icon {
+      width: 1.75rem; height: 1.75rem; border-radius: 0.5rem;
+      display: inline-flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-size: 0.85rem;
+      background: rgba(45, 212, 191, 0.12); color: #2dd4bf;
+    }
+    .talk-icon.wa { background: rgba(16, 185, 129, 0.12); color: #34d399; }
+    .msg-modal-backdrop {
+      position: fixed; inset: 0; z-index: 80;
+      background: rgba(2, 6, 23, 0.72);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .msg-modal-backdrop.open { display: flex; }
+    .msg-modal {
+      width: 100%; max-width: 26rem;
+      border-radius: 1.25rem;
+      padding: 1.25rem;
+      background: linear-gradient(165deg, rgba(20, 27, 45, 0.98), rgba(9, 12, 24, 0.99));
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+    }
   </style>
 </head>
 <body class="min-h-screen">
@@ -182,10 +237,28 @@
           <a href="/" class="nav-pill">Checker</a>
           <a href="/threats.html" class="nav-pill is-active" aria-current="page">Threats</a>
         </nav>
-        <a href="https://cal.com/alex-mochu/php-fix" target="_blank" rel="noopener" class="nav-cta hidden sm:inline-flex">
-          Book a call
-          <svg class="w-3.5 h-3.5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-        </a>
+
+        <div class="talk-wrap">
+          <button type="button" id="talkBtn" class="nav-cta" aria-expanded="false" aria-haspopup="true" aria-controls="talkMenu">
+            Talk to us
+            <svg class="w-3.5 h-3.5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div id="talkMenu" class="talk-menu" role="menu">
+            <a role="menuitem" class="talk-item" href="https://cal.com/alex-mochu/php-fix" target="_blank" rel="noopener">
+              <span class="talk-icon">📅</span>
+              <span><span class="ti-title">Book a free call</span><span class="ti-sub block">15 min · Cal.com</span></span>
+            </a>
+            <button type="button" role="menuitem" class="talk-item" id="navOpenMsg">
+              <span class="talk-icon">✉️</span>
+              <span><span class="ti-title">Send a message</span><span class="ti-sub block">Email reply · no account</span></span>
+            </button>
+            <a role="menuitem" class="talk-item hidden" id="navWhatsApp" href="#" target="_blank" rel="noopener">
+              <span class="talk-icon wa">💬</span>
+              <span><span class="ti-title">WhatsApp</span><span class="ti-sub block">Quick chat</span></span>
+            </a>
+          </div>
+        </div>
+
         <button type="button" id="navToggle" class="nav-mobile-btn" aria-expanded="false" aria-controls="navDrawer" aria-label="Open menu">
           <svg id="navIconOpen" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16M4 12h16M4 17h16"/></svg>
           <svg id="navIconClose" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -196,10 +269,62 @@
       <div class="max-w-5xl mx-auto px-4 py-3 space-y-1">
         <a href="/">Checker <span class="text-xs text-slate-500">Scan a site</span></a>
         <a href="/threats.html" class="is-active">Threat Timeline <span class="text-xs text-teal">2026</span></a>
+        <div class="my-2 border-t border-white/10"></div>
         <a href="https://cal.com/alex-mochu/php-fix" target="_blank" rel="noopener">Book a free call <span class="text-xs text-slate-500">Cal.com</span></a>
+        <button type="button" id="navDrawerMsg" class="w-full text-left talk-item !px-3 !py-3">
+          <span class="talk-icon">✉️</span>
+          <span><span class="ti-title">Send a message</span><span class="ti-sub block">I’ll reply by email</span></span>
+        </button>
       </div>
     </div>
   </header>
+
+  <div id="msgModal" class="msg-modal-backdrop" aria-hidden="true">
+    <div class="msg-modal" role="dialog" aria-labelledby="msgModalTitle">
+      <div class="flex items-start justify-between gap-3 mb-3">
+        <div>
+          <h2 id="msgModalTitle" class="font-display text-xl text-white">Send a message</h2>
+          <p class="text-sm text-slate-400 mt-1">Leave your email and a short note. Booking is optional.</p>
+        </div>
+        <button type="button" id="msgModalClose" class="w-9 h-9 rounded-xl border border-white/10 text-slate-400 hover:text-white hover:bg-white/5" aria-label="Close">×</button>
+      </div>
+      <form id="globalMsgForm" class="space-y-3" novalidate>
+        <input type="text" name="website" id="gMsgHp" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+        <div>
+          <label class="block text-xs text-slate-500 mb-1" for="gMsgEmail">Email</label>
+          <input id="gMsgEmail" type="email" required placeholder="you@company.com" class="w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-teal/50" />
+        </div>
+        <div class="grid sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs text-slate-500 mb-1" for="gMsgSite">Site (optional)</label>
+            <input id="gMsgSite" type="url" placeholder="https://…" class="w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-teal/50" />
+          </div>
+          <div>
+            <label class="block text-xs text-slate-500 mb-1" for="gMsgPhone">Phone / WhatsApp <span class="text-slate-600">(optional)</span></label>
+            <input id="gMsgPhone" type="tel" inputmode="tel" placeholder="+254 7…" class="w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-teal/50" />
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs text-slate-500 mb-1" for="gMsgBody">Message</label>
+          <textarea id="gMsgBody" required rows="3" placeholder="What do you need help with?" class="w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-teal/50 resize-y"></textarea>
+        </div>
+        <label class="flex items-start gap-2 text-sm text-slate-300 cursor-pointer select-none">
+          <input id="gMsgWantsCall" type="checkbox" class="mt-1 rounded border-white/20 bg-white/5 text-teal focus:ring-teal" />
+          <span>I’d also like a free 15‑min call <span class="text-slate-500">(optional)</span></span>
+        </label>
+        <div class="flex flex-wrap items-center gap-3 pt-1">
+          <button type="submit" id="gMsgSubmit" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-ink font-bold text-sm hover:bg-slate-100 transition">Send message</button>
+          <a href="https://cal.com/alex-mochu/php-fix" target="_blank" rel="noopener" class="text-sm text-teal hover:underline">Or book a call</a>
+        </div>
+        <p id="gMsgStatus" class="text-sm text-slate-500"></p>
+      </form>
+      <div id="gMsgSuccess" class="hidden rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-200">
+        <p class="font-medium text-emerald-100 mb-1">Message sent</p>
+        <p>Thanks — I’ll reply by email.</p>
+        <p id="gMsgSuccessCall" class="hidden mt-2">You asked for a call — <a href="https://cal.com/alex-mochu/php-fix" target="_blank" rel="noopener" class="underline text-teal">pick a slot here</a>.</p>
+      </div>
+    </div>
+  </div>
 
   <main class="max-w-5xl mx-auto px-4 py-10">
     <section class="mb-8">
@@ -650,13 +775,135 @@
       var drawer = document.getElementById("navDrawer");
       var iconOpen = document.getElementById("navIconOpen");
       var iconClose = document.getElementById("navIconClose");
-      if (!toggle || !drawer) return;
-      toggle.addEventListener("click", function () {
-        var open = drawer.classList.toggle("open");
-        toggle.setAttribute("aria-expanded", open ? "true" : "false");
-        if (iconOpen) iconOpen.classList.toggle("hidden", open);
-        if (iconClose) iconClose.classList.toggle("hidden", !open);
+      if (toggle && drawer) {
+        toggle.addEventListener("click", function () {
+          var open = drawer.classList.toggle("open");
+          toggle.setAttribute("aria-expanded", open ? "true" : "false");
+          if (iconOpen) iconOpen.classList.toggle("hidden", open);
+          if (iconClose) iconClose.classList.toggle("hidden", !open);
+        });
+      }
+
+      var talkBtn = document.getElementById("talkBtn");
+      var talkMenu = document.getElementById("talkMenu");
+      function closeTalk() {
+        if (talkMenu) talkMenu.classList.remove("open");
+        if (talkBtn) talkBtn.setAttribute("aria-expanded", "false");
+      }
+      if (talkBtn && talkMenu) {
+        talkBtn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          var open = talkMenu.classList.toggle("open");
+          talkBtn.setAttribute("aria-expanded", open ? "true" : "false");
+        });
+        document.addEventListener("click", function (e) {
+          if (!talkMenu.contains(e.target) && e.target !== talkBtn) closeTalk();
+        });
+      }
+
+      window.SENTINEL_WHATSAPP = window.SENTINEL_WHATSAPP || "25456966876";
+      var wa = (window.SENTINEL_WHATSAPP || "").replace(/\D/g, "");
+      var navWa = document.getElementById("navWhatsApp");
+      if (wa && wa.length >= 10 && navWa) {
+        navWa.href = "https://wa.me/" + wa + "?text=" + encodeURIComponent("Hi Alex — from Sentinel Threats. ");
+        navWa.classList.remove("hidden");
+      }
+
+      var modal = document.getElementById("msgModal");
+      function openMsgModal() {
+        if (!modal) return;
+        closeTalk();
+        if (drawer) drawer.classList.remove("open");
+        modal.classList.add("open");
+        modal.setAttribute("aria-hidden", "false");
+        var em = document.getElementById("gMsgEmail");
+        if (em) setTimeout(function () { em.focus(); }, 50);
+      }
+      function closeMsgModal() {
+        if (!modal) return;
+        modal.classList.remove("open");
+        modal.setAttribute("aria-hidden", "true");
+      }
+
+      ["navOpenMsg", "navDrawerMsg"].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) el.addEventListener("click", openMsgModal);
       });
+      var closeBtn = document.getElementById("msgModalClose");
+      if (closeBtn) closeBtn.addEventListener("click", closeMsgModal);
+      if (modal) {
+        modal.addEventListener("click", function (e) {
+          if (e.target === modal) closeMsgModal();
+        });
+      }
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") closeMsgModal();
+      });
+
+      var gForm = document.getElementById("globalMsgForm");
+      if (gForm) {
+        gForm.addEventListener("submit", function (ev) {
+          ev.preventDefault();
+          var email = (document.getElementById("gMsgEmail").value || "").trim();
+          var message = (document.getElementById("gMsgBody").value || "").trim();
+          var site_url = (document.getElementById("gMsgSite").value || "").trim();
+          var phone = (document.getElementById("gMsgPhone") && document.getElementById("gMsgPhone").value) || "";
+          var wants_call = !!(document.getElementById("gMsgWantsCall") && document.getElementById("gMsgWantsCall").checked);
+          var hp = (document.getElementById("gMsgHp") && document.getElementById("gMsgHp").value) || "";
+          var statusLine = document.getElementById("gMsgStatus");
+          var submitBtn = document.getElementById("gMsgSubmit");
+          if (!email || email.indexOf("@") < 1) {
+            if (statusLine) statusLine.textContent = "Enter a valid email.";
+            return;
+          }
+          if (message.length < 5) {
+            if (statusLine) statusLine.textContent = "Write a short message first.";
+            return;
+          }
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Sending…";
+          }
+          if (statusLine) statusLine.textContent = "";
+          fetch("/api/message", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: email,
+              message: message,
+              site_url: site_url,
+              phone: phone,
+              wants_call: wants_call,
+              source: "threats_nav",
+              website: hp
+            })
+          })
+            .then(function (r) {
+              return r.json().then(function (j) {
+                return { ok: r.ok, body: j };
+              });
+            })
+            .then(function (res) {
+              if (!res.ok || !res.body || !res.body.ok) {
+                throw new Error((res.body && res.body.error) || "Send failed");
+              }
+              gForm.classList.add("hidden");
+              var okBox = document.getElementById("gMsgSuccess");
+              if (okBox) okBox.classList.remove("hidden");
+              if (wants_call) {
+                var callHint = document.getElementById("gMsgSuccessCall");
+                if (callHint) callHint.classList.remove("hidden");
+              }
+            })
+            .catch(function (err) {
+              if (statusLine) statusLine.textContent = err.message || "Could not send.";
+              if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Send message";
+              }
+            });
+        });
+      }
     })();
   </script>
 </body>

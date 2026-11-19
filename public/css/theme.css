@@ -1,0 +1,50 @@
+/* Sentinel theme: tokens shared by every page. */
+body {
+  font-family: Inter, system-ui, sans-serif;
+  background:
+    radial-gradient(900px 500px at 15% -5%, rgba(99, 102, 241, 0.28), transparent 55%),
+    radial-gradient(700px 400px at 90% 0%, rgba(45, 212, 191, 0.14), transparent 50%),
+    #05070f;
+  color: #e2e8f0;
+}
+.font-display {
+  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+.glass {
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px);
+}
+.glass-strong {
+  background: linear-gradient(165deg, rgba(20, 27, 45, 0.96), rgba(9, 12, 24, 0.98));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+}
+.lift { transition: transform 0.2s ease, border-color 0.2s ease; }
+.lift:hover { transform: translateY(-3px); border-color: rgba(45, 212, 191, 0.35); }
+
+input::placeholder { color: #64748b; }
+
+/* Keyboard focus, skip link and reduced motion (added in v2). */
+:focus-visible { outline: 2px solid #2dd4bf; outline-offset: 2px; }
+.skip-link {
+  position: absolute; left: -9999px; top: 0; z-index: 100;
+  background: #fff; color: #05070f; padding: 0.6rem 1rem;
+  border-radius: 0 0 0.75rem 0; font-weight: 600;
+}
+.skip-link:focus { left: 0; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .ticker-track { animation: none !important; padding-left: 0 !important; }
+}

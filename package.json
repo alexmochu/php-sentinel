@@ -1,11 +1,19 @@
 {
   "name": "php-sentinel",
+  "version": "2.0.0",
   "private": true,
+  "type": "module",
+  "description": "Sentinel: free site risk checker (PHP signals, security headers, TLS basics) with AI fix plans and a Pro waitlist. Cloudflare Pages + D1.",
   "scripts": {
     "dev": "wrangler pages dev public",
-    "deploy": "wrangler pages deploy public"
+    "test": "node --test tests/*.test.mjs",
+    "db:migrate:local": "wrangler d1 migrations apply php-sentinel-db --local",
+    "db:migrate": "wrangler d1 migrations apply php-sentinel-db --remote",
+    "deploy": "wrangler pages deploy public",
+    "test:smoke": "node tests/smoke.mjs"
   },
   "devDependencies": {
-    "wrangler": "^3.78.0"
+    "wrangler": "^3.78.0",
+    "jsdom": "^24.1.0"
   }
 }

@@ -1,0 +1,30 @@
+/* Threat timeline page. */
+.sev-critical { background: rgba(244, 63, 94, 0.15); border-color: rgba(244, 63, 94, 0.4); color: #fda4af; }
+.sev-high { background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.4); color: #fcd34d; }
+.sev-medium { background: rgba(56, 189, 248, 0.12); border-color: rgba(56, 189, 248, 0.35); color: #7dd3fc; }
+.sev-research { background: rgba(148, 163, 184, 0.12); border-color: rgba(148, 163, 184, 0.3); color: #cbd5e1; }
+.chip {
+  display: inline-flex; align-items: center;
+  padding: 0.15rem 0.5rem; border-radius: 0.4rem;
+  font-size: 0.7rem; font-weight: 500;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  color: #94a3b8;
+}
+.chip-cve { color: #2dd4bf; border-color: rgba(45, 212, 191, 0.3); }
+.filter-btn.active {
+  background: #fff; color: #05070f; border-color: transparent;
+}
+.timeline-line {
+  position: absolute; left: 1.15rem; top: 0; bottom: 0;
+  width: 2px; background: rgba(255,255,255,0.08);
+}
+@media (min-width: 768px) {
+  .timeline-line { left: 1.4rem; }
+}
+.dot {
+  width: 0.75rem; height: 0.75rem; border-radius: 999px;
+  background: #2dd4bf; box-shadow: 0 0 0 4px rgba(45, 212, 191, 0.15);
+  flex-shrink: 0;
+}
+.dot-critical { background: #f43f5e; box-shadow: 0 0 0 4px rgba(244, 63, 94, 0.2); }
+.dot-high { background: #f59e0b; box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2); }

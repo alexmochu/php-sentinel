@@ -1,0 +1,49 @@
+/* Sentinel checker: scan results, stats, charts. */
+.bar { height: 8px; border-radius: 999px; background: rgba(255, 255, 255, 0.08); overflow: hidden; }
+.bar > span {
+  display: block; height: 100%; width: 0; border-radius: 999px;
+  transition: width 0.85s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.loader {
+  width: 44px; height: 44px;
+  border: 3px solid rgba(255, 255, 255, 0.12);
+  border-top-color: #2dd4bf;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.ticker-wrap { overflow: hidden; white-space: nowrap; }
+.ticker-track {
+  display: inline-block;
+  padding-left: 100%;
+  animation: ticker 42s linear infinite;
+}
+@keyframes ticker { to { transform: translateX(-100%); } }
+.chip-ok { background: rgba(52, 211, 153, 0.12); border: 1px solid rgba(52, 211, 153, 0.35); color: #6ee7b7; }
+.chip-bad { background: rgba(244, 63, 94, 0.12); border: 1px solid rgba(244, 63, 94, 0.35); color: #fda4af; }
+.chip-warn { background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.35); color: #fcd34d; }
+.chip-mute { background: rgba(148, 163, 184, 0.1); border: 1px solid rgba(148, 163, 184, 0.25); color: #cbd5e1; }
+#mainGrid.mode-focus { display: block; }
+#mainGrid.mode-focus #resultStage {
+  max-width: 48rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Fix plans, code blocks and waitlist (added in v2). */
+.code-block {
+  position: relative; margin-top: 0.5rem; border-radius: 0.85rem;
+  background: rgba(0, 0, 0, 0.45); border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.code-block pre {
+  margin: 0; padding: 0.85rem 1rem; overflow-x: auto;
+  font-size: 0.75rem; line-height: 1.55; color: #cbd5e1;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+.code-block .code-label { padding: 0.5rem 1rem 0; font-size: 0.7rem; color: #94a3b8; }
+.code-block button {
+  position: absolute; top: 0.4rem; right: 0.5rem;
+  font-size: 0.7rem; color: #2dd4bf; padding: 0.2rem 0.5rem; border-radius: 0.5rem;
+}
+.code-block button:hover { background: rgba(255, 255, 255, 0.06); }
+.fix-step { border: 1px solid rgba(255, 255, 255, 0.08); background: rgba(255, 255, 255, 0.03); border-radius: 1rem; padding: 1rem; }

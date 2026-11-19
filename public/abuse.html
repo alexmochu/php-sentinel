@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#05070f" />
+  <title>Abuse, removal and security reports – Sentinel by Kejani Garage</title>
+  <meta name="description" content="Ask Sentinel not to check your site, request removal of records, report abuse, or report a security issue." />
+  <link rel="canonical" href="https://sentinel.kejanigarage.com/abuse" />
+  <meta property="og:title" content="Abuse, removal and security reports – Sentinel" />
+  <meta property="og:description" content="Ask Sentinel not to check your site, request removal of records, report abuse, or report a security issue." />
+  <meta property="og:url" content="https://sentinel.kejanigarage.com/abuse" />
+  <meta property="og:image" content="https://sentinel.kejanigarage.com/og-image.png" />
+  <link rel="icon" href="/favicon.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/js/tailwind-config.js"></script>
+  <link rel="stylesheet" href="/css/theme.css" />
+  <link rel="stylesheet" href="/css/layout.css" />
+  <link rel="stylesheet" href="/css/legal.css" />
+  <script defer src="/js/config.js"></script>
+  <script defer src="/js/util.js"></script>
+  <script defer src="/js/analytics.js"></script>
+  <script defer src="/js/layout.js"></script>
+  <script defer src="/js/contact.js"></script>
+  <script defer src="/js/abuse.js"></script>
+</head>
+<body class="min-h-screen" data-page="legal">
+  <main id="main" class="legal max-w-3xl mx-auto px-4 py-12">
+    <p class="meta">Last updated 18 November 2026</p>
+    <h1 class="text-3xl sm:text-4xl text-white mb-2">Abuse, removal and security reports</h1>
+    <p>Use this page to ask us not to check your website, to remove records about it, to report misuse of Sentinel, or to report a security problem in Sentinel itself.</p>
+
+    <h2>How Sentinel checks a site</h2>
+    <ul>
+      <li>Checks are started by a person pasting an address. Sentinel is not a crawler.</li>
+      <li>It makes one GET request to that page and one request to the http:// version to test the redirect. It follows at most three redirects.</li>
+      <li>It identifies itself as <code>Sentinel/1.1 (+https://sentinel.kejanigarage.com/abuse)</code>.</li>
+      <li>It is limited to 8 checks per minute per visitor. It does not log in, submit forms or send exploit code.</li>
+    </ul>
+
+    <h2>What happens after you send a report</h2>
+    <ul>
+      <li><strong>Opt-out:</strong> We verify that you control the domain (for example by replying from an address at that domain, or asking you to add a DNS TXT record), then block it. Subdomains are covered.</li>
+      <li><strong>Removal:</strong> After the same verification we delete stored check records for that domain.</li>
+      <li><strong>Abuse:</strong> We look into it, block offenders if needed, and reply to you.</li>
+      <li><strong>Security issue in Sentinel:</strong> Please give us reasonable time to fix it before sharing details publicly. See also <a href="/.well-known/security.txt">security.txt</a>.</li>
+    </ul>
+    <p>We aim to reply within five working days.</p>
+
+    <h2>Send a report</h2>
+    <form id="reportForm" class="space-y-3 mt-4" novalidate>
+      <input type="text" id="reportHp" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+      <div>
+        <label class="block text-xs text-slate-400 mb-1" for="reportKind">What is this about?</label>
+        <select id="reportKind" class="w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2.5 text-sm text-white focus:outline-none focus:border-teal/50">
+          <option value="opt_out">Do not check my site (opt-out)</option>
+          <option value="removal">Remove records about my site</option>
+          <option value="abuse">Report abuse of Sentinel</option>
+          <option value="security">Security problem in Sentinel</option>
+          <option value="other">Something else</option>
+        </select>
+      </div>
+      <div class="grid sm:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs text-slate-400 mb-1" for="reportEmail">Your email</label>
+          <input id="reportEmail" type="email" required placeholder="you@yourdomain.com" class="w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-teal/50" />
+        </div>
+        <div>
+          <label class="block text-xs text-slate-400 mb-1" for="reportDomain">Domain (for opt-out and removal)</label>
+          <input id="reportDomain" type="text" placeholder="example.com" class="w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-teal/50" />
+        </div>
+      </div>
+      <div>
+        <label class="block text-xs text-slate-400 mb-1" for="reportDetails">Details</label>
+        <textarea id="reportDetails" rows="4" required class="w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-teal/50 resize-y"></textarea>
+      </div>
+      <p class="text-xs text-slate-500">We use these details only to handle your report. See the <a href="/privacy">Privacy policy</a>.</p>
+      <div class="flex flex-wrap items-center gap-3">
+        <button type="submit" id="reportSubmit" class="px-5 py-2.5 rounded-xl bg-white text-ink font-bold text-sm hover:bg-slate-100 transition">Send report</button>
+        <span id="reportStatus" class="text-sm text-slate-400" role="status"></span>
+      </div>
+    </form>
+    <div id="reportDone" class="hidden rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-200 mt-4">
+      <p class="font-medium text-emerald-100 mb-1">Report received</p>
+      <p>Thank you. We will reply by email.</p>
+    </div>
+    <p class="mt-6">Prefer email? Write to <a href="mailto:alex@kejanigarage.com">alex@kejanigarage.com</a>.</p>
+
+  </main>
+</body>
+</html>

@@ -1,0 +1,16 @@
+# Copy to .dev.vars for local development. Never commit .dev.vars.
+# In production set these with: wrangler pages secret put NAME   (or the Cloudflare dashboard)
+
+# --- Secrets ---
+ADMIN_SECRET=change-me-to-a-long-random-string
+IP_SALT=change-me-to-a-long-random-string
+RESEND_API_KEY=
+ANTHROPIC_API_KEY=
+
+# --- Settings (optional; defaults shown) ---
+NOTIFY_EMAIL=alex@kejanigarage.com
+EMAIL_FROM=Sentinel <noreply@kejanigarage.com>
+ANTHROPIC_MODEL=claude-haiku-5-5
+AI_DAILY_LIMIT=200
+# Comma-separated IPs to leave out of the public stats (your own).
+EXCLUDE_IPS=

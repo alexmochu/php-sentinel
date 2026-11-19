@@ -1,244 +1,66 @@
-/**
- * Cloudflare Pages Function: POST /api/message
- * Deploy as: functions/api/message.js
- *
- * Secrets / vars:
- *   RESEND_API_KEY, NOTIFY_EMAIL, EMAIL_FROM, DB (D1)
- */
+// POST /api/message -> contact form. Stored in D1, emailed to the owner through Resend.
 
-const RATE_WINDOW_MS = 15 * 60 * 1000;
-const RATE_MAX = 5;
-const ipHits = new Map();
+import { json, readJson, getIp, hashIp } from "../_lib/http.js";
+import { isValidEmail, cleanText, cleanPhone } from "../_lib/validate.js";
+import { hit } from "../_lib/ratelimit.js";
+import { sendEmail, notificationBody } from "../_lib/email.js";
 
-function corsHeaders(origin) {
-  return {
-    "Access-Control-Allow-Origin": origin || "*",
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type",
-    "Content-Type": "application/json",
-  };
-}
-
-function json(body, status, origin) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: corsHeaders(origin),
-  });
-}
-
-function isValidEmail(email) {
-  return (
-    typeof email === "string" &&
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()) &&
-    email.length <= 254
-  );
-}
-
-function cleanText(s, max) {
-  if (typeof s !== "string") return "";
-  return s.trim().slice(0, max);
-}
-
-function cleanPhone(s) {
-  if (typeof s !== "string") return "";
-  // keep digits, +, spaces, dashes, parentheses
-  return s.trim().replace(/[^\d+\s\-()]/g, "").slice(0, 40);
-}
-
-function rateLimit(ip) {
-  const now = Date.now();
-  let entry = ipHits.get(ip);
-  if (!entry || now - entry.start > RATE_WINDOW_MS) {
-    entry = { start: now, count: 0 };
-    ipHits.set(ip, entry);
-  }
-  entry.count += 1;
-  return entry.count <= RATE_MAX;
-}
-
-async function sendResend({ apiKey, from, to, subject, html, text, replyTo }) {
-  if (!apiKey) {
-    return { ok: false, error: "RESEND_API_KEY not configured" };
-  }
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from,
-      to: [to],
-      reply_to: replyTo || undefined,
-      subject,
-      html,
-      text,
-    }),
-  });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) {
-    return { ok: false, error: data?.message || res.statusText, data };
-  }
-  return { ok: true, data };
-}
-
-function escapeHtml(s) {
-  return String(s)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
-
-export async function onRequestOptions(context) {
-  const origin = context.env.CORS_ORIGIN || "*";
-  return new Response(null, { status: 204, headers: corsHeaders(origin) });
-}
-
-export async function onRequestPost(context) {
-  const { request, env } = context;
-  const origin = env.CORS_ORIGIN || "*";
-
+export async function onRequestPost({ request, env }) {
   try {
-    const ip =
-      request.headers.get("CF-Connecting-IP") ||
-      request.headers.get("X-Forwarded-For")?.split(",")[0]?.trim() ||
-      "unknown";
+    const ipHash = await hashIp(getIp(request), env);
+    const rl = await hit(env, `message:${ipHash}`, 5, 900);
+    if (!rl.allowed) return json({ ok: false, error: "Too many messages. Try again in a bit." }, 429);
 
-    if (!rateLimit(ip)) {
-      return json({ ok: false, error: "Too many messages. Try again in a bit." }, 429, origin);
-    }
+    const parsed = await readJson(request, 12000);
+    if (!parsed.ok) return json({ ok: false, error: parsed.error }, parsed.status);
+    const body = parsed.body;
 
-    let body;
-    try {
-      body = await request.json();
-    } catch {
-      return json({ ok: false, error: "Invalid JSON body" }, 400, origin);
-    }
+    if (body.website || body.company_url || body.hp) return json({ ok: true, id: 0 }); // honeypot
 
-    if (body.website || body.company_url || body.hp) {
-      return json({ ok: true, id: 0 }, 200, origin);
-    }
+    const email = cleanText(body.email, 254);
+    const message = cleanText(body.message, 4000);
+    const siteUrl = cleanText(body.site_url || body.url, 500);
+    const phone = cleanPhone(body.phone || body.whatsapp);
+    const scanStatus = cleanText(body.scan_status, 40);
+    const source = cleanText(body.source, 40) || "checker";
+    const wantsCall = body.wants_call === true || body.wants_call === 1 || body.wants_call === "1" ? 1 : 0;
 
-    const email = cleanText(body.email || "", 254);
-    const message = cleanText(body.message || "", 4000);
-    const siteUrl = cleanText(body.site_url || body.url || "", 500);
-    const phone = cleanPhone(body.phone || body.whatsapp || body.phone_number || "");
-    const scanStatus = cleanText(body.scan_status || "", 40);
-    const source = cleanText(body.source || "checker", 40) || "checker";
-    const wantsCall =
-      body.wants_call === true || body.wants_call === 1 || body.wants_call === "1" ? 1 : 0;
-
-    if (!isValidEmail(email)) {
-      return json({ ok: false, error: "Please enter a valid email." }, 400, origin);
-    }
-    if (!message || message.length < 5) {
-      return json(
-        { ok: false, error: "Please write a short message (at least a few words)." },
-        400,
-        origin
-      );
-    }
-
-    if (!env.DB) {
-      return json({ ok: false, error: "Database not configured" }, 500, origin);
-    }
-
-    const ua = (request.headers.get("User-Agent") || "").slice(0, 300);
+    if (!isValidEmail(email)) return json({ ok: false, error: "Please enter a valid email." }, 400);
+    if (message.length < 5) return json({ ok: false, error: "Please write a short message (at least a few words)." }, 400);
+    if (!env.DB) return json({ ok: false, error: "Database not configured." }, 500);
 
     const insert = await env.DB.prepare(
       `INSERT INTO messages (email, message, site_url, phone, scan_status, wants_call, source, ip, user_agent)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
     )
-      .bind(
-        email,
-        message,
-        siteUrl || null,
-        phone || null,
-        scanStatus || null,
-        wantsCall,
-        source,
-        ip,
-        ua
-      )
+      .bind(email, message, siteUrl || null, phone || null, scanStatus || null, wantsCall, source, ipHash,
+        (request.headers.get("User-Agent") || "").slice(0, 200))
       .run();
+    const id = (insert && insert.meta && insert.meta.last_row_id) || null;
 
-    const id = insert?.meta?.last_row_id || null;
-
-    const notifyTo = env.NOTIFY_EMAIL || "alex@kejanigarage.com";
-    const from = env.EMAIL_FROM || "Sentinel <noreply@kejanigarage.com>";
     const subject = wantsCall
       ? `[Sentinel] Call requested · ${siteUrl || email}`
-      : phone
-        ? `[Sentinel] Message + phone · ${siteUrl || email}`
-        : `[Sentinel] New message · ${siteUrl || email}`;
-
-    const text = [
+      : `[Sentinel] New message · ${siteUrl || email}`;
+    const { text, html } = notificationBody(
       "New Sentinel message",
-      "-------------------",
-      `From: ${email}`,
-      phone ? `Phone / WhatsApp: ${phone}` : null,
-      siteUrl ? `Site: ${siteUrl}` : null,
-      scanStatus ? `Scan status: ${scanStatus}` : null,
-      `Wants call: ${wantsCall ? "YES" : "no"}`,
-      `Source: ${source}`,
-      `IP: ${ip}`,
-      "",
-      message,
-      "",
-      id ? `DB id: ${id}` : null,
-    ]
-      .filter(Boolean)
-      .join("\n");
-
-    const html = `
-      <div style="font-family:system-ui,sans-serif;max-width:560px;line-height:1.5;color:#0f172a">
-        <h2 style="margin:0 0 12px">New Sentinel message</h2>
-        <p style="margin:0 0 8px"><strong>From:</strong> ${escapeHtml(email)}</p>
-        ${phone ? `<p style="margin:0 0 8px"><strong>Phone / WhatsApp:</strong> ${escapeHtml(phone)}</p>` : ""}
-        ${siteUrl ? `<p style="margin:0 0 8px"><strong>Site:</strong> ${escapeHtml(siteUrl)}</p>` : ""}
-        ${scanStatus ? `<p style="margin:0 0 8px"><strong>Scan status:</strong> ${escapeHtml(scanStatus)}</p>` : ""}
-        <p style="margin:0 0 8px"><strong>Wants call:</strong> ${wantsCall ? "YES" : "no"}</p>
-        <p style="margin:0 0 16px"><strong>Source:</strong> ${escapeHtml(source)}</p>
-        <div style="padding:12px 14px;background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;white-space:pre-wrap">${escapeHtml(message)}</div>
-        ${id ? `<p style="margin:16px 0 0;color:#64748b;font-size:12px">DB id: ${id}</p>` : ""}
-      </div>
-    `;
-
-    const mailed = await sendResend({
-      apiKey: env.RESEND_API_KEY,
-      from,
-      to: notifyTo,
-      replyTo: email,
-      subject,
-      html,
-      text,
-    });
-
-    if (mailed.ok && id) {
-      try {
-        await env.DB.prepare(`UPDATE messages SET notified = 1 WHERE id = ?`).bind(id).run();
-      } catch (_) {}
-    } else if (!mailed.ok) {
-      console.error("Resend failed", mailed.error || mailed.data);
-    }
-
-    return json(
-      {
-        ok: true,
-        id,
-        wants_call: !!wantsCall,
-        notified: !!mailed.ok,
-      },
-      200,
-      origin
+      [["From", email], ["Phone / WhatsApp", phone], ["Site", siteUrl], ["Scan status", scanStatus],
+        ["Wants call", wantsCall ? "YES" : "no"], ["Source", source], ["DB id", id]],
+      message
     );
+    const mailed = await sendEmail({
+      apiKey: env.RESEND_API_KEY,
+      from: env.EMAIL_FROM || "Sentinel <noreply@kejanigarage.com>",
+      to: env.NOTIFY_EMAIL || "alex@kejanigarage.com",
+      replyTo: email, subject, html, text,
+    });
+    if (mailed.ok && id) {
+      try { await env.DB.prepare("UPDATE messages SET notified = 1 WHERE id = ?").bind(id).run(); } catch { /* non-fatal */ }
+    } else if (!mailed.ok) {
+      console.error("Resend failed", mailed.error);
+    }
+    return json({ ok: true, id, wants_call: !!wantsCall, notified: !!mailed.ok });
   } catch (err) {
     console.error(err);
-    return json(
-      { ok: false, error: "Something went wrong. Try again or book a call." },
-      500,
-      origin
-    );
+    return json({ ok: false, error: "Something went wrong. Try again or book a call." }, 500);
   }
 }

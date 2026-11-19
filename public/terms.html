@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#05070f" />
+  <title>Terms of use – Sentinel by Kejani Garage</title>
+  <meta name="description" content="Terms for using Sentinel, the free website risk and public signal checker by Kejani Garage." />
+  <link rel="canonical" href="https://sentinel.kejanigarage.com/terms" />
+  <meta property="og:title" content="Terms of use – Sentinel" />
+  <meta property="og:description" content="Terms for using Sentinel, the free website risk and public signal checker by Kejani Garage." />
+  <meta property="og:url" content="https://sentinel.kejanigarage.com/terms" />
+  <meta property="og:image" content="https://sentinel.kejanigarage.com/og-image.png" />
+  <link rel="icon" href="/favicon.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/js/tailwind-config.js"></script>
+  <link rel="stylesheet" href="/css/theme.css" />
+  <link rel="stylesheet" href="/css/layout.css" />
+  <link rel="stylesheet" href="/css/legal.css" />
+  <script defer src="/js/config.js"></script>
+  <script defer src="/js/util.js"></script>
+  <script defer src="/js/analytics.js"></script>
+  <script defer src="/js/layout.js"></script>
+  <script defer src="/js/contact.js"></script>
+</head>
+<body class="min-h-screen" data-page="legal">
+  <main id="main" class="legal max-w-3xl mx-auto px-4 py-12">
+    <p class="meta">Last updated 18 November 2026</p>
+    <h1 class="text-3xl sm:text-4xl text-white mb-2">Terms of use</h1>
+    <p>These terms cover your use of Sentinel at sentinel.kejanigarage.com, a free website checker run by Kejani Garage in Nairobi, Kenya (“we”, “us”). By using Sentinel you agree to them. If you do not agree, please do not use it.</p>
+
+    <h2>1. What Sentinel is</h2>
+    <p>Sentinel looks at the public signals a website gives out (response headers, the visible page, TLS basics) and reports what it finds, for example the reported PHP version, missing security headers and technology fingerprints. It can also generate a suggested fix plan. It is an awareness tool, not a security audit or penetration test.</p>
+
+    <h2>2. How checks work</h2>
+    <ul>
+      <li>Sentinel sends ordinary GET requests to the address you enter, plus one request to the plain http:// version to see whether it redirects to https://. This is the same information a browser would receive.</li>
+      <li>It does not log in, guess passwords, crawl the site, or send exploit code.</li>
+      <li>Requests identify themselves with the user agent <code>Sentinel/1.1 (+https://sentinel.kejanigarage.com/abuse)</code>.</li>
+      <li>We keep a list of sites whose owners asked not to be checked, and we honour it. See <a href="/abuse">Abuse and removal</a>.</li>
+    </ul>
+
+    <h2>3. Acceptable use</h2>
+    <p>Only check websites you own or have permission to assess. You agree not to:</p>
+    <ul>
+      <li>use Sentinel to attack, harass, or disrupt any website or person;</li>
+      <li>send automated or bulk requests, or work around the rate limits;</li>
+      <li>check a site after its owner has asked us not to;</li>
+      <li>use results or fix plans to break the law or break someone else’s systems;</li>
+      <li>probe, overload or attempt to break Sentinel itself. To report a weakness responsibly, see <a href="/abuse">Abuse and removal</a>.</li>
+    </ul>
+    <p>We may block access or remove data if we believe these terms are being broken.</p>
+
+    <h2>4. Results and AI fix plans: no guarantee</h2>
+    <p>Results are indicators based on public information and can be wrong or incomplete. For example, many hosts patch software without changing the version number, and CDNs or proxies can hide or change what we see. A “Looks safe” result does not mean a site is secure.</p>
+    <p>Fix plans are a beta feature. They may be written by AI from your scan findings. They can contain mistakes. You are responsible for reviewing them, backing up first, and testing any change before you rely on it.</p>
+
+    <h2>5. Availability</h2>
+    <p>Sentinel is free and provided as is. We may change, limit or stop any part of it at any time, including adding rate limits.</p>
+
+    <h2>6. Liability</h2>
+    <p>To the extent the law allows, Sentinel is provided without warranties of any kind, and we are not liable for loss or damage that results from using it or from acting on its results. Nothing in these terms limits liability that cannot be limited under the laws of Kenya.</p>
+
+    <h2>7. What you send us</h2>
+    <p>If you send a message, join the waitlist or file a report, you let us use that information to reply and to run Sentinel, as described in the <a href="/privacy">Privacy policy</a>.</p>
+
+    <h2>8. Other websites</h2>
+    <p>Sentinel links to other sites (for example Cal.com and WhatsApp). We are not responsible for their content or practices.</p>
+
+    <h2>9. Changes and law</h2>
+    <p>We may update these terms. The date at the top shows the latest version, and continuing to use Sentinel means you accept the update. These terms are governed by the laws of Kenya, and the courts of Nairobi have jurisdiction.</p>
+
+    <h2>10. Contact</h2>
+    <p>Questions: <a href="mailto:alex@kejanigarage.com">alex@kejanigarage.com</a>.</p>
+
+  </main>
+</body>
+</html>

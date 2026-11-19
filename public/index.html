@@ -1,351 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sentinel – Free site risk and public tech signal check</title>
   <meta name="description" content="Free tool to check public PHP risk signals, security headers, TLS basics, and tech fingerprints. No login." />
   <link rel="canonical" href="https://sentinel.kejanigarage.com/" />
-  <meta property="og:title" content="Sentinel – Free site risk check" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Sentinel by Kejani Garage" />
+  <meta property="og:title" content="Sentinel – Free site risk and public tech signal check" />
+  <meta property="og:description" content="Free tool to check public PHP risk signals, security headers, TLS basics, and tech fingerprints. No login." />
+  <meta property="og:url" content="https://sentinel.kejanigarage.com/" />
   <meta property="og:image" content="https://sentinel.kejanigarage.com/og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <link rel="icon" href="/og-image.png" type="image/png" />
+  <meta name="twitter:title" content="Sentinel – Free site risk and public tech signal check" />
+  <meta name="twitter:description" content="Free tool to check public PHP risk signals, security headers, TLS basics, and tech fingerprints. No login." />
+  <meta name="twitter:image" content="https://sentinel.kejanigarage.com/og-image.png" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#05070f" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: { ink: "#05070f", teal: "#2dd4bf" }
-        }
-      }
-    };
-  </script>
-  <style>
-    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap");
-    body {
-      font-family: Inter, system-ui, sans-serif;
-      background:
-        radial-gradient(900px 500px at 15% -5%, rgba(99, 102, 241, 0.28), transparent 55%),
-        radial-gradient(700px 400px at 90% 0%, rgba(45, 212, 191, 0.14), transparent 50%),
-        #05070f;
-      color: #e2e8f0;
-    }
-    .font-display {
-      font-family: "Playfair Display", Georgia, "Times New Roman", serif;
-      letter-spacing: -0.02em;
-      font-weight: 600;
-    }
-    .glass {
-      background: linear-gradient(165deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02));
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(16px);
-    }
-    .glass-strong {
-      background: linear-gradient(165deg, rgba(20, 27, 45, 0.96), rgba(9, 12, 24, 0.98));
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
-    }
-    .lift { transition: transform 0.2s ease, border-color 0.2s ease; }
-    .lift:hover { transform: translateY(-3px); border-color: rgba(45, 212, 191, 0.35); }
-    .bar { height: 8px; border-radius: 999px; background: rgba(255, 255, 255, 0.08); overflow: hidden; }
-    .bar > span {
-      display: block; height: 100%; width: 0; border-radius: 999px;
-      transition: width 0.85s cubic-bezier(0.2, 0.8, 0.2, 1);
-    }
-    .loader {
-      width: 44px; height: 44px;
-      border: 3px solid rgba(255, 255, 255, 0.12);
-      border-top-color: #2dd4bf;
-      border-radius: 50%;
-      animation: spin 0.75s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .ticker-wrap { overflow: hidden; white-space: nowrap; }
-    .ticker-track {
-      display: inline-block;
-      padding-left: 100%;
-      animation: ticker 42s linear infinite;
-    }
-    @keyframes ticker { to { transform: translateX(-100%); } }
-    .chip-ok { background: rgba(52, 211, 153, 0.12); border: 1px solid rgba(52, 211, 153, 0.35); color: #6ee7b7; }
-    .chip-bad { background: rgba(244, 63, 94, 0.12); border: 1px solid rgba(244, 63, 94, 0.35); color: #fda4af; }
-    .chip-warn { background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.35); color: #fcd34d; }
-    .chip-mute { background: rgba(148, 163, 184, 0.1); border: 1px solid rgba(148, 163, 184, 0.25); color: #cbd5e1; }
-    input::placeholder { color: #64748b; }
-    #mainGrid.mode-focus { display: block; }
-    #mainGrid.mode-focus #resultStage {
-      max-width: 48rem;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    /* Nav */
-    .nav-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      padding: 0.45rem 0.9rem;
-      border-radius: 999px;
-      font-size: 0.8125rem;
-      font-weight: 500;
-      color: #94a3b8;
-      transition: color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
-    }
-    .nav-pill:hover {
-      color: #f8fafc;
-      background: rgba(255, 255, 255, 0.06);
-    }
-    .nav-pill.is-active {
-      color: #0f172a;
-      background: #2dd4bf;
-      box-shadow: 0 0 0 1px rgba(45, 212, 191, 0.35), 0 8px 20px rgba(45, 212, 191, 0.18);
-      font-weight: 600;
-    }
-    .nav-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.5rem 1rem;
-      border-radius: 999px;
-      font-size: 0.8125rem;
-      font-weight: 700;
-      color: #05070f;
-      background: #fff;
-      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 8px 24px rgba(0, 0, 0, 0.25);
-      transition: transform 0.15s ease, background 0.15s ease;
-    }
-    .nav-cta:hover {
-      background: #f1f5f9;
-      transform: translateY(-1px);
-    }
-    .nav-shell {
-      display: none;
-      align-items: center;
-      gap: 0.25rem;
-      padding: 0.25rem;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-    @media (min-width: 640px) {
-      .nav-shell { display: inline-flex; }
-    }
-    .nav-mobile-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 2.5rem;
-      height: 2.5rem;
-      border-radius: 0.75rem;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(255, 255, 255, 0.04);
-      color: #e2e8f0;
-    }
-    @media (min-width: 640px) {
-      .nav-mobile-btn { display: none; }
-    }
-    .nav-drawer {
-      display: none;
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
-      background: rgba(5, 7, 15, 0.96);
-      backdrop-filter: blur(16px);
-    }
-    .nav-drawer.open { display: block; }
-    @media (min-width: 640px) {
-      .nav-drawer { display: none !important; }
-    }
-    .nav-drawer a {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.9rem 1rem;
-      border-radius: 0.85rem;
-      color: #cbd5e1;
-      font-size: 0.9rem;
-      font-weight: 500;
-    }
-    .nav-drawer a:hover { background: rgba(255, 255, 255, 0.05); color: #fff; }
-    .nav-drawer a.is-active {
-      background: rgba(45, 212, 191, 0.12);
-      color: #2dd4bf;
-    }
-    .talk-wrap { position: relative; display: none; }
-    @media (min-width: 640px) { .talk-wrap { display: block; } }
-    .talk-menu {
-      position: absolute;
-      right: 0;
-      top: calc(100% + 0.5rem);
-      min-width: 15.5rem;
-      padding: 0.4rem;
-      border-radius: 1rem;
-      background: linear-gradient(165deg, rgba(20, 27, 45, 0.98), rgba(9, 12, 24, 0.99));
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
-      display: none;
-      z-index: 60;
-    }
-    .talk-menu.open { display: block; }
-    .talk-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.65rem;
-      width: 100%;
-      text-align: left;
-      padding: 0.7rem 0.75rem;
-      border-radius: 0.75rem;
-      color: #e2e8f0;
-      transition: background 0.15s ease;
-    }
-    .talk-item:hover { background: rgba(255, 255, 255, 0.06); }
-    .talk-item .ti-title { font-size: 0.8125rem; font-weight: 600; color: #f8fafc; }
-    .talk-item .ti-sub { font-size: 0.7rem; color: #94a3b8; margin-top: 0.1rem; }
-    .talk-icon {
-      width: 1.75rem; height: 1.75rem; border-radius: 0.5rem;
-      display: inline-flex; align-items: center; justify-content: center;
-      flex-shrink: 0; font-size: 0.85rem;
-      background: rgba(45, 212, 191, 0.12); color: #2dd4bf;
-    }
-    .talk-icon.wa { background: rgba(16, 185, 129, 0.12); color: #34d399; }
-    .msg-modal-backdrop {
-      position: fixed; inset: 0; z-index: 80;
-      background: rgba(2, 6, 23, 0.72);
-      backdrop-filter: blur(8px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-    }
-    .msg-modal-backdrop.open { display: flex; }
-    .msg-modal {
-      width: 100%; max-width: 26rem;
-      border-radius: 1.25rem;
-      padding: 1.25rem;
-      background: linear-gradient(165deg, rgba(20, 27, 45, 0.98), rgba(9, 12, 24, 0.99));
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
-    }
-  </style>
-  <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"YOUR_CLOUDFLARE_TOKEN"}'></script>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-X0YD7WX0CD"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag("js", new Date());
-    gtag("config", "G-X0YD7WX0CD");
-  </script>
+  <link rel="icon" href="/favicon.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/js/tailwind-config.js"></script>
+  <link rel="stylesheet" href="/css/theme.css" />
+  <link rel="stylesheet" href="/css/layout.css" />
+  <link rel="stylesheet" href="/css/checker.css" />
+  <script defer src="/vendor/chart.umd.js"></script>
+  <script defer src="/js/config.js"></script>
+  <script defer src="/js/util.js"></script>
+  <script defer src="/js/analytics.js"></script>
+  <script defer src="/js/layout.js"></script>
+  <script defer src="/js/contact.js"></script>
+  <script defer src="/js/charts.js"></script>
+  <script defer src="/js/stats.js"></script>
+  <script defer src="/js/results-view.js"></script>
+  <script defer src="/js/remediation.js"></script>
+  <script defer src="/js/waitlist.js"></script>
+  <script defer src="/js/results-cta.js"></script>
+  <script defer src="/js/checker.js"></script>
+  <script defer src="/js/main.js"></script>
 </head>
-<body class="min-h-screen">
-
-  <header class="sticky top-0 z-50 border-b border-white/5 bg-[#05070f]/80 backdrop-blur-xl">
-    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-3">
-      <a href="/" class="block shrink-0">
-        <p class="font-display text-white leading-none text-xl tracking-tight">Sentinel</p>
-        <p class="text-[11px] text-slate-500 mt-1">by Kejani Garage</p>
-      </a>
-
-      <div class="flex items-center gap-2 sm:gap-3">
-        <nav class="nav-shell" aria-label="Primary">
-          <a href="/" class="nav-pill is-active" aria-current="page">Checker</a>
-          <a href="/threats.html" class="nav-pill">Threats</a>
-        </nav>
-
-        <div class="talk-wrap">
-          <button type="button" id="talkBtn" class="nav-cta" aria-expanded="false" aria-haspopup="true" aria-controls="talkMenu">
-            Talk to us
-            <svg class="w-3.5 h-3.5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-          </button>
-          <div id="talkMenu" class="talk-menu" role="menu">
-            <a role="menuitem" class="talk-item" href="https://cal.com/alex-mochu/php-fix" target="_blank" rel="noopener">
-              <span class="talk-icon">📅</span>
-              <span><span class="ti-title">Book a free call</span><span class="ti-sub block">15 min · Cal.com</span></span>
-            </a>
-            <button type="button" role="menuitem" class="talk-item" id="navOpenMsg">
-              <span class="talk-icon">✉️</span>
-              <span><span class="ti-title">Send a message</span><span class="ti-sub block">Email reply · no account</span></span>
-            </button>
-            <a role="menuitem" class="talk-item hidden" id="navWhatsApp" href="#" target="_blank" rel="noopener">
-              <span class="talk-icon wa">💬</span>
-              <span><span class="ti-title">WhatsApp</span><span class="ti-sub block">Quick chat</span></span>
-            </a>
-          </div>
-        </div>
-
-        <button type="button" id="navToggle" class="nav-mobile-btn" aria-expanded="false" aria-controls="navDrawer" aria-label="Open menu">
-          <svg id="navIconOpen" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16M4 12h16M4 17h16"/></svg>
-          <svg id="navIconClose" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-        </button>
-      </div>
-    </div>
-    <div id="navDrawer" class="nav-drawer">
-      <div class="max-w-6xl mx-auto px-4 py-3 space-y-1">
-        <a href="/" class="is-active">Checker <span class="text-xs text-teal">Live</span></a>
-        <a href="/threats.html">Threat Timeline <span class="text-xs text-slate-500">2026</span></a>
-        <div class="my-2 border-t border-white/10"></div>
-        <a href="https://cal.com/alex-mochu/php-fix" target="_blank" rel="noopener">Book a free call <span class="text-xs text-slate-500">Cal.com</span></a>
-        <button type="button" id="navDrawerMsg" class="w-full text-left talk-item !px-3 !py-3">
-          <span class="talk-icon">✉️</span>
-          <span><span class="ti-title">Send a message</span><span class="ti-sub block">I’ll reply by email</span></span>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- Global message modal (nav / sidebar) -->
-  <div id="msgModal" class="msg-modal-backdrop" aria-hidden="true">
-    <div class="msg-modal" role="dialog" aria-labelledby="msgModalTitle">
-      <div class="flex items-start justify-between gap-3 mb-3">
-        <div>
-          <h2 id="msgModalTitle" class="font-display text-xl text-white">Send a message</h2>
-          <p class="text-sm text-slate-400 mt-1">Leave your email and a short note. Booking is optional.</p>
-        </div>
-        <button type="button" id="msgModalClose" class="w-9 h-9 rounded-xl border border-white/10 text-slate-400 hover:text-white hover:bg-white/5" aria-label="Close">×</button>
-      </div>
-      <form id="globalMsgForm" class="space-y-3" novalidate>
-        <input type="text" name="website" id="gMsgHp" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
-        <div>
-          <label class="block text-xs text-slate-500 mb-1" for="gMsgEmail">Email</label>
-          <input id="gMsgEmail" type="email" required placeholder="you@company.com" class="w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-teal/50" />
-        </div>
-        <div class="grid sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs text-slate-500 mb-1" for="gMsgSite">Site (optional)</label>
-            <input id="gMsgSite" type="url" placeholder="https://…" class="w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-teal/50" />
-          </div>
-          <div>
-            <label class="block text-xs text-slate-500 mb-1" for="gMsgPhone">Phone / WhatsApp <span class="text-slate-600">(optional)</span></label>
-            <input id="gMsgPhone" type="tel" inputmode="tel" placeholder="+254 7…" class="w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-teal/50" />
-          </div>
-        </div>
-        <div>
-          <label class="block text-xs text-slate-500 mb-1" for="gMsgBody">Message</label>
-          <textarea id="gMsgBody" required rows="3" placeholder="What do you need help with?" class="w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-teal/50 resize-y"></textarea>
-        </div>
-        <label class="flex items-start gap-2 text-sm text-slate-300 cursor-pointer select-none">
-          <input id="gMsgWantsCall" type="checkbox" class="mt-1 rounded border-white/20 bg-white/5 text-teal focus:ring-teal" />
-          <span>I’d also like a free 15‑min call <span class="text-slate-500">(optional)</span></span>
-        </label>
-        <div class="flex flex-wrap items-center gap-3 pt-1">
-          <button type="submit" id="gMsgSubmit" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-ink font-bold text-sm hover:bg-slate-100 transition">Send message</button>
-          <a href="https://cal.com/alex-mochu/php-fix" target="_blank" rel="noopener" class="text-sm text-teal hover:underline">Or book a call</a>
-        </div>
-        <p id="gMsgStatus" class="text-sm text-slate-500"></p>
-      </form>
-      <div id="gMsgSuccess" class="hidden rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-200">
-        <p class="font-medium text-emerald-100 mb-1">Message sent</p>
-        <p>Thanks — I’ll reply by email.</p>
-        <p id="gMsgSuccessCall" class="hidden mt-2">You asked for a call — <a href="https://cal.com/alex-mochu/php-fix" target="_blank" rel="noopener" class="underline text-teal">pick a slot here</a>.</p>
-      </div>
-    </div>
-  </div>
+<body class="min-h-screen" data-page="checker">
 
   <div id="statsTicker" class="border-b border-white/5 bg-black/30 text-[11px] text-slate-400">
     <div class="ticker-wrap py-2.5">
-      <div class="ticker-track" id="tickerText">Loading live platform stats…</div>
+      <div class="ticker-track" id="tickerText" aria-live="off">Loading live platform stats…</div>
     </div>
   </div>
 
-  <main class="max-w-6xl mx-auto px-4 py-12">
+  <main id="main" class="max-w-6xl mx-auto px-4 py-12">
     <section class="text-center max-w-3xl mx-auto mb-10">
       <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass text-xs text-teal mb-5">
         <span class="w-1.5 h-1.5 rounded-full bg-teal animate-pulse"></span>
@@ -358,33 +62,33 @@
       <p class="text-slate-400 text-lg">Paste a URL for PHP risk signals, security headers, TLS basics, and public tech fingerprints. No login. No exploits.</p>
     </section>
 
-    <section class="max-w-3xl mx-auto mb-10">
+    <section class="max-w-3xl mx-auto mb-10" aria-label="Site check">
       <div class="glass-strong rounded-3xl p-6 sm:p-8">
         <div class="flex flex-wrap gap-2 mb-4">
           <span class="text-[11px] px-2 py-1 rounded-md bg-white/5 border border-white/10 text-slate-400">Primary URL</span>
           <span class="text-[11px] px-2 py-1 rounded-md bg-white/5 border border-white/10 text-slate-400">Optional API URL</span>
         </div>
-        <label class="block text-sm font-medium text-slate-300 mb-2">Website URL</label>
+        <label for="urlInput" class="block text-sm font-medium text-slate-300 mb-2">Website URL</label>
         <div class="flex flex-col sm:flex-row gap-3 mb-3">
-          <input id="urlInput" type="text" placeholder="example.com" class="flex-1 px-4 py-3.5 rounded-2xl bg-black/50 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-teal/50" />
+          <input id="urlInput" type="text" inputmode="url" autocomplete="off" placeholder="example.com" class="flex-1 px-4 py-3.5 rounded-2xl bg-black/50 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-teal/50" />
           <button id="checkBtn" type="button" class="px-7 py-3.5 rounded-2xl bg-white text-ink font-bold min-w-[140px]">
             <span id="btnText">Check Now</span>
           </button>
         </div>
-        <label class="block text-sm font-medium text-slate-300 mb-2">Compare API / backend URL <span class="text-slate-500 font-normal">(optional)</span></label>
-        <input id="apiInput" type="text" placeholder="api.example.com" class="w-full px-4 py-3 rounded-2xl bg-black/40 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-teal/40 mb-2" />
-        <p class="text-xs text-slate-500">Useful for Vue/React frontends with a separate Laravel or API host.</p>
+        <label for="apiInput" class="block text-sm font-medium text-slate-300 mb-2">Compare API / backend URL <span class="text-slate-500 font-normal">(optional)</span></label>
+        <input id="apiInput" type="text" inputmode="url" autocomplete="off" placeholder="api.example.com" class="w-full px-4 py-3 rounded-2xl bg-black/40 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-teal/40 mb-2" />
+        <p class="text-xs text-slate-500">Useful for Vue/React frontends with a separate Laravel or API host. Only check sites you own or have permission to check. <a class="underline" href="/terms">Terms</a></p>
       </div>
     </section>
 
     <div id="mainGrid" class="grid lg:grid-cols-12 gap-6 mb-12">
-      <aside id="adLeft" class="lg:col-span-3 order-2 lg:order-1">
+      <aside id="sideHelp" class="lg:col-span-3 order-2 lg:order-1" aria-label="Sentinel Pro">
         <div class="glass rounded-3xl p-5 lift sticky top-24">
-          <p class="text-[11px] font-semibold text-teal uppercase tracking-wider mb-2">Need help?</p>
-          <h3 class="text-white font-semibold text-lg mb-2">Fix or upgrade with clarity</h3>
-          <p class="text-sm text-slate-400 mb-4">Message first or book a free call — both are fine.</p>
-          <a href="https://cal.com/alex-mochu/php-fix" target="_blank" rel="noopener" class="inline-flex w-full justify-center px-4 py-2.5 rounded-xl bg-teal text-ink text-sm font-bold mb-2">Book a free call</a>
-          <button type="button" id="sidebarMsgBtn" class="inline-flex w-full justify-center px-4 py-2.5 rounded-xl border border-white/15 text-sm font-medium text-white hover:bg-white/5 transition">Send a message</button>
+          <p class="text-[11px] font-semibold text-teal uppercase tracking-wider mb-2">New · Sentinel Pro</p>
+          <h3 class="text-white font-semibold text-lg mb-2">Fixes and alerts, done for you</h3>
+          <p class="text-sm text-slate-400 mb-4">Join the waitlist for scheduled checks, change alerts and client-ready reports.</p>
+          <a href="#waitlist" class="inline-flex w-full justify-center px-4 py-2.5 rounded-xl bg-teal text-ink text-sm font-bold mb-2">Join the waitlist</a>
+          <button type="button" data-open-message class="inline-flex w-full justify-center px-4 py-2.5 rounded-xl border border-white/15 text-sm font-medium text-white hover:bg-white/5 transition">Send a message</button>
         </div>
       </aside>
 
@@ -395,26 +99,90 @@
             <div class="rounded-2xl bg-white/[0.03] border border-white/5 p-3">Critical PHP RCE flaws still hit unpatched stacks.</div>
             <div class="rounded-2xl bg-white/[0.03] border border-white/5 p-3">WordPress, Laravel, Magento, Joomla, Drupal often in scope.</div>
             <div class="rounded-2xl bg-white/[0.03] border border-white/5 p-3">Headers and TLS basics reveal easy wins.</div>
-            <div class="rounded-2xl bg-white/[0.03] border border-white/5 p-3">Patched PHP: 8.2.35, 8.3.36, 8.4.27, 8.5.12.</div>
+            <div id="advisoryVersions" class="rounded-2xl bg-white/[0.03] border border-white/5 p-3">Fixed PHP releases are listed in your result.</div>
           </div>
         </div>
-        <div id="loading" class="hidden text-center py-14 glass rounded-3xl">
+        <div id="loading" class="hidden text-center py-14 glass rounded-3xl" role="status">
           <div class="loader mx-auto mb-4"></div>
           <p class="text-slate-300">Scanning public signals…</p>
         </div>
-        <div id="result" class="hidden space-y-4"></div>
+        <div id="result" class="hidden space-y-4" aria-live="polite"></div>
         <div id="ctaSection" class="hidden"></div>
       </div>
 
-      <aside id="adRight" class="lg:col-span-3 order-3">
+      <aside id="sideAbout" class="lg:col-span-3 order-3" aria-label="Kejani Garage">
         <div class="glass rounded-3xl p-5 lift sticky top-24">
           <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-2">Kejani Garage</p>
           <h3 class="text-white font-semibold text-lg mb-2">Product and engineering help</h3>
           <p class="text-sm text-slate-400 mb-4">PHP, WordPress, Laravel, and modern web stacks.</p>
-          <a href="https://kejanigarage.com" target="_blank" class="inline-flex w-full justify-center px-4 py-2.5 rounded-xl border border-white/15 text-white text-sm font-semibold">Visit website</a>
+          <a href="https://kejanigarage.com" target="_blank" rel="noopener" class="inline-flex w-full justify-center px-4 py-2.5 rounded-xl border border-white/15 text-white text-sm font-semibold">Visit website</a>
         </div>
       </aside>
     </div>
+
+    <section id="waitlistSection" class="mb-16" aria-labelledby="waitlistTitle">
+      <div id="waitlist" class="glass-strong rounded-3xl p-6 sm:p-8 grid lg:grid-cols-2 gap-8 scroll-mt-24">
+        <div>
+          <p class="text-xs text-teal mb-2">Sentinel Pro · in design</p>
+          <h3 id="waitlistTitle" class="font-display text-2xl sm:text-3xl text-white mb-3">Tell us what you would pay for</h3>
+          <p class="text-slate-400 mb-4">The free checker stays free. Pro is for people who look after many sites or answer to clients. Join the waitlist and we will email you when it opens, and ask what to build first.</p>
+          <ul class="text-sm text-slate-300 space-y-2 list-disc list-inside">
+            <li>AI fix plans without the hourly limit</li>
+            <li>Scheduled checks and alerts when something changes</li>
+            <li>White-label PDF reports for your clients</li>
+            <li>API access for hosts and agencies</li>
+          </ul>
+          <p id="waitlistCount" class="hidden text-sm text-teal mt-4"></p>
+        </div>
+        <div>
+          <form id="waitlistForm" class="space-y-3" novalidate>
+            <input type="text" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+            <div>
+              <label class="block text-xs text-slate-500 mb-1" for="wlEmail">Email</label>
+              <input id="wlEmail" name="email" type="email" required placeholder="you@company.com" class="w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-teal/50" />
+            </div>
+            <div class="grid sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs text-slate-500 mb-1" for="wlRole">I am a</label>
+                <select id="wlRole" name="role" class="w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2.5 text-sm text-white focus:outline-none focus:border-teal/50">
+                  <option value="site_owner">Site owner</option>
+                  <option value="agency">Agency</option>
+                  <option value="freelancer">Freelancer</option>
+                  <option value="host">Hosting provider</option>
+                  <option value="security">Security professional</option>
+                  <option value="other">Something else</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs text-slate-500 mb-1" for="wlSite">Site (optional)</label>
+                <input id="wlSite" name="site_url" type="url" placeholder="https://…" class="w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-teal/50" />
+              </div>
+            </div>
+            <fieldset>
+              <legend class="block text-xs text-slate-500 mb-2">What interests you?</legend>
+              <div class="grid sm:grid-cols-2 gap-2 text-sm text-slate-300">
+                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="interests" value="ai_fixes" checked class="rounded border-white/20 bg-white/5 text-teal" /> AI fix plans</label>
+                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="interests" value="monitoring" checked class="rounded border-white/20 bg-white/5 text-teal" /> Monitoring and alerts</label>
+                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="interests" value="reports" class="rounded border-white/20 bg-white/5 text-teal" /> Client reports</label>
+                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="interests" value="api" class="rounded border-white/20 bg-white/5 text-teal" /> API access</label>
+              </div>
+            </fieldset>
+            <label class="flex items-start gap-2 text-xs text-slate-400 cursor-pointer">
+              <input type="checkbox" name="consent" class="mt-0.5 rounded border-white/20 bg-white/5 text-teal" />
+              <span>I agree to be emailed about Sentinel Pro. I can unsubscribe at any time. <a class="underline" href="/privacy">Privacy</a></span>
+            </label>
+            <div class="flex flex-wrap items-center gap-3 pt-1">
+              <button type="submit" class="px-5 py-2.5 rounded-xl bg-white text-ink font-bold text-sm hover:bg-slate-100 transition">Join the waitlist</button>
+              <span data-status class="text-sm text-slate-400" role="status"></span>
+            </div>
+          </form>
+          <div id="waitlistDone" class="hidden rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-200">
+            <p class="font-medium text-emerald-100 mb-1">You’re on the list</p>
+            <p>Thanks. We will email you when Sentinel Pro opens.</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <section id="analyticsSection" class="mb-16">
       <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-6">
@@ -422,7 +190,7 @@
           <p class="text-xs uppercase tracking-[0.16em] text-teal mb-2">Live platform pulse</p>
           <h3 class="font-display text-2xl sm:text-3xl text-white">What the network is showing</h3>
         </div>
-        <p class="text-xs text-slate-500" id="statsUpdated">—</p>
+        <p class="text-xs text-slate-500"><span id="statsSince"></span> <span id="statsUpdated">—</span></p>
       </div>
 
       <div class="grid lg:grid-cols-12 gap-4 mb-4">
@@ -435,9 +203,9 @@
           <div class="flex items-center justify-between mb-3">
             <div>
               <p class="text-xs uppercase tracking-[0.14em] text-slate-400 mb-1">Trend</p>
-              <p class="text-white font-semibold">Outcome volume comparison</p>
+              <p class="text-white font-semibold">Checks per day</p>
             </div>
-            <p class="text-[11px] text-slate-500">All-time mix as series</p>
+            <p class="text-[11px] text-slate-500">Last 30 days</p>
           </div>
           <div class="h-56"><canvas id="trendChart"></canvas></div>
         </div>
@@ -453,7 +221,7 @@
           <p class="text-3xl font-black text-white" id="mSites">0</p>
         </div>
         <div class="glass rounded-3xl p-5 lift">
-          <p class="text-xs text-slate-400 mb-2">Unique users</p>
+          <p class="text-xs text-slate-400 mb-2">Unique visitors (approx.)</p>
           <p class="text-3xl font-black text-teal" id="mUsers">0</p>
         </div>
         <div class="glass rounded-3xl p-5 lift">
@@ -486,7 +254,8 @@
           <p class="font-semibold text-white mb-3">Risk insights</p>
           <p class="text-4xl font-black text-rose-300 mb-1"><span id="mVulnPct">0</span>%</p>
           <p class="text-xs text-slate-400 mb-4">checks flagged vulnerable</p>
-          <p class="text-sm text-slate-300">Repeat rate: <strong id="mRepeat" class="text-white">0</strong>%</p>
+          <p class="text-sm text-slate-300">Last 7 days: <strong id="m7" class="text-white">0</strong> · Last 30 days: <strong id="m30" class="text-white">0</strong></p>
+          <p class="text-sm text-slate-300">Repeat site checks: <strong id="mRepeat" class="text-white">0</strong>%</p>
           <p class="text-sm text-slate-300">Hidden among PHP-related: <strong id="mHiddenRate" class="text-white">0</strong>%</p>
         </div>
         <div class="glass rounded-3xl p-5 lift">
@@ -513,7 +282,7 @@
             <li>Enter site URL (and optional API URL).</li>
             <li>Click Check Now.</li>
             <li>Read status, headers, and next steps.</li>
-            <li>Book a call if you want help.</li>
+            <li>Get a fix plan, or book a call if you want help.</li>
           </ol>
         </div>
         <div class="glass rounded-3xl p-6 space-y-2">
@@ -523,972 +292,12 @@
           <p><span class="text-emerald-300">Safe</span> — patched version signals.</p>
           <p><span class="text-slate-200">No PHP</span> — no clear PHP on this URL.</p>
         </div>
+        <div class="glass rounded-3xl p-6 md:col-span-2">
+          <p class="text-white font-semibold mb-2">What Sentinel does and does not do</p>
+          <p>Sentinel reads only public information, the same as opening the page in a browser. It never logs in, never sends exploit code and checks one page per request. Results are indicators, not a security audit: some hosts backport fixes without changing the version number. If you own a site and do not want it checked, <a class="text-teal underline" href="/abuse">tell us</a>.</p>
+        </div>
       </div>
     </section>
   </main>
-
-  <footer class="border-t border-white/5 py-10 text-center text-sm text-slate-500">
-    <p>Sentinel · Built by <a href="https://kejanigarage.com" class="text-teal hover:underline">Kejani Garage</a></p>
-    <p class="mt-1">Public signals only. No exploits.</p>
-  </footer>
-
-  <script>
-    // Optional: international WhatsApp number without + (e.g. "2547XXXXXXXX")
-    // Set your real number (digits only, country code, no +). Example Kenya: "254712345678"
-    window.SENTINEL_WHATSAPP = window.SENTINEL_WHATSAPP || "25456966876";
-    window.SENTINEL_LINKEDIN = window.SENTINEL_LINKEDIN || "https://www.linkedin.com/in/";
-
-    (function () {
-      var STATS_KEY = "sentinel_stats_v1";
-      var STATS_TTL_MS = 10 * 60 * 1000;
-      var toolUrl = "https://sentinel.kejanigarage.com";
-      var outcomeChart = null;
-      var trendChart = null;
-
-      var input = document.getElementById("urlInput");
-      var apiInput = document.getElementById("apiInput");
-      var btn = document.getElementById("checkBtn");
-      var btnText = document.getElementById("btnText");
-      var loading = document.getElementById("loading");
-      var result = document.getElementById("result");
-      var ctaSection = document.getElementById("ctaSection");
-      var eduSection = document.getElementById("eduSection");
-      var mainGrid = document.getElementById("mainGrid");
-
-      btn.addEventListener("click", runCheck);
-      input.addEventListener("keydown", function (e) {
-        if (e.key === "Enter") runCheck();
-      });
-
-      loadStats().then(renderStats).catch(function () {});
-
-      function loadStats() {
-        try {
-          var cached = localStorage.getItem(STATS_KEY);
-          if (cached) {
-            var parsed = JSON.parse(cached);
-            if (Date.now() - parsed.fetched_at < STATS_TTL_MS) {
-              return Promise.resolve(parsed.data);
-            }
-          }
-        } catch (e) {}
-
-        return fetch("/api/stats").then(function (res) {
-          if (!res.ok) throw new Error("stats failed");
-          return res.json();
-        }).then(function (data) {
-          localStorage.setItem(
-            STATS_KEY,
-            JSON.stringify({ fetched_at: Date.now(), data: data })
-          );
-          return data;
-        });
-      }
-
-      function renderOutcomeChart(status) {
-        var ctx = document.getElementById("outcomeChart");
-        if (!ctx || typeof Chart === "undefined") return;
-        var values = [
-          status.vulnerable || 0,
-          status.hidden || 0,
-          status.safe || 0,
-          status.no_php || 0,
-          status.error || 0
-        ];
-        if (outcomeChart) outcomeChart.destroy();
-        outcomeChart = new Chart(ctx, {
-          type: "doughnut",
-          data: {
-            labels: ["Vulnerable", "Hidden", "Safe", "No PHP", "Error"],
-            datasets: [{
-              data: values,
-              backgroundColor: ["#f43f5e", "#f59e0b", "#34d399", "#64748b", "#fb7185"],
-              borderWidth: 0,
-              hoverOffset: 8
-            }]
-          },
-          options: {
-            cutout: "68%",
-            plugins: {
-              legend: {
-                position: "bottom",
-                labels: { color: "#94a3b8", boxWidth: 10, padding: 12 }
-              }
-            }
-          }
-        });
-      }
-
-      function renderTrendChart(status, totals) {
-        var ctx = document.getElementById("trendChart");
-        if (!ctx || typeof Chart === "undefined") return;
-        var labels = ["Vulnerable", "Hidden", "Safe", "No PHP", "Errors", "Last 24h"];
-        var values = [
-          status.vulnerable || 0,
-          status.hidden || 0,
-          status.safe || 0,
-          status.no_php || 0,
-          status.error || 0,
-          (totals && totals.last_24h) || 0
-        ];
-        if (trendChart) trendChart.destroy();
-        trendChart = new Chart(ctx, {
-          type: "line",
-          data: {
-            labels: labels,
-            datasets: [{
-              label: "Checks",
-              data: values,
-              borderColor: "#2dd4bf",
-              backgroundColor: "rgba(45,212,191,0.12)",
-              pointBackgroundColor: "#2dd4bf",
-              pointBorderColor: "#042f2e",
-              pointRadius: 5,
-              pointHoverRadius: 7,
-              borderWidth: 3,
-              fill: true,
-              tension: 0.35
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: { display: false },
-              tooltip: {
-                backgroundColor: "rgba(15,23,42,0.95)",
-                titleColor: "#fff",
-                bodyColor: "#cbd5e1",
-                borderColor: "rgba(45,212,191,0.3)",
-                borderWidth: 1
-              }
-            },
-            scales: {
-              x: {
-                ticks: { color: "#94a3b8" },
-                grid: { color: "rgba(255,255,255,0.04)" }
-              },
-              y: {
-                beginAtZero: true,
-                ticks: { color: "#94a3b8", precision: 0 },
-                grid: { color: "rgba(255,255,255,0.06)" }
-              }
-            }
-          }
-        });
-      }
-
-      function countryFlagImg(code) {
-        if (!code || code === "Unknown" || String(code).length !== 2) return "🌐";
-        var cc = String(code).trim().toLowerCase();
-        return '<img src="https://flagcdn.com/w40/' + cc + '.png" width="20" height="15" class="inline-block rounded-sm mr-1.5 align-middle" alt="' + cc + '" loading="lazy" />';
-      }
-
-      function renderRankedCountries(rows) {
-        var el = document.getElementById("topCountries");
-        if (!rows || !rows.length) {
-          el.innerHTML = '<p class="text-slate-500">No data yet</p>';
-          return;
-        }
-        var max = Math.max.apply(null, rows.map(function (r) { return r.c; }).concat([1]));
-        el.innerHTML = rows.map(function (r) {
-          var pct = Math.max(6, Math.round((100 * r.c) / max));
-          var name = !r.name || r.name === "Unknown" ? "Unknown" : String(r.name).toUpperCase();
-          var flag = name === "Unknown" ? "🌐" : countryFlagImg(r.name);
-          return (
-            "<div>" +
-            '<div class="flex justify-between mb-1 text-slate-200"><span>' + flag + " " + name +
-            '</span><span class="font-semibold text-white">' + r.c + "</span></div>" +
-            '<div class="bar"><span data-w="' + pct + '" style="background:#2dd4bf"></span></div>' +
-            "</div>"
-          );
-        }).join("");
-        requestAnimationFrame(function () {
-          el.querySelectorAll(".bar > span").forEach(function (s) {
-            s.style.width = s.getAttribute("data-w") + "%";
-          });
-        });
-      }
-
-      function renderRanked(id, rows, color) {
-        var el = document.getElementById(id);
-        if (!rows || !rows.length) {
-          el.innerHTML = '<p class="text-slate-500">No data yet</p>';
-          return;
-        }
-        var max = Math.max.apply(null, rows.map(function (r) { return r.c; }).concat([1]));
-        el.innerHTML = rows.map(function (r) {
-          var pct = Math.max(6, Math.round((100 * r.c) / max));
-          return (
-            "<div>" +
-            '<div class="flex justify-between mb-1 text-slate-200"><span>' + r.name +
-            '</span><span class="font-semibold text-white">' + r.c + "</span></div>" +
-            '<div class="bar"><span data-w="' + pct + '" style="background:' + color + '"></span></div>' +
-            "</div>"
-          );
-        }).join("");
-        requestAnimationFrame(function () {
-          el.querySelectorAll(".bar > span").forEach(function (s) {
-            s.style.width = s.getAttribute("data-w") + "%";
-          });
-        });
-      }
-
-      function setText(id, val) {
-        var el = document.getElementById(id);
-        if (el) el.textContent = val || 0;
-      }
-
-      function renderStats(data) {
-        var t = data.totals || {};
-        var s = data.status || {};
-        var risk = data.risk || {};
-        var derived = data.derived || {};
-
-        setText("mTotal", t.scans);
-        setText("mSites", t.unique_sites);
-        setText("mUsers", t.unique_users);
-        setText("m24", t.last_24h);
-        setText("mVuln", s.vulnerable);
-        setText("mHidden", s.hidden);
-        setText("mSafe", s.safe);
-        setText("mNoPhp", s.no_php);
-        setText("mVulnPct", risk.vulnerable_pct);
-        setText("mRepeat", derived.repeat_check_rate);
-        setText("mHiddenRate", derived.hidden_rate_among_php);
-
-        var updated = document.getElementById("statsUpdated");
-        if (updated) {
-          updated.textContent = data.updated_at
-            ? "Updated " + new Date(data.updated_at).toLocaleString()
-            : "—";
-        }
-
-        renderOutcomeChart(s);
-        renderTrendChart(s, t);
-        renderRankedCountries(data.countries || []);
-        renderRanked("topFrameworks", data.frameworks || [], "#818cf8");
-        renderRanked("topSignals", data.top_tech_signals || [], "#38bdf8");
-
-        document.getElementById("tickerText").textContent =
-          "Total " + (t.scans || 0) +
-          " · Unique sites " + (t.unique_sites || 0) +
-          " · Vulnerable " + (s.vulnerable || 0) +
-          " · Hidden " + (s.hidden || 0) +
-          " · Safe " + (s.safe || 0) +
-          " · No PHP " + (s.no_php || 0) + " · ";
-      }
-
-      function chip(ok, label) {
-        var cls = ok ? "chip-ok" : "chip-bad";
-        var mark = ok ? "✓" : "✗";
-        return (
-          '<span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium ' +
-          cls + '">' + mark + " " + label + "</span>"
-        );
-      }
-
-      function enterFocusMode() {
-        mainGrid.classList.add("mode-focus");
-        var ids = ["adLeft", "adRight", "statsTicker", "analyticsSection", "faqSection"];
-        ids.forEach(function (id) {
-          var el = document.getElementById(id);
-          if (el) el.classList.add("hidden");
-        });
-        eduSection.classList.add("hidden");
-      }
-
-      function exitFocusMode() {
-        mainGrid.classList.remove("mode-focus");
-        var ids = ["adLeft", "adRight", "statsTicker", "analyticsSection", "faqSection"];
-        ids.forEach(function (id) {
-          var el = document.getElementById(id);
-          if (el) el.classList.remove("hidden");
-        });
-        eduSection.classList.remove("hidden");
-      }
-
-      function scanOne(url) {
-        return fetch("/api/scan", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url: url })
-        }).then(function (res) {
-          return res.json();
-        });
-      }
-
-      function runCheck() {
-        var url = input.value.trim();
-        if (!url) {
-          input.focus();
-          return;
-        }
-
-        enterFocusMode();
-        btn.disabled = true;
-        btnText.textContent = "Scanning…";
-        loading.classList.remove("hidden");
-        result.classList.add("hidden");
-        ctaSection.classList.add("hidden");
-
-        var chain = scanOne(url).then(function (primary) {
-          var apiUrl = apiInput.value.trim();
-          if (!apiUrl) return { primary: primary, secondary: null };
-          return scanOne(apiUrl).then(function (secondary) {
-            return { primary: primary, secondary: secondary };
-          });
-        });
-
-        chain
-          .then(function (pair) {
-            loading.classList.add("hidden");
-            showResult(pair.primary, pair.secondary);
-          })
-          .catch(function () {
-            loading.classList.add("hidden");
-            result.innerHTML =
-              '<div class="glass rounded-3xl p-6 text-center border border-rose-500/30">' +
-              '<p class="text-rose-300 font-medium">Something went wrong</p></div>';
-            result.classList.remove("hidden");
-          })
-          .finally(function () {
-            btn.disabled = false;
-            btnText.textContent = "Check Now";
-          });
-      }
-
-      function showResult(data, secondary) {
-        var border = "border-white/10";
-        var titleColor = "text-white";
-        var title = "No PHP Detected";
-
-        if (data.status === "vulnerable") {
-          border = "border-rose-500/40";
-          titleColor = "text-rose-300";
-          title = "Vulnerable – Action Required";
-        } else if (data.status === "hidden") {
-          border = "border-amber-500/40";
-          titleColor = "text-amber-300";
-          title = "PHP Detected – Version Hidden";
-        } else if (data.status === "safe") {
-          border = "border-emerald-500/40";
-          titleColor = "text-emerald-300";
-          title = "Looks Safe";
-        } else if (data.status === "error") {
-          border = "border-rose-500/40";
-          titleColor = "text-rose-300";
-          title = "Could not scan";
-        }
-
-        var sh = data.security_headers || {};
-        var tls = data.tls || {};
-        var signals = data.tech_signals || [];
-        var cms = data.cms_signals || [];
-        var badgeHtml =
-          '<!-- Sentinel --><a href="' + toolUrl + '" rel="noopener">Checked with Sentinel</a>';
-
-        window.lastResultText =
-          title + "\n" +
-          (data.message || "") + "\n" +
-          (data.php_version ? "Version: " + data.php_version : "") +
-          "\n\nChecked with Sentinel -> " + toolUrl;
-        window.lastBadgeHtml = badgeHtml;
-
-        var headersHtml =
-          '<div class="mt-4 p-4 rounded-2xl bg-white/5 border border-white/10">' +
-          '<p class="text-white font-medium mb-3">Security headers snapshot</p>' +
-          '<div class="flex flex-wrap gap-2">' +
-          chip(!!sh.https, "HTTPS") +
-          chip(!!sh.hsts, "HSTS") +
-          chip(!!sh.csp, "CSP") +
-          chip(!!sh.x_frame_options, "X-Frame-Options") +
-          chip(!!sh.x_content_type_options, "X-Content-Type-Options") +
-          chip(!!sh.referrer_policy, "Referrer-Policy") +
-          "</div>" +
-          '<div class="mt-3 flex flex-wrap gap-2 text-xs">' +
-          '<span class="' + (tls.https ? "chip-ok" : "chip-bad") + ' px-2 py-1 rounded-lg">TLS: ' +
-          (tls.https ? "HTTPS URL" : "Not HTTPS") + "</span>" +
-          '<span class="' + (tls.redirects_to_https ? "chip-ok" : "chip-mute") + ' px-2 py-1 rounded-lg">HTTP to HTTPS redirect: ' +
-          (tls.redirects_to_https === true ? "Yes" : tls.redirects_to_https === false ? "No" : "Unknown") +
-          "</span>" +
-          '<span class="' + (tls.mixed_content_hint ? "chip-warn" : "chip-ok") + ' px-2 py-1 rounded-lg">Mixed content hints: ' +
-          (tls.mixed_content_hint ? "Possible" : "None spotted") +
-          "</span></div></div>";
-
-        var playbookHtml = "";
-        if (data.playbook && data.playbook.length) {
-          playbookHtml =
-            '<div class="mt-4 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20">' +
-            '<p class="text-amber-200 font-medium mb-2">Hidden PHP playbook</p>' +
-            '<ul class="list-disc list-inside text-sm text-slate-300 space-y-1">' +
-            data.playbook.map(function (i) { return "<li>" + i + "</li>"; }).join("") +
-            "</ul></div>";
-        }
-
-        var apiHtml = "";
-        if (data.status === "no_php" && data.api_suggestion) {
-          apiHtml =
-            '<div class="mt-4 p-4 rounded-2xl bg-indigo-500/10 border border-indigo-400/20 text-sm text-slate-300">' +
-            '<p class="text-white font-medium mb-1">Check your API domain too</p>' +
-            '<p class="mb-2">Frontends often hide the PHP backend. Try: <code class="text-teal">' +
-            data.api_suggestion +
-            "</code></p>" +
-            '<button type="button" class="text-teal underline text-sm" id="useApiSuggestion">Use this API URL</button>' +
-            "</div>";
-        }
-
-        var secondaryHtml = "";
-        if (secondary) {
-          secondaryHtml =
-            '<div class="mt-4 p-4 rounded-2xl glass border border-white/10 text-sm">' +
-            '<p class="text-white font-medium mb-1">API / backend comparison</p>' +
-            '<p class="text-slate-300">Status: <strong class="text-white">' +
-            secondary.status +
-            "</strong>" +
-            (secondary.php_version ? " · PHP " + secondary.php_version : "") +
-            (secondary.framework ? " · " + secondary.framework : "") +
-            "</p>" +
-            '<p class="text-slate-400 mt-1">' + (secondary.message || "") + "</p></div>";
-        }
-
-        var metaBits = "";
-        if (data.php_version) {
-          metaBits += '<span>Version: <code class="text-teal">' + data.php_version + "</code></span>";
-        }
-        if (data.framework) metaBits += "<span>Framework: " + data.framework + "</span>";
-        if (data.support_status) metaBits += "<span>" + data.support_status + "</span>";
-
-        var cmsHtml = "";
-        if (cms.length) {
-          cmsHtml =
-            '<div class="mt-4 text-sm text-slate-300"><p class="text-white font-medium mb-1">CMS signals</p>' +
-            '<ul class="list-disc list-inside">' +
-            cms.map(function (c) { return "<li>" + c + "</li>"; }).join("") +
-            "</ul></div>";
-        }
-
-        var signalsHtml = "";
-        if (signals.length) {
-          signalsHtml =
-            '<div class="mt-4 text-sm text-slate-300"><p class="text-white font-medium mb-1">What we found</p>' +
-            '<ul class="list-disc list-inside">' +
-            signals.map(function (s) { return "<li>" + s + "</li>"; }).join("") +
-            "</ul></div>";
-        }
-
-        result.innerHTML =
-          '<div class="glass-strong rounded-3xl p-6 ' + border + '">' +
-          '<h3 class="text-xl font-semibold ' + titleColor + ' mb-2">' + title + "</h3>" +
-          '<p class="text-slate-200 mb-2">' + (data.message || data.error || "") + "</p>" +
-          (data.details ? '<p class="text-sm text-slate-400 mb-2">' + data.details + "</p>" : "") +
-          '<div class="text-sm text-slate-300 flex flex-wrap gap-3">' + metaBits + "</div>" +
-          (data.hygiene
-            ? '<div class="mt-3 p-3 rounded-xl text-sm text-amber-200 bg-amber-500/10 border border-amber-500/20">' +
-              data.hygiene +
-              "</div>"
-            : "") +
-          (data.tip
-            ? '<div class="mt-4 p-4 rounded-2xl text-sm bg-white/5 border border-white/10"><strong class="text-white">What to do next:</strong> ' +
-              data.tip +
-              "</div>"
-            : "") +
-          (data.host_guidance
-            ? '<div class="mt-3 p-4 rounded-2xl text-sm bg-white/5 border border-white/10"><strong class="text-white">Host guidance:</strong> ' +
-              data.host_guidance +
-              "</div>"
-            : "") +
-          headersHtml +
-          cmsHtml +
-          signalsHtml +
-          playbookHtml +
-          apiHtml +
-          secondaryHtml +
-          '<div class="mt-4 p-4 rounded-2xl bg-white/5 border border-white/10 text-sm">' +
-          '<p class="text-white font-medium mb-2">Embeddable badge</p>' +
-          '<code id="badgeCode" class="block text-xs text-slate-400 break-all mb-2"></code>' +
-          '<button type="button" id="copyBadgeBtn" class="text-teal text-xs underline">Copy badge HTML</button>' +
-          "</div>" +
-          '<div class="mt-4 p-4 rounded-2xl bg-white/5 border border-white/10 text-sm">' +
-          '<p class="text-white font-medium mb-2">Email me this report</p>' +
-          '<div class="flex flex-col sm:flex-row gap-2">' +
-          '<input id="emailReport" type="email" placeholder="you@company.com" class="flex-1 px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-white text-sm" />' +
-          '<button type="button" id="emailReportBtn" class="px-4 py-2 rounded-xl bg-white/10 border border-white/15 text-sm text-white">Send copy</button>' +
-          "</div>" +
-          '<p class="text-[11px] text-slate-500 mt-2">No account. Opens your email client with the report text.</p>' +
-          "</div></div>" +
-          '<div class="flex flex-wrap gap-3">' +
-          '<button type="button" id="copyResultBtn" class="px-4 py-2.5 glass rounded-xl text-sm">Copy result</button>' +
-          '<a id="shareXBtn" href="#" target="_blank" class="px-4 py-2.5 glass rounded-xl text-sm">Share on X</a>' +
-          '<button type="button" id="checkAnotherBtn" class="px-4 py-2.5 bg-white text-ink font-semibold rounded-xl text-sm">Check another site</button>' +
-          "</div>";
-
-        var badgeCode = document.getElementById("badgeCode");
-        if (badgeCode) badgeCode.textContent = badgeHtml;
-
-        var copyBadgeBtn = document.getElementById("copyBadgeBtn");
-        if (copyBadgeBtn) {
-          copyBadgeBtn.addEventListener("click", function () {
-            navigator.clipboard.writeText(window.lastBadgeHtml || badgeHtml).then(function () {
-              alert("Badge HTML copied");
-            });
-          });
-        }
-
-        var copyResultBtn = document.getElementById("copyResultBtn");
-        if (copyResultBtn) {
-          copyResultBtn.addEventListener("click", function () {
-            navigator.clipboard.writeText(window.lastResultText || "").then(function () {
-              alert("Result copied");
-            });
-          });
-        }
-
-        var emailReportBtn = document.getElementById("emailReportBtn");
-        if (emailReportBtn) {
-          emailReportBtn.addEventListener("click", function () {
-            var email = (document.getElementById("emailReport") || {}).value || "";
-            var body = encodeURIComponent(window.lastResultText || "");
-            window.location.href =
-              "mailto:" + email +
-              "?subject=" + encodeURIComponent("Sentinel site report") +
-              "&body=" + body;
-          });
-        }
-
-        var checkAnotherBtn = document.getElementById("checkAnotherBtn");
-        if (checkAnotherBtn) checkAnotherBtn.addEventListener("click", checkAnother);
-
-        var shareX = document.getElementById("shareXBtn");
-        if (shareX) {
-          shareX.href =
-            "https://twitter.com/intent/tweet?text=" +
-            encodeURIComponent(window.lastResultText || "");
-        }
-
-        var useApi = document.getElementById("useApiSuggestion");
-        if (useApi && data.api_suggestion) {
-          useApi.addEventListener("click", function () {
-            apiInput.value = data.api_suggestion;
-            apiInput.focus();
-          });
-        }
-
-        result.classList.remove("hidden");
-
-        if (typeof gtag === "function") {
-          gtag("event", "scan_completed", {
-            status: data.status,
-            url: data.url || input.value
-          });
-        }
-
-        var ctaTitle = "Need a hand?";
-        var ctaText = "Leave a note or book a free call — your choice.";
-        var ctaButton = "Book a free discovery call";
-        var msgHint = "Not ready to book? Send a short note. I reply by email.";
-        if (data.status === "vulnerable") {
-          ctaTitle = "Your site needs attention";
-          ctaText = "I help teams upgrade PHP and harden apps after critical issues.";
-          ctaButton = "Book free emergency review";
-          msgHint = "Prefer writing first? Describe what you run and I will reply with next steps.";
-        } else if (data.status === "hidden") {
-          ctaTitle = "Verify it is patched";
-          ctaText = "I can help confirm the real version and upgrade safely.";
-          ctaButton = "Book a free verification call";
-          msgHint = "Send the hosting type (cPanel, VPS, managed) and I will point you to where the version lives.";
-        } else if (data.status === "safe") {
-          ctaTitle = "You look patched";
-          ctaText = "Want hardening or a second opinion?";
-          ctaButton = "Book a free strategy call";
-          msgHint = "Ask about headers, TLS, or upgrade paths — no call required.";
-        } else {
-          ctaTitle = "Still want a review?";
-          ctaText = "Happy to look at hardening even when PHP is not public.";
-          ctaButton = "Book a free strategy call";
-          msgHint = "Tell me what stack you use and what you are worried about.";
-        }
-
-        var siteForForm = data.url || input.value || "";
-        var notes = encodeURIComponent(
-          "Sentinel result for " +
-            siteForForm +
-            "\nStatus: " +
-            data.status +
-            "\n" +
-            (data.message || "")
-        );
-
-        var waNumber = (window.SENTINEL_WHATSAPP || "").replace(/\D/g, "");
-        var waLink =
-          waNumber && waNumber.length >= 10
-            ? "https://wa.me/" +
-              waNumber +
-              "?text=" +
-              encodeURIComponent(
-                "Hi Alex — Sentinel check for " + siteForForm + " (" + data.status + "). "
-              )
-            : "";
-
-        ctaSection.innerHTML =
-          '<div class="glass-strong rounded-3xl p-6 space-y-5">' +
-          '<div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">' +
-          '<div>' +
-          '<h3 class="font-semibold text-white text-lg">Alex Mochu</h3>' +
-          '<p class="text-sm text-slate-400">Senior Fullstack Engineer · Nairobi · PHP &amp; frameworks</p>' +
-          '<p class="text-sm text-slate-300 mt-2 max-w-md">Clear next steps for complex technical problems. Message first if you prefer — booking is optional.</p>' +
-          "</div>" +
-          '<div class="flex flex-wrap gap-2 shrink-0">' +
-          (waLink
-            ? '<a href="' +
-              waLink +
-              '" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20 transition">WhatsApp</a>'
-            : "") +
-          '<a href="' +
-          (window.SENTINEL_LINKEDIN || "https://www.linkedin.com/") +
-          '" id="ctaLinkedIn" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium border border-white/10 text-slate-300 hover:text-white hover:bg-white/5 transition">LinkedIn</a>' +
-          "</div></div>" +
-          '<div class="border-t border-white/10 pt-5">' +
-          '<h4 class="font-semibold text-white mb-1">' +
-          ctaTitle +
-          "</h4>" +
-          '<p class="text-sm text-slate-400 mb-4">' +
-          ctaText +
-          "</p>" +
-          '<div class="flex flex-col sm:flex-row gap-2 mb-5">' +
-          '<a id="bookBtn" href="https://cal.com/alex-mochu/php-fix?notes=' +
-          notes +
-          '" target="_blank" rel="noopener" class="inline-flex justify-center items-center gap-2 px-5 py-3 bg-teal text-ink font-bold rounded-xl hover:brightness-110 transition">' +
-          ctaButton +
-          "</a>" +
-          '<button type="button" id="toggleMsgBtn" class="inline-flex justify-center items-center gap-2 px-5 py-3 rounded-xl border border-white/15 text-white font-medium hover:bg-white/5 transition">Send a message instead</button>' +
-          "</div>" +
-          '<div id="msgPanel" class="hidden">' +
-          '<p class="text-sm text-slate-400 mb-3">' +
-          msgHint +
-          "</p>" +
-          '<form id="msgForm" class="space-y-3" novalidate>' +
-          '<input type="text" name="website" id="msgHp" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />' +
-          '<div class="grid sm:grid-cols-2 gap-3">' +
-          '<div>' +
-          '<label class="block text-xs text-slate-500 mb-1" for="msgEmail">Email</label>' +
-          '<input id="msgEmail" type="email" required placeholder="you@company.com" class="w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-teal/50" />' +
-          "</div>" +
-          '<div>' +
-          '<label class="block text-xs text-slate-500 mb-1" for="msgPhone">Phone / WhatsApp <span class="text-slate-600">(optional)</span></label>' +
-          '<input id="msgPhone" type="tel" inputmode="tel" placeholder="+254 7…" class="w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-teal/50" />' +
-          "</div></div>" +
-          '<div>' +
-          '<label class="block text-xs text-slate-500 mb-1" for="msgSite">Site (optional)</label>' +
-          '<input id="msgSite" type="url" value="' +
-          escapeAttr(siteForForm) +
-          '" placeholder="https://…" class="w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-teal/50" />' +
-          "</div>" +
-          '<div>' +
-          '<label class="block text-xs text-slate-500 mb-1" for="msgBody">Message</label>' +
-          '<textarea id="msgBody" required rows="3" placeholder="What are you running, and what do you need help with?" class="w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-teal/50 resize-y"></textarea>' +
-          "</div>" +
-          '<label class="flex items-start gap-2 text-sm text-slate-300 cursor-pointer select-none">' +
-          '<input id="msgWantsCall" type="checkbox" class="mt-1 rounded border-white/20 bg-white/5 text-teal focus:ring-teal" />' +
-          '<span>I would also like a free 15‑min call <span class="text-slate-500">(optional)</span></span>' +
-          "</label>" +
-          '<input type="hidden" id="msgStatus" value="' +
-          escapeAttr(data.status || "") +
-          '" />' +
-          '<div class="flex flex-wrap items-center gap-3 pt-1">' +
-          '<button type="submit" id="msgSubmit" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-ink font-bold text-sm hover:bg-slate-100 transition">Send message</button>' +
-          '<span id="msgStatusLine" class="text-sm text-slate-500"></span>' +
-          "</div>" +
-          "</form>" +
-          '<div id="msgSuccess" class="hidden mt-3 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-200">' +
-          '<p class="font-medium text-emerald-100 mb-1">Message sent</p>' +
-          '<p id="msgSuccessText">Thanks — I will reply by email. No account needed.</p>' +
-          '<p id="msgSuccessCall" class="hidden mt-2">You asked for a call — you can still <a id="msgCalAfter" href="https://cal.com/alex-mochu/php-fix?notes=' +
-          notes +
-          '" target="_blank" rel="noopener" class="underline text-teal">pick a slot here</a>.</p>' +
-          "</div></div></div></div>";
-
-        ctaSection.classList.remove("hidden");
-
-        var toggleMsgBtn = document.getElementById("toggleMsgBtn");
-        var msgPanel = document.getElementById("msgPanel");
-        if (toggleMsgBtn && msgPanel) {
-          toggleMsgBtn.addEventListener("click", function () {
-            msgPanel.classList.toggle("hidden");
-            if (!msgPanel.classList.contains("hidden")) {
-              var em = document.getElementById("msgEmail");
-              if (em) em.focus();
-              toggleMsgBtn.textContent = "Hide message form";
-            } else {
-              toggleMsgBtn.textContent = "Send a message instead";
-            }
-          });
-        }
-
-        var msgForm = document.getElementById("msgForm");
-        if (msgForm) {
-          msgForm.addEventListener("submit", function (ev) {
-            ev.preventDefault();
-            submitMessageForm({
-              notes: notes,
-              status: data.status || "",
-              site: siteForForm,
-            });
-          });
-        }
-
-        if (typeof gtag === "function") {
-          gtag("event", "cta_shown", { status: data.status });
-        }
-
-        // Sidebar "Send a message" scrolls to form once CTA is open
-        var sidebarMsgBtn = document.getElementById("sidebarMsgBtn");
-        if (sidebarMsgBtn) {
-          sidebarMsgBtn.onclick = function () {
-            var panel = document.getElementById("msgPanel");
-            var toggle = document.getElementById("toggleMsgBtn");
-            if (panel && panel.classList.contains("hidden") && toggle) toggle.click();
-            ctaSection.scrollIntoView({ behavior: "smooth", block: "start" });
-          };
-        }
-      }
-
-      function escapeAttr(s) {
-        return String(s || "")
-          .replace(/&/g, "&amp;")
-          .replace(/"/g, "&quot;")
-          .replace(/</g, "&lt;");
-      }
-
-      function submitMessageForm(ctx) {
-        var emailEl = document.getElementById("msgEmail");
-        var siteEl = document.getElementById("msgSite");
-        var bodyEl = document.getElementById("msgBody");
-        var wantsEl = document.getElementById("msgWantsCall");
-        var statusEl = document.getElementById("msgStatus");
-        var hpEl = document.getElementById("msgHp");
-        var submitBtn = document.getElementById("msgSubmit");
-        var statusLine = document.getElementById("msgStatusLine");
-        var successBox = document.getElementById("msgSuccess");
-        var successCall = document.getElementById("msgSuccessCall");
-        var form = document.getElementById("msgForm");
-
-        if (!emailEl || !bodyEl) return;
-
-        var phoneEl = document.getElementById("msgPhone");
-        var payload = {
-          email: (emailEl.value || "").trim(),
-          message: (bodyEl.value || "").trim(),
-          site_url: (siteEl && siteEl.value) || ctx.site || "",
-          phone: (phoneEl && phoneEl.value) || "",
-          scan_status: (statusEl && statusEl.value) || ctx.status || "",
-          wants_call: !!(wantsEl && wantsEl.checked),
-          source: "checker_result",
-          website: (hpEl && hpEl.value) || "",
-        };
-
-        if (!payload.email || payload.email.indexOf("@") < 1) {
-          if (statusLine) statusLine.textContent = "Enter a valid email.";
-          return;
-        }
-        if (payload.message.length < 5) {
-          if (statusLine) statusLine.textContent = "Write a short message first.";
-          return;
-        }
-
-        if (submitBtn) {
-          submitBtn.disabled = true;
-          submitBtn.textContent = "Sending…";
-        }
-        if (statusLine) statusLine.textContent = "";
-
-        fetch("/api/message", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        })
-          .then(function (r) {
-            return r.json().then(function (j) {
-              return { ok: r.ok, status: r.status, body: j };
-            });
-          })
-          .then(function (res) {
-            if (!res.ok || !res.body || !res.body.ok) {
-              throw new Error((res.body && res.body.error) || "Send failed");
-            }
-            if (form) form.classList.add("hidden");
-            if (successBox) successBox.classList.remove("hidden");
-            if (payload.wants_call && successCall) successCall.classList.remove("hidden");
-            if (typeof gtag === "function") {
-              gtag("event", "message_sent", {
-                status: payload.scan_status,
-                wants_call: payload.wants_call,
-              });
-            }
-          })
-          .catch(function (err) {
-            if (statusLine) statusLine.textContent = err.message || "Could not send. Try again or book a call.";
-            if (submitBtn) {
-              submitBtn.disabled = false;
-              submitBtn.textContent = "Send message";
-            }
-          });
-      }
-
-      function checkAnother() {
-        result.classList.add("hidden");
-        ctaSection.classList.add("hidden");
-        exitFocusMode();
-        input.value = "";
-        apiInput.value = "";
-        input.focus();
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-    })();
-
-    (function () {
-      var toggle = document.getElementById("navToggle");
-      var drawer = document.getElementById("navDrawer");
-      var iconOpen = document.getElementById("navIconOpen");
-      var iconClose = document.getElementById("navIconClose");
-      if (toggle && drawer) {
-        toggle.addEventListener("click", function () {
-          var open = drawer.classList.toggle("open");
-          toggle.setAttribute("aria-expanded", open ? "true" : "false");
-          if (iconOpen) iconOpen.classList.toggle("hidden", open);
-          if (iconClose) iconClose.classList.toggle("hidden", !open);
-        });
-      }
-
-      var talkBtn = document.getElementById("talkBtn");
-      var talkMenu = document.getElementById("talkMenu");
-      function closeTalk() {
-        if (talkMenu) talkMenu.classList.remove("open");
-        if (talkBtn) talkBtn.setAttribute("aria-expanded", "false");
-      }
-      if (talkBtn && talkMenu) {
-        talkBtn.addEventListener("click", function (e) {
-          e.stopPropagation();
-          var open = talkMenu.classList.toggle("open");
-          talkBtn.setAttribute("aria-expanded", open ? "true" : "false");
-        });
-        document.addEventListener("click", function (e) {
-          if (!talkMenu.contains(e.target) && e.target !== talkBtn) closeTalk();
-        });
-      }
-
-      var wa = (window.SENTINEL_WHATSAPP || "").replace(/\D/g, "");
-      var navWa = document.getElementById("navWhatsApp");
-      if (wa && wa.length >= 10 && navWa) {
-        navWa.href = "https://wa.me/" + wa + "?text=" + encodeURIComponent("Hi Alex — from Sentinel. ");
-        navWa.classList.remove("hidden");
-      }
-
-      var modal = document.getElementById("msgModal");
-      function openMsgModal(prefillSite) {
-        if (!modal) return;
-        closeTalk();
-        if (drawer) drawer.classList.remove("open");
-        var site = document.getElementById("gMsgSite");
-        var urlInput = document.getElementById("urlInput");
-        if (site && !site.value) {
-          site.value = prefillSite || (urlInput && urlInput.value) || "";
-        }
-        modal.classList.add("open");
-        modal.setAttribute("aria-hidden", "false");
-        var em = document.getElementById("gMsgEmail");
-        if (em) setTimeout(function () { em.focus(); }, 50);
-      }
-      function closeMsgModal() {
-        if (!modal) return;
-        modal.classList.remove("open");
-        modal.setAttribute("aria-hidden", "true");
-      }
-      window.openSentinelMessage = openMsgModal;
-
-      ["navOpenMsg", "navDrawerMsg", "sidebarMsgBtn"].forEach(function (id) {
-        var el = document.getElementById(id);
-        if (el) el.addEventListener("click", function () { openMsgModal(); });
-      });
-      var closeBtn = document.getElementById("msgModalClose");
-      if (closeBtn) closeBtn.addEventListener("click", closeMsgModal);
-      if (modal) {
-        modal.addEventListener("click", function (e) {
-          if (e.target === modal) closeMsgModal();
-        });
-      }
-      document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape") closeMsgModal();
-      });
-
-      var gForm = document.getElementById("globalMsgForm");
-      if (gForm) {
-        gForm.addEventListener("submit", function (ev) {
-          ev.preventDefault();
-          var email = (document.getElementById("gMsgEmail").value || "").trim();
-          var message = (document.getElementById("gMsgBody").value || "").trim();
-          var site_url = (document.getElementById("gMsgSite").value || "").trim();
-          var phone = (document.getElementById("gMsgPhone") && document.getElementById("gMsgPhone").value) || "";
-          var wants_call = !!(document.getElementById("gMsgWantsCall") && document.getElementById("gMsgWantsCall").checked);
-          var hp = (document.getElementById("gMsgHp") && document.getElementById("gMsgHp").value) || "";
-          var statusLine = document.getElementById("gMsgStatus");
-          var submitBtn = document.getElementById("gMsgSubmit");
-          if (!email || email.indexOf("@") < 1) {
-            if (statusLine) statusLine.textContent = "Enter a valid email.";
-            return;
-          }
-          if (message.length < 5) {
-            if (statusLine) statusLine.textContent = "Write a short message first.";
-            return;
-          }
-          if (submitBtn) {
-            submitBtn.disabled = true;
-            submitBtn.textContent = "Sending…";
-          }
-          if (statusLine) statusLine.textContent = "";
-          fetch("/api/message", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              email: email,
-              message: message,
-              site_url: site_url,
-              phone: phone,
-              wants_call: wants_call,
-              source: "nav_modal",
-              website: hp
-            })
-          })
-            .then(function (r) {
-              return r.json().then(function (j) {
-                return { ok: r.ok, body: j };
-              });
-            })
-            .then(function (res) {
-              if (!res.ok || !res.body || !res.body.ok) {
-                throw new Error((res.body && res.body.error) || "Send failed");
-              }
-              gForm.classList.add("hidden");
-              var okBox = document.getElementById("gMsgSuccess");
-              if (okBox) okBox.classList.remove("hidden");
-              if (wants_call) {
-                var callHint = document.getElementById("gMsgSuccessCall");
-                if (callHint) callHint.classList.remove("hidden");
-              }
-              if (typeof gtag === "function") {
-                gtag("event", "message_sent", { source: "nav_modal", wants_call: wants_call });
-              }
-            })
-            .catch(function (err) {
-              if (statusLine) statusLine.textContent = err.message || "Could not send.";
-              if (submitBtn) {
-                submitBtn.disabled = false;
-                submitBtn.textContent = "Send message";
-              }
-            });
-        });
-      }
-    })();
-  </script>
 </body>
 </html>

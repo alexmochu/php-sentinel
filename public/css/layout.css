@@ -1,0 +1,165 @@
+/* Sentinel layout: header, nav, talk menu, drawer, message modal. */
+/* Nav */
+.nav-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #94a3b8;
+  transition: color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+.nav-pill:hover {
+  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.06);
+}
+.nav-pill.is-active {
+  color: #0f172a;
+  background: #2dd4bf;
+  box-shadow: 0 0 0 1px rgba(45, 212, 191, 0.35), 0 8px 20px rgba(45, 212, 191, 0.18);
+  font-weight: 600;
+}
+.nav-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #05070f;
+  background: #fff;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 8px 24px rgba(0, 0, 0, 0.25);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+.nav-cta:hover {
+  background: #f1f5f9;
+  transform: translateY(-1px);
+}
+.nav-shell {
+  display: none;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+@media (min-width: 640px) {
+  .nav-shell { display: inline-flex; }
+}
+.nav-mobile-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: #e2e8f0;
+}
+@media (min-width: 640px) {
+  .nav-mobile-btn { display: none; }
+}
+.nav-drawer {
+  display: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(5, 7, 15, 0.96);
+  backdrop-filter: blur(16px);
+}
+.nav-drawer.open { display: block; }
+@media (min-width: 640px) {
+  .nav-drawer { display: none !important; }
+}
+.nav-drawer a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 1rem;
+  border-radius: 0.85rem;
+  color: #cbd5e1;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.nav-drawer a:hover { background: rgba(255, 255, 255, 0.05); color: #fff; }
+.nav-drawer a.is-active {
+  background: rgba(45, 212, 191, 0.12);
+  color: #2dd4bf;
+}
+.talk-wrap { position: relative; display: none; }
+@media (min-width: 640px) { .talk-wrap { display: block; } }
+.talk-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  min-width: 15.5rem;
+  padding: 0.4rem;
+  border-radius: 1rem;
+  background: linear-gradient(165deg, rgba(20, 27, 45, 0.98), rgba(9, 12, 24, 0.99));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+  display: none;
+  z-index: 60;
+}
+.talk-menu.open { display: block; }
+.talk-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  width: 100%;
+  text-align: left;
+  padding: 0.7rem 0.75rem;
+  border-radius: 0.75rem;
+  color: #e2e8f0;
+  transition: background 0.15s ease;
+}
+.talk-item:hover { background: rgba(255, 255, 255, 0.06); }
+.talk-item .ti-title { font-size: 0.8125rem; font-weight: 600; color: #f8fafc; }
+.talk-item .ti-sub { font-size: 0.7rem; color: #94a3b8; margin-top: 0.1rem; }
+.talk-icon {
+  width: 1.75rem; height: 1.75rem; border-radius: 0.5rem;
+  display: inline-flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-size: 0.85rem;
+  background: rgba(45, 212, 191, 0.12); color: #2dd4bf;
+}
+.talk-icon.wa { background: rgba(16, 185, 129, 0.12); color: #34d399; }
+.msg-modal-backdrop {
+  position: fixed; inset: 0; z-index: 80;
+  background: rgba(2, 6, 23, 0.72);
+  backdrop-filter: blur(8px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.msg-modal-backdrop.open { display: flex; }
+.msg-modal {
+  width: 100%; max-width: 26rem;
+  border-radius: 1.25rem;
+  padding: 1.25rem;
+  background: linear-gradient(165deg, rgba(20, 27, 45, 0.98), rgba(9, 12, 24, 0.99));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+}
+/* Toast and consent banner (added in v2). */
+.toast {
+  position: fixed; left: 50%; bottom: 1.5rem; z-index: 90;
+  transform: translateX(-50%);
+  max-width: calc(100vw - 2rem);
+  padding: 0.65rem 1rem; border-radius: 0.85rem;
+  background: rgba(20, 27, 45, 0.98);
+  border: 1px solid rgba(45, 212, 191, 0.35);
+  color: #e2e8f0; font-size: 0.85rem;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+}
+.consent-banner {
+  position: fixed; left: 1rem; right: 1rem; bottom: 1rem; z-index: 85;
+  max-width: 34rem; margin-left: auto;
+  padding: 1rem; border-radius: 1.1rem;
+  background: linear-gradient(165deg, rgba(20, 27, 45, 0.98), rgba(9, 12, 24, 0.99));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+}

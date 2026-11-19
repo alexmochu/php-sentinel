@@ -1,0 +1,12 @@
+/* Legal and policy pages (terms, privacy, abuse). */
+.legal h1 { font-family: "Playfair Display", Georgia, serif; letter-spacing: -0.02em; font-weight: 600; }
+.legal h2 { color: #fff; font-weight: 600; font-size: 1.15rem; margin: 2rem 0 0.6rem; }
+.legal p, .legal li { color: #cbd5e1; line-height: 1.7; font-size: 0.95rem; }
+.legal p { margin: 0.6rem 0; }
+.legal ul { list-style: disc; padding-left: 1.25rem; margin: 0.6rem 0; }
+.legal li { margin: 0.3rem 0; }
+.legal a { color: #2dd4bf; text-decoration: underline; text-underline-offset: 2px; }
+.legal .meta { color: #94a3b8; font-size: 0.8rem; }
+.legal table { width: 100%; border-collapse: collapse; margin: 0.8rem 0; font-size: 0.85rem; }
+.legal th, .legal td { text-align: left; padding: 0.55rem 0.7rem; border-bottom: 1px solid rgba(255, 255, 255, 0.08); color: #cbd5e1; vertical-align: top; }
+.legal th { color: #fff; font-weight: 600; }

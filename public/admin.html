@@ -3,50 +3,61 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PHP Sentinel Admin</title>
-  <script src="https://cdn.tailwindcss.com"></script>
   <meta name="robots" content="noindex, nofollow" />
+  <title>Sentinel admin</title>
+  <link rel="icon" href="/favicon.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/js/tailwind-config.js"></script>
+  <link rel="stylesheet" href="/css/theme.css" />
+  <script defer src="/js/admin.js"></script>
 </head>
-<body class="bg-slate-100 p-6 font-sans">
-  <h1 class="text-xl font-bold mb-4">PHP Sentinel Admin</h1>
-  <p class="text-sm text-slate-600 mb-4">Add <code>?key=YOUR_ADMIN_SECRET</code> to this page URL, or enter the key below.</p>
-  <input id="key" type="password" placeholder="Admin secret" class="border px-3 py-2 rounded mr-2" />
-  <button id="load" class="bg-slate-900 text-white px-4 py-2 rounded">Load</button>
-  <div id="stats" class="mt-6 grid grid-cols-2 sm:grid-cols-5 gap-3"></div>
-  <div class="mt-6 overflow-x-auto bg-white rounded-xl border">
-    <table class="min-w-full text-sm">
-      <thead class="bg-slate-50 text-left">
-        <tr>
-          <th class="p-3">Time</th><th class="p-3">Status</th><th class="p-3">URL</th>
-          <th class="p-3">Version</th><th class="p-3">Framework</th><th class="p-3">Country</th>
-        </tr>
-      </thead>
-      <tbody id="rows"></tbody>
-    </table>
-  </div>
-  <script>
-    const params = new URLSearchParams(location.search);
-    if (params.get("key")) document.getElementById("key").value = params.get("key");
+<body class="min-h-screen" data-page="admin">
+  <main class="max-w-6xl mx-auto px-4 py-10">
+    <div class="flex flex-wrap items-end justify-between gap-3 mb-6">
+      <div>
+        <p class="text-xs uppercase tracking-[0.16em] text-teal mb-1">Private</p>
+        <h1 class="font-display text-3xl text-white">Sentinel admin</h1>
+      </div>
+      <p class="text-xs text-slate-500">Protect this page and /api/admin/* with Cloudflare Access.</p>
+    </div>
 
-    document.getElementById("load").onclick = async () => {
-      const key = document.getElementById("key").value.trim();
-      const res = await fetch("/api/admin/scans?key=" + encodeURIComponent(key));
-      if (!res.ok) { alert("Unauthorized or error"); return; }
-      const data = await res.json();
-      document.getElementById("stats").innerHTML = (data.counts || []).map(c =>
-        `<div class="bg-white border rounded-xl p-3"><div class="text-xs text-slate-500">${c.status}</div><div class="text-xl font-semibold">${c.c}</div></div>`
-      ).join("");
-      document.getElementById("rows").innerHTML = (data.scans || []).map(s =>
-        `<tr class="border-t">
-          <td class="p-3 whitespace-nowrap">${s.created_at || ""}</td>
-          <td class="p-3">${s.status || ""}</td>
-          <td class="p-3 max-w-xs truncate">${s.normalized_url || s.url || ""}</td>
-          <td class="p-3">${s.php_version || ""}</td>
-          <td class="p-3">${s.framework || ""}</td>
-          <td class="p-3">${s.country || ""}</td>
-        </tr>`
-      ).join("");
-    };
-  </script>
+    <form id="loginForm" class="glass rounded-3xl p-5 mb-6 flex flex-col sm:flex-row gap-3" autocomplete="off">
+      <label class="sr-only" for="adminKey">Admin key</label>
+      <input id="adminKey" type="password" placeholder="Admin key" class="flex-1 rounded-xl bg-black/40 border border-white/10 px-3 py-2.5 text-sm text-white focus:outline-none focus:border-teal/50" />
+      <button type="submit" class="px-5 py-2.5 rounded-xl bg-white text-ink font-bold text-sm">Load</button>
+    </form>
+    <p id="adminStatus" class="text-sm text-slate-400 mb-4" role="status"></p>
+
+    <div id="adminBody" class="hidden space-y-6">
+      <div id="adminCounts" class="grid grid-cols-2 lg:grid-cols-5 gap-3"></div>
+      <section class="glass rounded-3xl p-5 overflow-x-auto">
+        <h2 class="text-white font-semibold mb-3">Latest checks</h2>
+        <table class="w-full text-sm"><thead><tr class="text-left text-slate-400">
+          <th class="py-2 pr-3">Time</th><th class="pr-3">Site</th><th class="pr-3">Status</th><th class="pr-3">PHP</th><th class="pr-3">Framework</th><th>Country</th>
+        </tr></thead><tbody id="scanRows"></tbody></table>
+      </section>
+      <section class="glass rounded-3xl p-5 overflow-x-auto">
+        <h2 class="text-white font-semibold mb-3">Waitlist</h2>
+        <table class="w-full text-sm"><thead><tr class="text-left text-slate-400">
+          <th class="py-2 pr-3">Time</th><th class="pr-3">Email</th><th class="pr-3">Role</th><th class="pr-3">Interests</th><th>Site</th>
+        </tr></thead><tbody id="waitRows"></tbody></table>
+      </section>
+      <section class="glass rounded-3xl p-5 overflow-x-auto">
+        <h2 class="text-white font-semibold mb-3">Messages</h2>
+        <table class="w-full text-sm"><thead><tr class="text-left text-slate-400">
+          <th class="py-2 pr-3">Time</th><th class="pr-3">Email</th><th class="pr-3">Call?</th><th class="pr-3">Source</th><th>Message</th>
+        </tr></thead><tbody id="msgRows"></tbody></table>
+      </section>
+      <section class="glass rounded-3xl p-5 overflow-x-auto">
+        <h2 class="text-white font-semibold mb-3">Reports (opt-out, removal, abuse, security)</h2>
+        <table class="w-full text-sm"><thead><tr class="text-left text-slate-400">
+          <th class="py-2 pr-3">Time</th><th class="pr-3">Kind</th><th class="pr-3">Domain</th><th class="pr-3">Email</th><th>Details</th>
+        </tr></thead><tbody id="reportRows"></tbody></table>
+      </section>
+    </div>
+  </main>
 </body>
 </html>

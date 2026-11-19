@@ -1,10 +1,10 @@
 {
   "meta": {
     "title": "Sentinel Threat Timeline 2026",
-    "description": "Publicly reported critical vulnerabilities, exploits, breaches, supply-chain incidents, PKI failures, and AI-related security events from 1 January 2026 through 25 October 2026. Includes PHP2Shell, Railway, Hugging Face agent intrusion, eMudhra weak CA keys, and more.",
+    "description": "Publicly reported critical vulnerabilities, exploits, breaches, supply-chain incidents, PKI failures, and AI-related security events from 1 January 2026 through 19 November 2026. Includes PHP2Shell, Railway, Hugging Face agent intrusion, eMudhra weak CA keys, Binance hot-wallet theft, Optimizely supply-chain attack, WordPress upgrade-window RCE, and more.",
     "coverage_start": "2026-01-01",
-    "coverage_end": "2026-10-25",
-    "generated_at": "2026-10-25",
+    "coverage_end": "2026-11-19",
+    "generated_at": "2026-11-19",
     "disclaimer": "Public reporting only. Not a complete CVE database. Dates prefer official announcement or widely confirmed disclosure. Severities follow vendor/CISA ratings where available. No exploit instructions included.",
     "categories": [
       "runtime_language",
@@ -20,6 +20,248 @@
     "curation": "high_impact_only"
   },
   "events": [
+    {
+      "date": "2026-11-12 to 2026-11-14",
+      "category": "major_outage / infrastructure",
+      "title": "Microsoft 365 global outage (Outlook, Teams, Exchange, Copilot)",
+      "description": "Major worldwide outage of Microsoft 365 services lasting roughly 24–38 hours. Caused by a latent software defect introduced in July 2026 that was triggered by traffic rerouting and reduced server capacity. At peak, more than 80% of Outlook-related servers were unresponsive. Microsoft stated it was not a cyberattack. Followed by opportunistic credential-phishing campaigns impersonating Microsoft service-health notifications.",
+      "cves": [
+        "CVE-2026-124194 (related November Patch Tuesday Outlook issue, actively exploited)"
+      ],
+      "fixed_versions": "N/A (service-side recovery); customers advised to monitor for phishing",
+      "impact": "Widespread disruption to email, collaboration, and AI tools for businesses, governments, airlines, and other organizations globally.",
+      "sources": [
+        "Microsoft service health updates",
+        "Wikipedia 2026 Microsoft outage",
+        "Bloomberg / The Guardian / Computerworld reporting"
+      ]
+    },
+    {
+      "date": "2026-11-14 (detected; access ~13–14 Nov)",
+      "category": "infrastructure_breach / hosting",
+      "title": "Contabo unauthorized access – all VNC passwords reset",
+      "description": "German VPS/cloud provider Contabo detected unauthorized access to its internal systems. Access lasted approximately 20 hours. Contabo stopped the access, reset every customer VNC password, blocked known access paths, rotated internal credentials, and engaged external incident-response specialists. As of the latest updates, Contabo reports no indications of personal data leakage and states that customer services continue normally. Investigation remains ongoing.",
+      "cves": [],
+      "fixed_versions": "N/A – all VNC passwords force-reset by Contabo; customers advised to change panel, root, and other credentials and review for unauthorized access",
+      "impact": "Potential risk to remote console access for Contabo VPS/dedicated server customers. Scope of what the attacker could reach is still under investigation.",
+      "sources": [
+        "Contabo official incident notice (16 Nov 2026)",
+        "Privacy Affairs, xCloud, CyberSIXT, and customer notifications"
+      ]
+    },
+    {
+      "date": "2026-11-18",
+      "category": "critical_runtime_framework / KEV",
+      "title": "CISA KEV additions including LiteLLM, Apache Axis, REDCap, Synology",
+      "description": "CISA added multiple actively exploited vulnerabilities to the KEV catalog. Notable: BerriAI LiteLLM unprotected alternate channel (CVE-2026-40217); Apache Axis unsafe reflection enabling unauth RCE (CVE-2026-90436, relevant to Confluence Data Center with Remote API); Vanderbilt REDCap code injection (CVE-2026-90817); Synology DSM (CVE-2024-10441).",
+      "cves": [
+        "CVE-2026-40217",
+        "CVE-2026-90436",
+        "CVE-2026-90817",
+        "CVE-2024-10441"
+      ],
+      "fixed_versions": "Vendor-specific (LiteLLM latest patched release; Axis 1.x users should migrate or apply mitigations; REDCap and Synology patches per vendor advisories)",
+      "impact": "Unauthenticated or low-privilege RCE / code execution on affected products; federal due dates ~3 days for several.",
+      "sources": [
+        "CISA KEV catalog 2026.11.18",
+        "Daily CISO / VulnTide trackers"
+      ]
+    },
+    {
+      "date": "2026-11-16",
+      "category": "supply_chain",
+      "title": "Optimizely malicious JavaScript supply-chain (OPTIMJACK)",
+      "description": "Attackers modified Optimizely Web project JavaScript served via cdn.optimizely.com, impacting ~178 organizations (including banking/finance). Payload included card skimmer, crypto clipper, and staging components.",
+      "cves": [],
+      "fixed_versions": "Optimizely blocked the path and deployed a fix",
+      "impact": "Client-side compromise of visitor sessions across many high-value sites.",
+      "sources": [
+        "Report URI / StepSecurity reporting",
+        "November 2026 attack trackers"
+      ]
+    },
+    {
+      "date": "2026-11-13",
+      "category": "critical_runtime / KEV",
+      "title": "Check Point Gaia / DynamicCLI local root escalation + UnrealIRCd",
+      "description": "CISA KEV: CVE-2026-123039 (Check Point Gaia OS / multiple products) – incorrect permission assignment on world-writable control socket allows local privilege escalation to root. Also CVE-2026-114713 (UnrealIRCd delimiter injection enabling server-level command injection on linked networks).",
+      "cves": [
+        "CVE-2026-123039",
+        "CVE-2026-114713"
+      ],
+      "fixed_versions": "Check Point emergency hotfixes or stop dynamic_server; UnrealIRCd 6.2.7.1 or hotpatch/spamfilter workaround",
+      "impact": "Root on firewalls/gateways; server command injection on IRC networks. Active exploitation reported.",
+      "sources": [
+        "CISA KEV",
+        "Check Point / UnrealIRCd advisories",
+        "Slugnet briefings"
+      ]
+    },
+    {
+      "date": "2026-11-10–11",
+      "category": "PKI_failure",
+      "title": "eMudhra additional RSA intermediate CA revocations + exit from public TLS",
+      "description": "Following October weak-key discovery (private keys recoverable from public certs due to faulty Python key-handling script), eMudhra revoked 8 more RSA intermediate CAs (total 16). Company exiting publicly trusted TLS certificate business; G1 hierarchy issuance stopped ~16 Nov. Browser/OS vendors had already begun distrust actions.",
+      "cves": [],
+      "fixed_versions": "N/A – revoke/replace all eMudhra-issued certificates; update trust stores",
+      "impact": "Potential MitM / unauthorized cert issuance risk for remaining trust; major PKI operational failure. ~30k+ certificates affected historically.",
+      "sources": [
+        "eMudhra incident reports",
+        "Mozilla/Chrome/Apple root program actions",
+        "The Hacker News / Forrester"
+      ]
+    },
+    {
+      "date": "2026-11-09",
+      "category": "large_breach",
+      "title": "Nitori Holdings – up to 37.62 million customer records",
+      "description": "Japanese furniture retailer confirmed unauthorized access (detected 6 Nov, activity from mid/late October). Exposed membership numbers, names, emails, addresses, phones, DOB, gender, and order data. Passwords and payment cards not included.",
+      "cves": [],
+      "fixed_versions": "N/A",
+      "impact": "One of the largest Japanese retail breaches of 2026; high phishing risk.",
+      "sources": [
+        "Nitori disclosure",
+        "BleepingComputer",
+        "Straits Times"
+      ]
+    },
+    {
+      "date": "2026-11-09–10",
+      "category": "AI_agent_incident / runtime",
+      "title": "NEAR AI – SGLang RCE leading to data theft from agents and users",
+      "description": "Attacker exploited RCE in SGLang (open-source inference engine) on a NEAR AI inference server. Accessed ~100 user accounts and 18 AI agents (chat history, settings, logs); two customer API keys exposed and revoked.",
+      "cves": [],
+      "fixed_versions": "SGLang patched on NEAR AI servers; credentials rotated",
+      "impact": "Direct compromise of AI inference infrastructure and agent data.",
+      "sources": [
+        "NEAR AI incident report",
+        "The Hacker News"
+      ]
+    },
+    {
+      "date": "2026-11-10",
+      "category": "critical_runtime / KEV",
+      "title": "Barracuda, Microsoft Office, Chromium, Cisco BroadWorks KEV additions",
+      "description": "CISA added several: Barracuda ESG authentication bypass (CVE-2026-116606) and related; Microsoft Office Outlook (CVE-2026-124194); Google Chromium UAF (CVE-2026-125350); Cisco BroadWorks XXE (CVE-2026-20320).",
+      "cves": [
+        "CVE-2026-116606",
+        "CVE-2026-124194",
+        "CVE-2026-125350",
+        "CVE-2026-20320"
+      ],
+      "fixed_versions": "Vendor patches (Barracuda, Microsoft, Chrome, Cisco)",
+      "impact": "Auth bypass / RCE / privilege issues on email security, browsers, collaboration tools.",
+      "sources": [
+        "CISA KEV"
+      ]
+    },
+    {
+      "date": "2026-11-04",
+      "category": "supply_chain",
+      "title": "OpsShield / cPGuard malicious update",
+      "description": "Attacker used compromised credentials on OpsShield billing server to push malicious cPGuard updates; ~2,950 customer hosting servers installed the backdoored version on 2 Nov.",
+      "cves": [],
+      "fixed_versions": "OpsShield cleaned updates; customers should rebuild/rotate",
+      "impact": "Widespread backdoors on Linux web-hosting servers.",
+      "sources": [
+        "OpsShield disclosure",
+        "SecurityWeek / FireCompass"
+      ]
+    },
+    {
+      "date": "2026-10-30",
+      "category": "critical_runtime / KEV + large_breach + AI_agent",
+      "title": "Ivanti Connect Secure chain + Binance ~$6.3B theft + Chainalysis agentic intrusion",
+      "description": "CISA KEV: Ivanti Connect Secure missing auth (CVE-2026-111357) and predictable identifiers (CVE-2026-118527), chained with prior flaws for unauth root. Concurrently, Binance suffered a major multi-chain hot-wallet theft (~$6.3B reported impact, significant portion frozen). Chainalysis reported an external actor using 'offensive agentic techniques' to reach internal tools.",
+      "cves": [
+        "CVE-2026-111357",
+        "CVE-2026-118527"
+      ],
+      "fixed_versions": "Ivanti 25.1.1.3 / 22.8R2.6 (and factory reset guidance for potentially compromised appliances)",
+      "impact": "Remote access appliance takeover; one of the largest crypto thefts; AI-agent assisted internal access.",
+      "sources": [
+        "CISA KEV",
+        "Volexity / Ivanti",
+        "Binance disclosures",
+        "Chainalysis"
+      ]
+    },
+    {
+      "date": "2026-10-29",
+      "category": "critical_runtime / KEV",
+      "title": "GitLab unauthenticated RCE + Cisco ASA/FTD DoS",
+      "description": "CISA KEV: GitLab CE/EE integer overflow in CI/CD regex compiler leading to unauthenticated code execution (CVE-2026-97229, CVSS 10.0). Cisco Secure Firewall ASA/FTD unchecked return value / NULL deref (CVE-2026-76418).",
+      "cves": [
+        "CVE-2026-97229",
+        "CVE-2026-76418"
+      ],
+      "fixed_versions": "GitLab 19.4.2 / 19.3.5 / 19.2.8; Cisco recommended releases",
+      "impact": "Full unauthenticated RCE on self-managed GitLab; VPN/firewall DoS.",
+      "sources": [
+        "CISA KEV",
+        "GitLab / Cisco advisories"
+      ]
+    },
+    {
+      "date": "2026-10-28",
+      "category": "critical_runtime / KEV",
+      "title": "Linux kernel + VMware ESX logging flaws",
+      "description": "CISA KEV: Linux kernel missing variable initialization (CVE-2026-46300); Broadcom VMware ESX insufficient logging (CVE-2026-41709).",
+      "cves": [
+        "CVE-2026-46300",
+        "CVE-2026-41709"
+      ],
+      "fixed_versions": "Kernel updates; VMware patches",
+      "impact": "Local privilege / detection-evasion issues; used in some attack chains.",
+      "sources": [
+        "CISA KEV"
+      ]
+    },
+    {
+      "date": "2026-10-27",
+      "category": "critical_runtime / KEV",
+      "title": "Google Brotli + Adobe Commerce/Magento",
+      "description": "CISA KEV: Google Brotli decoder unchecked return value (CVE-2026-111497, high EPSS); Adobe Commerce and Magento unrestricted dangerous file upload (CVE-2026-48356).",
+      "cves": [
+        "CVE-2026-111497",
+        "CVE-2026-48356"
+      ],
+      "fixed_versions": "Brotli updated builds / restart processes; Adobe security patches",
+      "impact": "Code execution via compressed content; e-commerce RCE.",
+      "sources": [
+        "CISA KEV"
+      ]
+    },
+    {
+      "date": "2026-10-26",
+      "category": "critical_runtime / KEV",
+      "title": "PHP2Shell – dual critical PHP RCEs (actively exploited)",
+      "description": "CISA KEV (due 29 Oct): PHP memory corruption (CVE-2026-109618) and stale internal request-state (CVE-2026-109619). Unauthenticated RCE. Rapid exploitation observed (including against PAN-OS firewalls); fixed same day as public disclosure window.",
+      "cves": [
+        "CVE-2026-109618",
+        "CVE-2026-109619"
+      ],
+      "fixed_versions": "PHP 8.5.12, 8.4.27, 8.3.36, 8.2.35",
+      "impact": "Widespread web-stack RCE; used in high-volume scanning and targeted chains. Core of 'Black October' runtime layer.",
+      "sources": [
+        "CISA KEV",
+        "PHP Group",
+        "multiple threat intel reports"
+      ]
+    },
+    {
+      "date": "2026-10-26–31 (activity window)",
+      "category": "large_breach / AI_agent",
+      "title": "Multiple large Japanese / platform breaches + ongoing AI-agent activity",
+      "description": "Cluster of disclosures: Capcom (~11.7M accounts), Sony So-net/plala (~2.58M), Times CAR/Park24 (~6.6M accounts + ID images), Arara email-delivery cascade (tens of millions of addresses across customers), plus continued reports of autonomous AI agents (Cairn, ARTEX) used in website compromise and platform targeting. Railway and other AI-dev platforms had secrets exposure earlier in the month feeding the cluster.",
+      "cves": [],
+      "fixed_versions": "N/A",
+      "impact": "Mass PII exposure + demonstration of scalable AI-driven intrusion at low cost.",
+      "sources": [
+        "Company disclosures",
+        "pwn.watch / Loginsoft / Reuters / NorForge / Wiz"
+      ]
+    },
     {
       "id": "pizza-hut-japan-2026-10",
       "date": "2026-10-24",

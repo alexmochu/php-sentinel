@@ -70,7 +70,7 @@
     {
       "date": "2026-11-16",
       "category": "supply_chain",
-      "title": "Optimizely malicious JavaScript supply-chain (OPTIMJACK)",
+      "title": "Optimizely malicious JavaScript supply chain (OPTIMJACK)",
       "description": "Attackers modified Optimizely Web project JavaScript served via cdn.optimizely.com, impacting ~178 organizations (including banking/finance). Payload included card skimmer, crypto clipper, and staging components.",
       "cves": [],
       "fixed_versions": "Optimizely blocked the path and deployed a fix",
